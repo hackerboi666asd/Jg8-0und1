@@ -1,0 +1,2952 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBER::KLASSE — Informatik Grundlagen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   CSS VARIABLES & RESET
+   ═══════════════════════════════════════════ */
+:root {
+  /* Light mode defaults */
+  --bg: #f4f1ec;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0ede8;
+  --text: #2c2c34;
+  --text-bright: #1a1a22;
+  --text-dim: #7a7a88;
+  --neon-blue: #0077aa;
+  --neon-green: #1a7a0a;
+  --neon-pink: #c41858;
+  --border-dim: rgba(0,0,0,0.10);
+  --grid-line: rgba(0,136,170,0.06);
+  --scanline-alpha: 0;
+  --nav-bg: rgba(244,241,236,0.95);
+  --nav-border: rgba(0,136,170,0.2);
+  --font-head: 'Orbitron', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+  --h2-shadow: none;
+  --h2-anim: none;
+}
+body.dark-mode {
+  --bg: #0a0a0f;
+  --bg-card: #0d0d1a;
+  --bg-card-hover: #12122a;
+  --text: #c0c8d8;
+  --text-bright: #e8eaf6;
+  --text-dim: #8892a4;
+  --neon-blue: #00d4ff;
+  --neon-green: #00ff88;
+  --neon-pink: #ff2d78;
+  --border-dim: rgba(0,212,255,0.12);
+  --grid-line: rgba(0,212,255,0.03);
+  --scanline-alpha: 0.03;
+  --nav-bg: rgba(10,10,20,0.92);
+  --nav-border: rgba(0,212,255,0.2);
+  --h2-shadow: 0 0 10px var(--neon-blue), 0 0 30px rgba(0,212,255,0.4);
+  --h2-anim: flicker 8s infinite;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition: background-color 0.4s, color 0.4s;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,var(--scanline-alpha)) 0px,
+    rgba(0,0,0,var(--scanline-alpha)) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════
+   THEME TOGGLE BUTTON
+   ═══════════════════════════════════════════ */
+.theme-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 2000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border-dim);
+  background: var(--bg-card);
+  color: var(--text-bright);
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-toggle:hover {
+  border-color: var(--neon-blue);
+  box-shadow: 0 4px 20px rgba(0,136,170,0.25);
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--nav-border);
+  overflow-x: auto;
+  transition: background 0.4s, border-color 0.4s;
+}
+nav a {
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all 0.3s;
+  color: var(--text-dim);
+}
+nav a.active {
+  color: var(--neon-blue);
+  border-color: var(--neon-blue);
+  background: rgba(0,136,170,0.1);
+}
+nav a.nav-locked {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+nav a:not(.nav-locked):not(.active):hover {
+  color: var(--text-bright);
+  border-color: var(--border-dim);
+}
+
+/* ═══════════════════════════════════════════
+   SECTIONS — BASE
+   ═══════════════════════════════════════════ */
+.section {
+  min-height: 100vh;
+  padding: 5rem 1.5rem 3rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.section-inner {
+  width: 100%;
+  max-width: 900px;
+}
+.section-header {
+  margin-bottom: 2.5rem;
+  border-left: 3px solid var(--neon-blue);
+  padding-left: 1.2rem;
+}
+.section-number {
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--neon-blue);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.section-header h2 {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--text-bright);
+  line-height: 1.15;
+  text-shadow: var(--h2-shadow);
+  animation: var(--h2-anim);
+  margin-bottom: 0.3rem;
+}
+.section-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION TEXT
+   ═══════════════════════════════════════════ */
+.section-text {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.5rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.section-text p {
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-size: 0.97rem;
+}
+.section-text p:last-child { margin-bottom: 0; }
+.section-text strong { color: var(--text-bright); }
+.section-text .aside {
+  border-left: 3px solid var(--neon-blue);
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(0,136,170,0.05);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.92rem;
+  color: var(--text-dim);
+}
+
+/* ═══════════════════════════════════════════
+   INTERACTIVE AREA
+   ═══════════════════════════════════════════ */
+.interactive-area {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: background 0.4s, border-color 0.4s;
+}
+.interactive-area h3 {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--neon-blue);
+  margin-bottom: 1.2rem;
+}
+
+/* ═══════════════════════════════════════════
+   GATE AREA
+   ═══════════════════════════════════════════ */
+.gate-area {
+  background: var(--bg-card);
+  border: 2px solid var(--border-dim);
+  border-radius: 10px;
+  padding: 1.8rem;
+  margin-top: 1.5rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.gate-area h3 {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--neon-pink);
+  margin-bottom: 1.2rem;
+}
+.gate-area p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+.gate-area input[type="text"],
+.gate-area input[type="number"] {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text-bright);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  outline: none;
+  width: 100%;
+  max-width: 340px;
+  transition: border-color 0.3s, background 0.4s;
+}
+.gate-area input:focus { border-color: var(--neon-blue); }
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════ */
+.btn {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.65rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: inline-block;
+  margin-top: 0.6rem;
+}
+.btn-primary { background: var(--neon-blue); color: #fff; }
+.btn-primary:hover { filter: brightness(1.1); box-shadow: 0 4px 16px rgba(0,136,170,0.3); }
+.btn-secondary { background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+.btn-secondary:hover { background: rgba(0,136,170,0.1); }
+.btn-danger { background: var(--neon-pink); color: #fff; }
+.btn-danger:hover { filter: brightness(1.1); }
+
+/* ═══════════════════════════════════════════
+   GATE FEEDBACK
+   ═══════════════════════════════════════════ */
+.gate-feedback {
+  margin-top: 1rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: none;
+}
+.gate-feedback.success {
+  background: rgba(0,200,100,0.12);
+  border: 1px solid rgba(0,200,100,0.3);
+  color: var(--neon-green);
+  display: block;
+}
+.gate-feedback.error {
+  background: rgba(255,45,120,0.08);
+  border: 1px solid rgba(255,45,120,0.25);
+  color: var(--neon-pink);
+  display: block;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION 1 — BIT-TAPE & ASCII
+   ═══════════════════════════════════════════ */
+.bit-tape-wrap { margin: 1rem 0; overflow-x: auto; }
+.bit-tape { display: flex; gap: 6px; padding: 0.5rem 0; }
+.bit-cell {
+  width: 44px; height: 64px;
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-mono);
+}
+.bit-cell:hover { border-color: var(--neon-blue); transform: translateY(-2px); }
+.bit-cell .bit-val { font-size: 1.1rem; color: var(--neon-blue); font-weight: bold; }
+.bit-cell .bit-pos { font-size: 0.6rem; color: var(--text-dim); }
+.bit-cell.active-bit { background: rgba(0,136,170,0.1); border-color: var(--neon-blue); }
+
+.ascii-display { margin-top: 1.2rem; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+.ascii-char { text-align: center; }
+.ascii-char .char-label {
+  font-size: 0.65rem; color: var(--text-dim); display: block;
+  margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.ascii-char .char-val { font-family: var(--font-head); font-size: 2.2rem; color: var(--neon-blue); }
+.ascii-char .char-dec { font-size: 0.7rem; color: var(--text-dim); display: block; }
+.ascii-table-mini {
+  width: 100%; margin-top: 1rem; border-collapse: collapse; font-size: 0.82rem;
+}
+.ascii-table-mini th {
+  color: var(--neon-blue); text-align: left; padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid var(--border-dim);
+  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 0.08em;
+}
+.ascii-table-mini td { padding: 0.3rem 0.8rem; border-bottom: 1px solid var(--border-dim); color: var(--text); }
+.ascii-table-mini tr:hover td { background: var(--bg-card-hover); }
+.ascii-table-mini .mono { font-family: var(--font-mono); color: var(--neon-blue); }
+
+/* ═══════════════════════════════════════════
+   SECTION 2 — LOGIK / TURING
+   ═══════════════════════════════════════════ */
+.turing-machine { position: relative; }
+.turing-tape-container {
+  overflow-x: auto;
+  display: flex; gap: 2px; align-items: center;
+  background: var(--bg); border: 1px solid var(--border-dim);
+  border-radius: 6px; padding: 0.5rem 0.75rem;
+  min-height: 64px;
+}
+.turing-tape { display: flex; gap: 0; min-width: max-content; }
+.turing-tape-cell {
+  width: 48px; height: 48px;
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 1.15rem;
+  color: var(--text-bright); background: var(--bg-card);
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  flex-shrink: 0; user-select: none;
+}
+.turing-tape-cell.head {
+  background: var(--bg-card);
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 0 2px var(--neon-blue), 0 0 14px rgba(0,212,255,0.25);
+  color: var(--neon-blue);
+  font-weight: bold;
+  position: relative; z-index: 1;
+}
+.turing-tape-cell.just-written {
+  animation: writeFlash 0.7s ease-out;
+}
+@keyframes writeFlash {
+  0%   { background: rgba(0,255,136,0.5); border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0,255,136,0.4); }
+  100% { background: var(--bg-card); border-color: var(--border-dim); box-shadow: none; }
+}
+.target-cell {
+  width: 40px; height: 40px; border-radius: 4px;
+  border: 1px solid rgba(196,24,88,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.95rem;
+  color: var(--neon-pink); background: rgba(196,24,88,0.06);
+  flex-shrink: 0;
+}
+.turing-head-indicator {
+  text-align: center; color: var(--neon-blue);
+  font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.12em;
+  margin-top: 0.25rem; opacity: 0.75;
+}
+.turing-controls { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0; align-items: center; }
+.turing-status {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);
+  padding: 0.5rem 0.9rem; border: 1px solid var(--border-dim);
+  border-radius: 4px; background: var(--bg); margin-top: 0.8rem;
+  transition: color 0.3s, border-color 0.3s;
+}
+.turing-status .status-val { color: var(--neon-blue); }
+.turing-status.running { color: var(--neon-green); border-color: var(--neon-green); }
+.turing-status.halted  { color: var(--neon-blue);  border-color: var(--neon-blue); }
+.turing-status.error   { color: var(--neon-pink);  border-color: var(--neon-pink); }
+
+/* Rule editor */
+.rule-editor { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.rule-editor-label {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.1em;
+  color: var(--text-dim); padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-dim);
+}
+.rule-row {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 6px; padding: 0.65rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+  transition: border-color 0.2s;
+}
+.rule-row:hover { border-color: rgba(0,136,170,0.3); }
+.rule-label {
+  font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.08em;
+  color: var(--text-dim); white-space: nowrap;
+}
+.rule-row select {
+  font-family: var(--font-mono);
+  background: var(--bg); color: var(--text-bright);
+  border: 1px solid var(--border-dim); border-radius: 4px;
+  padding: 0.3rem 0.5rem; font-size: 0.85rem; outline: none; cursor: pointer;
+  transition: background 0.3s, color 0.3s, border-color 0.2s;
+  -webkit-appearance: auto;
+}
+.rule-row select:focus { border-color: var(--neon-blue); outline: none; }
+.rule-arrow { color: var(--neon-green); font-size: 1.1rem; }
+
+/* Legacy selectors kept for compatibility */
+.turing-rules { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.turing-rule {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 6px; padding: 0.65rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+}
+.turing-rule label { color: var(--text-dim); font-size: 0.75rem; font-family: var(--font-head); }
+.turing-rule select {
+  font-family: var(--font-mono);
+  background: var(--bg); color: var(--text-bright);
+  border: 1px solid var(--border-dim); border-radius: 4px;
+  padding: 0.3rem 0.5rem; font-size: 0.85rem; outline: none; cursor: pointer;
+}
+.turing-rule select:focus { border-color: var(--neon-blue); }
+.turing-log {
+  margin-top: 1rem; max-height: 120px; overflow-y: auto;
+  background: var(--bg); border: 1px solid var(--border-dim);
+  border-radius: 6px; padding: 0.6rem 0.8rem;
+}
+.turing-log p { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+.turing-log p span { color: var(--neon-green); }
+
+/* ═══════════════════════════════════════════
+   SECTION 3 — TURM / LAYER SORT
+   ═══════════════════════════════════════════ */
+.layer-sort-area { display: flex; flex-direction: column; gap: 0.5rem; min-height: 200px; }
+.sort-item {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 6px; padding: 0.8rem 1.2rem;
+  cursor: grab; display: flex; align-items: center; gap: 1rem;
+  transition: all 0.2s; user-select: none;
+}
+.sort-item:hover { border-color: var(--neon-blue); transform: translateX(4px); }
+.sort-item.dragging { opacity: 0.4; cursor: grabbing; }
+.sort-item.drag-over { border-color: var(--neon-green); background: rgba(0,200,100,0.08); }
+.sort-item .layer-icon { font-size: 1.5rem; }
+.sort-item .layer-name { font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--text-bright); }
+.sort-item .layer-desc { font-size: 0.78rem; color: var(--text-dim); margin-left: auto; text-align: right; }
+.layer-check-btn { margin-top: 1rem; }
+.layer-result { margin-top: 0.8rem; font-size: 0.88rem; color: var(--text-dim); min-height: 1.5em; }
+.layer-result.ok { color: var(--neon-green); }
+.layer-result.err { color: var(--neon-pink); }
+
+/* Sort item feedback */
+.sort-item .sort-num { font-family: var(--font-head); font-size: 0.65rem; color: var(--text-dim); min-width: 22px; }
+.sort-item.correct-pos { border-color: var(--neon-green); background: rgba(0,200,100,0.09); }
+.sort-item.correct-pos .sort-num { color: var(--neon-green); }
+.sort-item.wrong-pos { border-color: var(--neon-pink); background: rgba(255,45,120,0.06); }
+
+/* Tower slider explorer */
+.tower-explorer { display: flex; flex-direction: column; gap: 0.8rem; }
+.tower-slider-row { display: flex; align-items: center; gap: 0.8rem; }
+.tower-slider-row label { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-dim); white-space: nowrap; }
+.tower-slider-row input[type=range] { flex: 1; accent-color: var(--neon-blue); cursor: pointer; }
+.tower-display {
+  position: relative; min-height: 130px;
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 8px; padding: 1.2rem;
+  font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-dim);
+}
+.tower-layer { position: absolute; inset: 1.2rem; overflow: auto; line-height: 1.7; }
+.tower-level-indicator {
+  font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.1em;
+  color: var(--neon-blue); text-align: center; margin-top: 0.5rem;
+  padding: 0.3rem; border: 1px solid rgba(0,136,170,0.2); border-radius: 4px;
+  background: rgba(0,136,170,0.05);
+}
+/* Tower layer cards */
+.tower-stack { display: flex; flex-direction: column-reverse; gap: 3px; }
+.tower-card {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 1rem; border-radius: 6px;
+  border: 1px solid var(--border-dim); background: var(--bg-card);
+  opacity: 0.45; transition: all 0.22s; cursor: default;
+}
+.tower-card .tc-num  { font-family: var(--font-head); font-size: 0.55rem; color: var(--border-dim); min-width: 20px; }
+.tower-card .tc-icon { font-size: 1.1rem; min-width: 1.4rem; }
+.tower-card .tc-name { font-family: var(--font-head); font-size: 0.63rem; letter-spacing: 0.07em; color: var(--text-dim); flex: 1; }
+.tower-card.active {
+  border-color: var(--neon-blue); background: rgba(0,136,170,0.1);
+  opacity: 1; transform: translateX(6px);
+  box-shadow: 0 0 10px rgba(0,136,170,0.18);
+}
+.tower-card.active .tc-name { color: var(--neon-blue); }
+.tower-card.active .tc-num  { color: var(--neon-blue); }
+.tower-card.tc-above { opacity: 0.2; }
+.tower-detail-panel {
+  margin-top: 0.6rem; padding: 0.8rem 1rem;
+  background: var(--bg); border: 1px solid var(--border-dim); border-radius: 6px;
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);
+  min-height: 52px; line-height: 1.75; transition: opacity 0.25s;
+}
+/* Abstraktion quiz */
+.turm-quiz {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 8px; padding: 1.2rem 1.4rem; margin: 1.5rem 0 0;
+}
+.quiz-label { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--neon-blue); margin-bottom: 0.6rem; }
+.quiz-question { font-size: 0.9rem; color: var(--text-bright); margin-bottom: 0.8rem; line-height: 1.6; }
+.quiz-choices { display: flex; flex-direction: column; gap: 0.4rem; }
+.quiz-btn {
+  text-align: left; font-family: var(--font-mono); font-size: 0.82rem;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border-dim);
+  border-radius: 5px; padding: 0.55rem 0.9rem; cursor: pointer;
+  transition: all 0.2s; line-height: 1.5;
+}
+.quiz-btn:hover:not(:disabled) { border-color: var(--neon-blue); color: var(--neon-blue); }
+.quiz-btn.qb-correct { border-color: var(--neon-green); background: rgba(0,200,100,0.09); color: var(--neon-green); }
+.quiz-btn.qb-wrong   { border-color: var(--neon-pink);  background: rgba(255,45,120,0.06); color: var(--neon-pink); }
+.quiz-feedback { margin-top: 0.7rem; font-size: 0.84rem; min-height: 1.4em; }
+
+/* ═══════════════════════════════════════════
+   SECTION 4 — PIXEL / BITMAP
+   ═══════════════════════════════════════════ */
+.pixel-grid-wrap { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+.pixel-grid {
+  display: grid; grid-template-columns: repeat(8, 28px);
+  gap: 3px; background: var(--bg); padding: 6px;
+  border-radius: 6px; border: 1px solid var(--border-dim);
+}
+.pixel-cell {
+  width: 28px; height: 28px; border-radius: 3px;
+  border: 1px solid var(--border-dim); background: var(--bg-card);
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+}
+.pixel-cell.lit {
+  background: var(--neon-blue); border-color: var(--neon-blue);
+  box-shadow: 0 0 6px rgba(0,136,170,0.4);
+}
+.pixel-info { flex: 1; min-width: 200px; }
+.pixel-info p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.6rem; line-height: 1.7; }
+.pixel-info strong { color: var(--text-bright); }
+.pixel-input-row {
+  display: flex; gap: 0.4rem; align-items: center;
+  margin-bottom: 0.5rem; flex-wrap: wrap;
+}
+.pixel-input-row label { font-size: 0.75rem; color: var(--text-dim); min-width: 50px; }
+.pixel-input-row input {
+  font-family: var(--font-mono); font-size: 0.9rem; width: 100px;
+  background: var(--bg); color: var(--text-bright);
+  border: 1px solid var(--border-dim); border-radius: 4px;
+  padding: 0.3rem 0.6rem; outline: none;
+  transition: border-color 0.3s, background 0.4s;
+}
+.pixel-input-row input:focus { border-color: var(--neon-blue); }
+.pixel-ref-grid {
+  display: grid; grid-template-columns: repeat(8, 24px);
+  gap: 2px; background: rgba(0,0,0,0.05);
+  padding: 4px; border-radius: 4px; margin-top: 0.8rem;
+}
+.pixel-ref-grid .ref-cell,
+.pixel-ref-grid .pixel-ref-cell {
+  width: 24px; height: 24px; border-radius: 2px;
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+}
+.pixel-ref-grid .ref-cell.ref-lit,
+.pixel-ref-grid .pixel-ref-cell.ref-lit { background: var(--neon-pink); border-color: var(--neon-pink); }
+
+/* ═══════════════════════════════════════════
+   SECTION 5 — PARADOXO
+   ═══════════════════════════════════════════ */
+.paradox-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.paradox-step {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 8px; overflow: hidden;
+  transition: background 0.4s, border-color 0.4s;
+}
+.paradox-step.active { border-color: var(--neon-blue); }
+.step-header {
+  padding: 0.9rem 1.2rem; display: flex; align-items: center; gap: 1rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.step-header:hover { background: var(--bg-card-hover); }
+.step-num { font-family: var(--font-head); font-size: 0.65rem; color: var(--neon-blue); min-width: 60px; }
+.step-title { font-size: 0.9rem; color: var(--text-bright); flex: 1; }
+.step-status { font-size: 1rem; }
+.step-body { padding: 0 1.2rem 1.2rem; display: none; }
+.step-body.open { display: block; }
+.step-body p { font-size: 0.88rem; color: var(--text); line-height: 1.75; margin-bottom: 0.8rem; }
+.paradox-choice { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.paradox-choice .choice-btn {
+  font-family: var(--font-mono); font-size: 0.85rem;
+  padding: 0.5rem 1rem; border-radius: 6px;
+  border: 1px solid var(--border-dim); background: var(--bg); color: var(--text);
+  cursor: pointer; transition: all 0.2s;
+}
+.paradox-choice .choice-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+.paradox-choice .choice-btn.chosen-correct {
+  border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,200,100,0.08);
+}
+.paradox-choice .choice-btn.chosen-wrong {
+  border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,120,0.08);
+}
+.error-box {
+  border: 1px solid rgba(255,45,120,0.3); background: rgba(255,45,120,0.06);
+  border-radius: 8px; padding: 1rem 1.2rem; margin: 0.8rem 0;
+}
+.error-box .error-label {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.12em;
+  color: var(--neon-pink); display: block; margin-bottom: 0.4rem;
+}
+.error-box .error-text { font-family: var(--font-mono); font-size: 0.88rem; color: #cc4444; line-height: 1.7; }
+body.dark-mode .error-box .error-text { color: #ffaaaa; }
+
+.glitch-btn {
+  font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.1em;
+  padding: 0.65rem 1.5rem; border-radius: 6px;
+  background: var(--neon-pink); color: #fff; border: none; cursor: pointer;
+  transition: all 0.25s; margin-top: 0.5rem; position: relative;
+}
+.glitch-btn:hover { filter: brightness(1.15); box-shadow: 0 0 20px rgba(255,45,120,0.4); }
+.glitch-btn.glitching { animation: glitch 0.4s steps(2) infinite; }
+@keyframes glitch {
+  0%   { transform: translate(-2px, 0) skewX(-1deg); clip-path: inset(10% 0 80% 0); }
+  25%  { transform: translate(2px, 0) skewX(1deg);  clip-path: inset(70% 0 10% 0); }
+  50%  { transform: translate(-1px, 1px);            clip-path: inset(30% 0 50% 0); }
+  75%  { transform: translate(1px, -1px);            clip-path: inset(50% 0 30% 0); }
+  100% { transform: translate(0); }
+}
+
+.halting-visual { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+.halting-box {
+  border: 1px solid var(--border-dim); border-radius: 8px;
+  padding: 1rem 1.2rem; background: var(--bg);
+  flex: 1; min-width: 180px; text-align: center;
+  transition: background 0.4s, border-color 0.4s;
+}
+.halting-box .hb-label {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.12em;
+  color: var(--text-dim); display: block; margin-bottom: 0.6rem;
+}
+.halting-box .hb-icon { font-size: 2.2rem; }
+.halting-box .hb-text { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.4rem; line-height: 1.5; }
+
+/* ═══════════════════════════════════════════
+   SECTION 6 — KI-ARENA
+   ═══════════════════════════════════════════ */
+.ki-intro-cards { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.ki-data-card {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 8px; padding: 1rem 1.5rem;
+  flex: 1; min-width: 200px; display: flex; align-items: center; gap: 1rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.ki-data-card .ki-number { font-family: var(--font-head); font-size: 3rem; color: var(--neon-blue); line-height: 1; }
+.ki-data-card .ki-label { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+.ki-data-card .ki-label strong { color: var(--text-bright); display: block; }
+.ki-data-card .ki-buttons { display: flex; flex-direction: column; gap: 0.4rem; }
+.ki-btn {
+  font-size: 1.2rem; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border-dim); background: var(--bg); cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.ki-btn:hover { border-color: var(--neon-blue); transform: scale(1.1); }
+.ki-scenarios { display: flex; flex-direction: column; gap: 0.8rem; }
+.ki-scenario {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: 8px; overflow: hidden;
+  transition: background 0.4s, border-color 0.4s;
+}
+.ki-scenario.active { border-color: var(--neon-blue); }
+.ki-scenario .scenario-header {
+  padding: 0.9rem 1.2rem; display: flex; align-items: center; gap: 1rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.ki-scenario .scenario-header:hover { background: var(--bg-card-hover); }
+.ki-scenario .scenario-num { font-family: var(--font-head); font-size: 0.65rem; color: var(--neon-blue); min-width: 70px; }
+.ki-scenario .scenario-title { font-size: 0.9rem; color: var(--text-bright); flex: 1; }
+.ki-scenario .scenario-body { padding: 0 1.2rem 1.2rem; display: none; }
+.ki-scenario .scenario-body.open { display: block; }
+.ki-scenario .scenario-question {
+  border: 1px solid rgba(0,200,100,0.2); background: rgba(0,200,100,0.05);
+  border-radius: 6px; padding: 0.8rem 1rem; margin-bottom: 0.8rem;
+  font-size: 0.88rem; color: var(--text); line-height: 1.7;
+}
+.ki-scenario .scenario-choices { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.ki-scenario .ki-choice-btn {
+  font-family: var(--font-mono); font-size: 0.82rem; padding: 0.45rem 0.9rem;
+  border-radius: 6px; border: 1px solid var(--border-dim);
+  background: var(--bg); color: var(--text); cursor: pointer; transition: all 0.2s;
+}
+.ki-scenario .ki-choice-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+.ki-scenario .ki-choice-btn.ki-correct {
+  border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,200,100,0.08);
+}
+.ki-scenario .ki-choice-btn.ki-wrong {
+  border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,120,0.08);
+}
+.ki-scenario .ki-explain { margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; display: none; }
+.ki-scenario .ki-explain.open { display: block; }
+
+/* ═══════════════════════════════════════════
+   UNLOCK ANIMATION
+   ═══════════════════════════════════════════ */
+.unlock-flash {
+  position: fixed; inset: 0;
+  background: var(--neon-green); opacity: 0;
+  pointer-events: none; z-index: 9998; transition: opacity 0.1s;
+}
+.unlock-flash.flash { opacity: 0.15; }
+
+/* ═══════════════════════════════════════════
+   LOCKED STATES
+   ═══════════════════════════════════════════ */
+.section.locked { pointer-events: none; }
+.section.locked .section-inner {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.6s;
+}
+
+/* ═══════════════════════════════════════════
+   @KEYFRAMES
+   ═══════════════════════════════════════════ */
+@keyframes flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.85; }
+  97% { opacity: 1; }
+  98% { opacity: 0.9; }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  nav { gap: 0.3rem; padding: 0.6rem 0.8rem; }
+  nav a { font-size: 0.55rem; padding: 0.35rem 0.6rem; }
+  .section { padding: 4.5rem 1rem 2rem; }
+  .section-text { padding: 1.2rem; }
+  .interactive-area { padding: 1rem; }
+  .gate-area { padding: 1.2rem; }
+  .bit-cell { width: 36px; height: 54px; }
+  .turing-tape-cell { width: 40px; height: 40px; font-size: 1rem; }
+  .ki-data-card { flex-direction: column; min-width: auto; width: 100%; }
+  .ki-data-card .ki-number { font-size: 2.5rem; }
+  .ki-data-card .ki-buttons { flex-direction: row; }
+}
+@media (max-width: 480px) {
+  .ki-data-card { flex-direction: column; min-width: auto; width: 100%; }
+  .ki-data-card .ki-number { font-size: 2.5rem; }
+  .ki-data-card .ki-buttons { flex-direction: row; }
+}
+
+/* ═══════════════════════════════════════════
+   STEP CALLOUT BOXES
+   ═══════════════════════════════════════════ */
+.step-callouts { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.4rem; }
+.step-callout {
+  display: flex; gap: 0.8rem; align-items: flex-start;
+  padding: 0.75rem 1rem;
+  background: rgba(0,136,170,0.05);
+  border-left: 3px solid var(--neon-blue);
+  border-radius: 0 6px 6px 0;
+}
+.step-callout .sc-num {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.1em;
+  color: var(--neon-blue); min-width: 68px; margin-top: 0.15rem;
+}
+.step-callout .sc-text { font-size: 0.88rem; color: var(--text); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════
+   GATE HINT (collapsible)
+   ═══════════════════════════════════════════ */
+details.gate-hint { margin-top: 1rem; }
+details.gate-hint summary {
+  font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.1em;
+  color: var(--text-dim); cursor: pointer; list-style: none; padding: 0.3rem 0;
+}
+details.gate-hint summary::-webkit-details-marker { display: none; }
+details.gate-hint summary::before { content: '▸ '; color: var(--neon-blue); }
+details.gate-hint[open] summary::before { content: '▾ '; }
+details.gate-hint .hint-body {
+  margin-top: 0.6rem; padding: 0.8rem 1rem;
+  background: rgba(0,136,170,0.05);
+  border: 1px solid rgba(0,136,170,0.15);
+  border-radius: 6px; font-size: 0.85rem; color: var(--text-dim); line-height: 1.75;
+}
+
+/* ═══════════════════════════════════════════
+   INFO TOOLTIP (details/summary)
+   ═══════════════════════════════════════════ */
+details.info-detail {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  margin-left: 0.4rem;
+}
+details.info-detail summary {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--neon-blue);
+  color: var(--neon-blue);
+  font-size: 0.65rem;
+  cursor: pointer;
+  background: transparent;
+  font-family: var(--font-head);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  user-select: none;
+}
+details.info-detail summary::-webkit-details-marker { display: none; }
+details.info-detail .info-panel {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.7rem 0.9rem;
+  width: 240px;
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.65;
+  z-index: 50;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  white-space: normal;
+}
+
+/* ═══════════════════════════════════════════
+   MISSING / EXTRA CLASSES
+   ═══════════════════════════════════════════ */
+
+/* Alias for section-text */
+.content-text {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.5rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.content-text p { line-height: 1.8; color: var(--text); margin-bottom: 1rem; font-size: 0.97rem; }
+.content-text p:last-child { margin-bottom: 0; }
+.content-text strong { color: var(--text-bright); }
+
+/* Inline highlight */
+.highlight { color: var(--neon-blue); font-weight: bold; }
+
+/* Hint text */
+.hint-text { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.5rem; font-style: italic; }
+
+/* Section lock overlay */
+.section-lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 0;
+  transition: opacity 0.3s;
+}
+.section-lock-overlay .lock-icon { font-size: 3rem; margin-bottom: 1rem; }
+.section-lock-overlay p { color: #fff; font-size: 0.9rem; opacity: 0.8; }
+/* Hide overlay once section is unlocked */
+.section:not(.locked) .section-lock-overlay {
+  display: none;
+  pointer-events: none;
+}
+.section { position: relative; }
+
+/* Gate specific */
+.gate-container { margin-top: 1rem; }
+.gate-target-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.5rem; letter-spacing: 0.08em; }
+.gate-target-tape { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 1rem; }
+.gate-target-tape .t-cell {
+  width: 36px; height: 36px; border: 1px solid var(--border-dim);
+  border-radius: 4px; background: var(--bg); display: flex;
+  align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.9rem; color: var(--neon-blue);
+}
+.gate-status { margin-top: 0.5rem; font-size: 0.88rem; color: var(--text-dim); min-height: 1.4em; }
+.gate-description { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 1rem; line-height: 1.7; }
+
+/* Tower / App layers */
+.app-layer {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.6rem 1rem; border-radius: 6px; margin-bottom: 0.4rem;
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+}
+.app-icon { font-size: 1.4rem; }
+.app-label { font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 0.08em; color: var(--text-bright); }
+.binary-layer { background: rgba(0,136,170,0.06); }
+.code-layer { background: rgba(0,200,100,0.06); }
+
+/* KI training area */
+.ki-training-area {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px; padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: background 0.4s, border-color 0.4s;
+}
+.ki-phase-label {
+  font-family: var(--font-head); font-size: 0.65rem;
+  letter-spacing: 0.12em; color: var(--neon-blue);
+  margin-bottom: 1rem;
+}
+.ki-progress-bar {
+  height: 6px; background: var(--border-dim);
+  border-radius: 3px; margin: 1rem 0; overflow: hidden;
+}
+.ki-progress-fill { height: 100%; background: var(--neon-blue); border-radius: 3px; transition: width 0.3s; }
+.ki-stats { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.ki-stat { text-align: center; }
+.ki-stat .stat-value { font-family: var(--font-head); font-size: 1.5rem; display: block; }
+.ki-stat .stat-label { font-size: 0.7rem; color: var(--text-dim); }
+.ki-stat .stat-value.good { color: var(--neon-green); }
+.ki-stat .stat-value.bad { color: var(--neon-pink); }
+.ki-stat .stat-value.neutral { color: var(--neon-blue); }
+.ki-label-btn {
+  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 0.08em;
+  padding: 0.5rem 1.2rem; border-radius: 6px; border: 1px solid var(--border-dim);
+  background: var(--bg); color: var(--text-bright); cursor: pointer; transition: all 0.2s;
+}
+.ki-label-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+.ki-model-viz { margin: 1rem 0; font-size: 0.85rem; color: var(--text-dim); }
+.ki-scenario-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+.ki-test-results { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.8rem; }
+.ki-test-row {
+  display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+  padding: 0.5rem 0.8rem; border-radius: 6px;
+  border: 1px solid var(--border-dim); background: var(--bg-card);
+  font-size: 0.82rem;
+}
+.ki-test-row.test-correct { border-color: rgba(0,200,100,0.35); background: rgba(0,200,100,0.06); }
+.ki-test-row.test-wrong  { border-color: rgba(255,45,120,0.35); background: rgba(255,45,120,0.05); }
+.test-num {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.06em;
+  color: var(--neon-blue); background: rgba(0,136,170,0.1);
+  padding: 0.15rem 0.5rem; border-radius: 3px; white-space: nowrap;
+}
+.test-prediction { flex: 1; color: var(--text-dim); line-height: 1.5; }
+.test-prediction strong { color: var(--text-bright); }
+.test-result { font-size: 1rem; }
+.ki-test-row.test-correct .test-result { color: var(--neon-green); }
+.ki-test-row.test-wrong  .test-result { color: var(--neon-pink); }
+
+/* Pixel section extras */
+.pixel-gate-layout { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+.pixel-gate-left { flex: 0 0 auto; }
+.pixel-grid-wrapper { display: flex; flex-direction: column; gap: 4px; }
+.pixel-input-area { flex: 1; min-width: 220px; }
+.pixel-presets { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.row-status { font-size: 0.75rem; color: var(--text-dim); margin-left: 0.5rem; }
+.ref-label { font-size: 0.7rem; color: var(--text-dim); margin: 0.4rem 0; }
+
+/* Paradox chain */
+.paradox-chain {
+  display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;
+}
+
+/* Code syntax colours */
+.kw { color: var(--neon-pink); }
+.fn { color: var(--neon-blue); }
+.cm { color: var(--text-dim); font-style: italic; }
+
+/* cyber-btn alias */
+.cyber-btn, .btn.primary { background: var(--neon-blue); color: #fff; }
+.cyber-btn:hover { filter: brightness(1.1); }
+
+/* Decimal / binary display */
+.decimal-value { font-family: var(--font-head); font-size: 2rem; color: var(--neon-blue); }
+.checking { color: var(--neon-blue); }
+.error-header { font-family: var(--font-head); font-size: 0.65rem; color: var(--neon-pink); letter-spacing: 0.1em; margin-bottom: 0.3rem; display: block; }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle button -->
+<button class="theme-toggle" id="theme-toggle" title="Hell/Dunkel umschalten">🌙</button>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav id="main-nav">
+  <a href="#werkstatt" class="active" data-section="werkstatt">🔧 01 WERKSTATT</a>
+  <a href="#logik" class="nav-locked" data-section="logik">🧩 02 LOGIK</a>
+  <a href="#turm" class="nav-locked" data-section="turm">🏗️ 03 TURM</a>
+  <a href="#pixel" class="nav-locked" data-section="pixel">🎨 04 PIXEL</a>
+  <a href="#paradoxo" class="nav-locked" data-section="paradoxo">🌀 05 PARADOXO</a>
+  <a href="#ki" class="nav-locked" data-section="ki">🤖 06 KI</a>
+</nav>
+
+<!-- Flash overlay for unlock animation -->
+<div class="unlock-flash" id="unlock-flash"></div>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 1: WERKSTATT
+     ═══════════════════════════════════════════ -->
+<section id="werkstatt" class="section" data-accent="blue">
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 01</span>
+      <h2>WERKSTATT</h2>
+      <span class="section-subtitle">⚡ Hardware & Bits — Was steckt wirklich in deinem Gerät?</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Dein iPad kostet über 500 Euro — weißt du, was da drin steckt?
+        <span class="highlight">Keine Magie</span>, sondern ungefähr 16 Milliarden winzige Schalter.
+        Jeder kann genau zwei Zustände: <span class="highlight">an oder aus</span> — 1 oder 0.
+        Ein einzelner Schalter heißt „Bit", die kleinste Informationseinheit überhaupt.
+      </p>
+      <p>
+        <em>Alles</em>, was dein Gerät tut — jedes Foto, jede Nachricht, jedes Video — ist am Ende
+        eine riesige Reihe aus Nullen und Einsen. 1936 bewies der Mathematiker
+        <span class="highlight">Alan Turing</span>, dass eine absurd einfache Maschine (ein Band, ein Lesekopf, ein paar Regeln) alles berechnen kann, was überhaupt berechenbar ist.
+      </p>
+      <p>
+        Warum ist das wichtig für dich? Die App, mit der du Musik hörst, das Spiel, das du abends zockst, und die KI, die deine Fragen beantwortet — all das läuft auf exakt demselben Grundprinzip. Nicht drei verschiedene Maschinen für drei Aufgaben, sondern ein einziger Typ: der universelle Schalter-Umdreh-Automat. Dein Gerät ist im Kern genau das — nur mit Milliarden Schaltern statt Papierband.
+      </p>
+      <p>
+        <span class="highlight">Rechnen ist kein Zauber</span> — es ist das systematische Umdrehen von Schaltern
+        nach festen Regeln. Und genau das probierst du jetzt selbst aus. ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: Free Bit-Tape -->
+    <div class="interactive-area">
+      <h3>⬡ Bit-Tape — Klick die Schalter</h3>
+
+      <div class="step-callouts">
+        <div class="step-callout">
+          <span class="sc-num">SCHRITT 1</span>
+          <span class="sc-text">Jede Zelle ist ein <strong>Bit</strong> — wie ein Lichtschalter: entweder <strong>0</strong> (aus, dunkel) oder <strong>1</strong> (an, leuchtet). Klick auf eine Zelle, um sie umzuschalten.</span>
+        </div>
+        <div class="step-callout">
+          <span class="sc-num">SCHRITT 2</span>
+          <span class="sc-text">Immer <strong>8 Bits</strong> hintereinander ergeben <strong>1 Byte</strong>. Mit 8 Bits kann man 256 verschiedene Muster darstellen — zum Beispiel genau einen Buchstaben des Alphabets.</span>
+        </div>
+        <div class="step-callout">
+          <span class="sc-num">SCHRITT 3</span>
+          <span class="sc-text">Unten siehst du den <strong>Dezimalwert</strong> — das ist die normale Alltagszahl, die dein Bitmuster bedeutet. Klick das <strong>?</strong> für eine genaue Erklärung.</span>
+        </div>
+      </div>
+      <div class="bit-tape" id="free-tape"></div>
+      <div class="tape-info">
+        Dezimalwert: <span class="decimal-value" id="free-tape-decimal">0</span>
+        <details class="info-detail">
+          <summary>?</summary>
+          <div class="info-panel">
+            <strong>Dezimal = normale Alltagszahl.</strong><br>
+            Du kennst Dezimalzahlen: 0, 1, 2, 3 … 42, 100, 255. Das sind einfach die Zahlen, mit denen wir täglich rechnen.<br><br>
+            <strong>Wie rechnet man um?</strong><br>
+            Jede Bit-Position hat einen festen Wert — von rechts nach links verdoppelt er sich:<br>
+            <code>128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</code><br><br>
+            Steht an einer Position eine <strong>1</strong>, addierst du deren Wert dazu.<br>
+            Beispiel: <code>0 0 0 0 1 1 0 1</code><br>
+            = 8 + 4 + 1 = <strong>13</strong><br><br>
+            Das ? verschwindet nur dann nicht — du brauchst Dezimalzahlen nicht auswendig können. Wichtig ist: Computer übersetzen alles in Zahlen.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- GATE: Pattern Match -->
+    <div class="gate-area" id="werkstatt-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+       Unten siehst du ein <strong>Zielmuster</strong> — eine bestimmte Folge aus Nullen und Einsen.
+        Stelle dein Band oben <em>exakt</em> so ein, dass es dem Zielmuster entspricht.
+        Erst wenn jedes Bit stimmt, öffnet sich die nächste Einheit.
+        <br><span class="aside">(Tipp: Das Muster ist kein Zufall — du wirst am Ende sehen, was es bedeutet.)</span>
+      </p>
+      <div class="gate-target-label">▸ ZIELMUSTER</div>
+      <div class="gate-target-tape" id="target-tape-display"></div>
+      <details class="gate-hint">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          Vergleiche dein Band <strong>Bit für Bit</strong> mit dem Zielmuster — von links nach rechts.<br>
+          Ist das erste Bit oben eine 0, aber im Zielmuster eine 1? Klick drauf, um es zu wechseln.<br><br>
+          <strong>Tipp:</strong> Das Zielmuster besteht aus zwei 8-Bit-Gruppen. Jede Gruppe steht für einen Buchstaben. Du erfährst in Einheit 2, was sie bedeuten.
+        </div>
+      </details>
+      <div class="gate-status checking" id="werkstatt-gate-status">
+        ⏳ Dein Band stimmt noch nicht mit dem Zielmuster überein.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 2: LOGIK-PUZZLE (Platzhalter)
+     ═══════════════════════════════════════════ -->
+<section id="logik" class="section locked" data-accent="green">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Löse das Rätsel in WERKSTATT, um diese Einheit freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 02</span>
+      <h2>LOGIK-PUZZLE</h2>
+      <span class="section-subtitle">⚙️ Computation — Kannst du eine Maschine steuern?</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Stell dir vor, du gibst einem Freund eine Anleitung — aber der Freund hat
+        <span class="highlight">keinerlei Eigeninitiative</span>. Er tut exakt und nur das,
+        was in deiner Anleitung steht. Kein Nachdenken, kein Improvisieren, kein „ich hab
+        mir gedacht, du meinst vielleicht…". Wenn du ihm sagst „Lies das Feld, und wenn da
+        eine 0 steht, schreib eine 1 hin", dann macht er genau das — bei jeder einzelnen 0,
+        bis zum Ende aller Zeiten.
+      </p>
+      <p>
+        Genau so funktioniert ein Computer. Er folgt einem <span class="highlight">Regelbuch</span>
+        (in der Informatik heißt das „Algorithmus"). Keine Kreativität, keine Intuition — nur
+        stumpfes, perfektes Befolgen von Anweisungen. Und das Verrückte: Damit kann man
+        <em>unglaublich viel</em> erreichen.
+      </p>
+      <p>
+        Die Turing-Maschine, die du in Einheit 1 kennengelernt hast, ist das einfachste
+        Modell dafür. Sie liest ein Feld, entscheidet nach einer Regel was sie schreibt,
+        und geht dann einen Schritt nach links oder rechts. Das wars. Kein weiterer Trick.
+        Und trotzdem kann man damit alles berechnen, was berechenbar ist.
+      </p>
+      <p>
+        Jetzt bist du dran: Du schreibst die Regeln. Du wirst zum Programmierer.
+        Deine Maschine tut exakt das, was du ihr sagst — nicht mehr, nicht weniger.
+        Wenn das Ergebnis falsch ist, liegt es nicht an der Maschine — es liegt an dir.
+        Das ist der Kern jeder Programmierung: vom Empfehlungsalgorithmus deiner Lieblings-App
+        bis zur Steuerung eines Satelliten. Jemand hat Regeln aufgeschrieben. Und eine Maschine
+        befolgt sie blind.
+      </p>
+    </div>
+
+    <!-- INTERACTION: Turing Simulator -->
+    <div class="interactive-area">
+      <h3>⬡ Turing-Simulator — Erkunden</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Unten siehst du das Band der Turing-Maschine. Der grün leuchtende Bereich ist der
+        <strong>Lesekopf</strong> — die Position, die gerade gelesen wird. Stell deine Regeln
+        ein und drück „Ausführen". Beobachte, wie die Maschine Schritt für Schritt arbeitet.
+      </p>
+
+      <div class="turing-machine" id="turing-explore">
+        <div class="turing-tape-container" id="turing-explore-tape"></div>
+        <div class="turing-head-indicator"><span>▲ LESEKOPF</span></div>
+
+        <div class="rule-editor">
+          <div class="rule-editor-label">▸ DEINE REGELN</div>
+
+          <div class="rule-row" id="rule-row-0">
+            <span class="rule-label">WENN</span>
+            <select id="explore-rule0-read"><option value="0">0</option><option value="1">1</option></select>
+            <span class="rule-label">→ SCHREIBE</span>
+            <select id="explore-rule0-write"><option value="0">0</option><option value="1" selected>1</option></select>
+            <span class="rule-label">→ GEHE</span>
+            <select id="explore-rule0-dir"><option value="R" selected>RECHTS ▸</option><option value="L">◂ LINKS</option><option value="H">HALT ■</option></select>
+          </div>
+
+          <div class="rule-row" id="rule-row-1">
+            <span class="rule-label">WENN</span>
+            <select id="explore-rule1-read"><option value="0">0</option><option value="1" selected>1</option></select>
+            <span class="rule-label">→ SCHREIBE</span>
+            <select id="explore-rule1-write"><option value="0" selected>0</option><option value="1">1</option></select>
+            <span class="rule-label">→ GEHE</span>
+            <select id="explore-rule1-dir"><option value="R" selected>RECHTS ▸</option><option value="L">◂ LINKS</option><option value="H">HALT ■</option></select>
+          </div>
+        </div>
+
+        <div class="turing-controls">
+          <button class="cyber-btn primary" id="turing-explore-run" style="--accent:var(--neon-green)">▶ AUSFÜHREN</button>
+          <button class="cyber-btn" id="turing-explore-step" style="--accent:var(--neon-green)">⏭ EIN SCHRITT</button>
+          <button class="cyber-btn" id="turing-explore-reset" style="--accent:var(--neon-green)">↺ RESET</button>
+        </div>
+
+        <div class="turing-status" id="turing-explore-status">Bereit. Stelle deine Regeln ein und drück Ausführen.</div>
+      </div>
+    </div>
+
+    <!-- GATE: Inversion challenge -->
+    <div class="gate-area" id="logik-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Jetzt wird es ernst: Du bekommst ein festes Eingabe-Band. Dein Ziel ist das
+        <strong>invertierte</strong> Band — jede 0 soll zur 1 werden und jede 1 zur 0.
+        Programmiere die Regeln so, dass die Maschine das Band vollständig invertiert
+        und dann <strong>anhält</strong>.
+        <br><span class="aside">(Tipp: Du brauchst genau 2 Regeln für die Symbole — und eine dritte, die die Maschine stoppt, wenn sie auf ein leeres Feld trifft.)</span>
+      </p>
+
+      <div class="turing-machine" id="turing-gate">
+        <div class="gate-target-label">▸ EINGABE-BAND</div>
+        <div class="turing-tape-container" id="turing-gate-input-display" style="margin-bottom:0.5rem;"></div>
+
+        <div class="gate-target-label" style="margin-top:1rem;">▸ ZIEL-BAND (so soll es am Ende aussehen)</div>
+        <div class="gate-target-tape" id="turing-gate-target-display" style="margin-bottom:1.5rem;"></div>
+
+        <div class="gate-target-label" style="margin-top:1rem;">▸ DEIN ARBEITSBAND</div>
+        <div class="turing-tape-container" id="turing-gate-tape"></div>
+        <div class="turing-head-indicator"><span>▲ LESEKOPF</span></div>
+
+        <div class="rule-editor">
+          <div class="rule-editor-label">▸ DEINE REGELN FÜR DIE MISSION</div>
+
+          <div class="rule-row">
+            <span class="rule-label">WENN</span>
+            <select id="gate-rule0-read"><option value="0" selected>0</option><option value="1">1</option><option value="_">_ (leer)</option></select>
+            <span class="rule-label">→ SCHREIBE</span>
+            <select id="gate-rule0-write"><option value="0">0</option><option value="1">1</option><option value="_">_ (leer)</option></select>
+            <span class="rule-label">→ GEHE</span>
+            <select id="gate-rule0-dir"><option value="R">RECHTS ▸</option><option value="L">◂ LINKS</option><option value="H">HALT ■</option></select>
+          </div>
+
+          <div class="rule-row">
+            <span class="rule-label">WENN</span>
+            <select id="gate-rule1-read"><option value="0">0</option><option value="1" selected>1</option><option value="_">_ (leer)</option></select>
+            <span class="rule-label">→ SCHREIBE</span>
+            <select id="gate-rule1-write"><option value="0">0</option><option value="1">1</option><option value="_">_ (leer)</option></select>
+            <span class="rule-label">→ GEHE</span>
+            <select id="gate-rule1-dir"><option value="R">RECHTS ▸</option><option value="L">◂ LINKS</option><option value="H">HALT ■</option></select>
+          </div>
+
+          <div class="rule-row">
+            <span class="rule-label">WENN</span>
+            <select id="gate-rule2-read"><option value="0">0</option><option value="1">1</option><option value="_" selected>_ (leer)</option></select>
+            <span class="rule-label">→ SCHREIBE</span>
+            <select id="gate-rule2-write"><option value="0">0</option><option value="1">1</option><option value="_" selected>_ (leer)</option></select>
+            <span class="rule-label">→ GEHE</span>
+            <select id="gate-rule2-dir"><option value="R">RECHTS ▸</option><option value="L">◂ LINKS</option><option value="H" selected>HALT ■</option></select>
+          </div>
+        </div>
+
+        <div class="turing-controls">
+          <button class="cyber-btn primary" id="turing-gate-run" style="--accent:var(--neon-green)">▶ AUSFÜHREN</button>
+          <button class="cyber-btn" id="turing-gate-reset" style="--accent:var(--neon-green)">↺ RESET</button>
+        </div>
+
+        <div class="turing-status" id="turing-gate-status">Bereit. Programmiere die Regeln und drück Ausführen.</div>
+      </div>
+
+      <details class="gate-hint">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          Du brauchst genau <strong>3 Regeln</strong>:<br>
+          <strong>Regel 1:</strong> Wenn ich eine <code>0</code> lese → schreibe <code>1</code>, gehe RECHTS.<br>
+          <strong>Regel 2:</strong> Wenn ich eine <code>1</code> lese → schreibe <code>0</code>, gehe RECHTS.<br>
+          <strong>Regel 3:</strong> Wenn ich ein <code>_</code> (leeres Feld) lese → schreibe <code>_</code>, HALT.<br><br>
+          Drück erst <em>Ausführen</em> um zu sehen was passiert, dann <em>Reset</em> und passe die Regeln an.
+        </div>
+      </details>
+      <div class="gate-status checking" id="logik-gate-status">
+        ⏳ Die Maschine hat noch nicht das richtige Ergebnis produziert.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 3: DER TURM
+     ═══════════════════════════════════════════ -->
+<section id="turm" class="section locked" data-accent="pink">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Löse das Rätsel in LOGIK-PUZZLE, um diese Einheit freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 03</span>
+      <h2>DER TURM</h2>
+      <span class="section-subtitle">📚 Abstraktion — Warum du kein Elektrotechnik-Studium brauchst</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Du öffnest Instagram, scrollst durch Reels, likest ein Bild — und denkst
+        dabei keine Sekunde an Transistoren. <span class="highlight">Genau das ist Absicht.</span>
+        Informatiker haben über Jahrzehnte etwas Geniales gebaut: Schichten. Schicht
+        über Schicht, wie eine Zwiebel, bei der jede Lage die darunterliegende versteckt.
+      </p>
+      <p>
+        Ganz unten, auf der untersten Ebene, sind immer noch die Nullen und Einsen —
+        die Bits aus Einheit 1. Eine Schicht darüber sitzt <span class="highlight">Maschinencode</span>:
+        kryptische Zahlen, die der Prozessor direkt versteht. Noch eine Schicht höher kommt
+        eine Programmiersprache wie Python oder Java — Wörter statt Zahlen, lesbar für Menschen.
+        Darüber das Betriebssystem (iOS, Windows, Android), und ganz oben: deine App.
+      </p>
+      <p>
+        Dieses Prinzip heißt <span class="highlight">Abstraktion</span>
+        <span class="aside">(= Komplexität verstecken)</span>. Du musst nicht wissen, wie
+        ein Motor funktioniert, um Auto zu fahren. Du musst nicht wissen, wie ein Transistor
+        schaltet, um eine Nachricht zu schicken. Jede Schicht bietet der nächsten eine
+        vereinfachte Oberfläche — und verbirgt den ganzen Wahnsinn darunter.
+      </p>
+      <p>
+        Ohne Abstraktion wäre jede App-Entwicklung ein Albtraum. Mit Abstraktion kann ein
+        15-Jähriger in seiner Freizeit eine App bauen, ohne jemals einen Lötkolben angefasst
+        zu haben — und das passiert tatsächlich. Das Ergebnis von Jahrzehnten kluger Abstraktionsarbeit.
+        Probier den Slider unten aus und sieh selbst, was unter der Oberfläche liegt. ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: Abstraction Slider -->
+    <div class="interactive-area">
+      <h3>⬡ Abstraktions-Röntgen — Zieh den Slider</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Zieh den Regler von <strong>links</strong> (rohe Bits) nach <strong>rechts</strong> (fertige App) — du siehst, was auf jeder Abstraktionsebene passiert.
+      </p>
+      <div class="tower-explorer">
+        <div class="tower-slider-row">
+          <label>◂ E1</label>
+          <input type="range" min="0" max="6" value="0" class="tower-slider" id="tower-slider">
+          <label>E7 ▸</label>
+        </div>
+        <div class="tower-stack" id="tower-stack"></div>
+        <div class="tower-detail-panel" id="tower-detail"></div>
+      </div>
+      <div class="tower-level-indicator" id="tower-level">EBENE 1 / 7 — Transistor / Hardware</div>
+    </div>
+
+    <!-- Quiz: Abstraktion -->
+    <div class="turm-quiz" id="turm-quiz">
+      <div class="quiz-label">▸ SCHNELLTEST — ABSTRAKTION</div>
+      <p class="quiz-question">Was beschreibt Abstraktion in der Informatik am besten?</p>
+      <div class="quiz-choices">
+        <button class="quiz-btn" data-correct="false">Computer schneller machen, indem man Schaltkreise vereinfacht.</button>
+        <button class="quiz-btn" data-correct="true">Komplexität verstecken — jede Schicht zeigt der nächsten nur das, was sie braucht.</button>
+        <button class="quiz-btn" data-correct="false">Programmcode direkt in Transistorsignale umwandeln, ohne Zwischenstufen.</button>
+        <button class="quiz-btn" data-correct="false">Apps ohne Betriebssystem direkt auf der Hardware laufen lassen.</button>
+      </div>
+      <div class="quiz-feedback" id="turm-quiz-feedback"></div>
+    </div>
+
+    <!-- GATE: Sort the layers -->
+    <div class="gate-area" id="turm-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Die Schichten des Abstraktionsturms sind durcheinander geraten!
+        <strong>Sortiere sie von unten (niedrigste Ebene) nach oben (höchste Ebene)</strong>,
+        indem du die Kacheln per Drag &amp; Drop an die richtige Stelle ziehst.
+        <br><span class="aside">(Tipp: Überleg dir — was braucht was? Die App braucht das Betriebssystem, das Betriebssystem braucht…)</span>
+      </p>
+
+      <div class="sort-container" id="sort-container">
+        <!-- filled by JS -->
+      </div>
+
+      <div style="text-align:center; margin-bottom:1rem;">
+        <button class="cyber-btn primary" id="turm-check-btn" style="--accent:var(--neon-pink)">✓ PRÜFEN</button>
+        <button class="cyber-btn" id="turm-shuffle-btn" style="--accent:var(--neon-pink)">↺ NEU MISCHEN</button>
+      </div>
+
+      <details class="gate-hint">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          Frag dich: Was braucht was?<br>
+          Eine <strong>App</strong> braucht ein Betriebssystem, das Betriebssystem braucht Hardware,<br>
+          Hardware braucht Prozessoren, Prozessoren brauchen …<strong>Transistoren</strong>.<br><br>
+          Reihenfolge von unten nach oben:<br>
+          Transistoren → Logikgatter → Prozessor → Betriebssystem → App → Nutzer
+        </div>
+      </details>
+      <div class="gate-status checking" id="turm-gate-status">
+        ⏳ Bring die Schichten in die richtige Reihenfolge.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 4: PIXEL-STUDIO
+     ═══════════════════════════════════════════ -->
+<section id="pixel" class="section locked" data-accent="blue">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Löse das Rätsel in DER TURM, um diese Einheit freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 04</span>
+      <h2>PIXEL-STUDIO</h2>
+      <span class="section-subtitle">🖼️ Wie Zahlen zu Bildern werden</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Jedes Bild, das du auf deinem Bildschirm siehst — jedes Meme, jedes Selfie,
+        jedes TikTok-Thumbnail — ist in Wahrheit eine <span class="highlight">Tabelle voller
+        Zahlen</span>. Kein Witz. Dein Bildschirm besteht aus Millionen winziger Punkte,
+        sogenannter Pixel. Und jeder dieser Punkte ist nichts anderes als eine Zahl, die
+        dem Bildschirm sagt: „Leuchte in dieser Farbe."
+      </p>
+      <p>
+        Auf einem Schwarz-Weiß-Bildschirm ist es besonders einfach: Ein Pixel braucht
+        genau <span class="highlight">1 Bit</span>. Eine 1 heißt „an" (leuchten), eine 0
+        heißt „aus" (dunkel). Ein 8×8-Raster hat also 64 Pixel, und die brauchst du genau
+        64 Bits, um das komplette Bild zu speichern. So hat Nintendo das 1985 beim
+        Game Boy gemacht — nur statt 64 waren es knapp 24.000 Pixel. Und im Prinzip
+        funktioniert es heute genauso, nur mit viel mehr Pixeln und drei Farbkanälen pro
+        Punkt statt einem <span class="aside">(Rot, Grün, Blau — zusammen ergeben sie jede
+        Farbe der Welt.)</span>
+      </p>
+      <p>
+        Warum ist das wichtig? Weil du damit verstehst, warum Bilder Speicherplatz brauchen, warum das Profilbild auf WhatsApp kleiner ist als das Original, und warum Filter und Effekte in Foto-Apps im Grunde nur Mathematik auf diesen Zahlen sind.
+        Das bedeutet: <em>Jedes</em> digitale Bild ist eine Liste von Zahlen. Und wenn du
+        die Zahlen kennst, kannst du das Bild rekonstruieren. Genau das probierst du jetzt.
+        Unten ist ein 8×8-Raster. Du kannst per Klick Pixel an- und ausschalten oder
+        Binärcodes eingeben. Spiel erst mal frei herum — und dann löse die Mission. ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: Free Pixel Grid -->
+    <div class="interactive-area">
+      <h3>⬡ Pixel-Editor — Mal mit Nullen und Einsen</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Klick auf ein Feld, um es ein- oder auszuschalten. Oder gib unten für jede Zeile
+        einen 8-stelligen Binärcode ein (z.B. <span style="color:var(--neon-blue)">10101010</span>).
+      </p>
+
+      <div class="pixel-grid-wrapper">
+        <div class="pixel-grid" id="pixel-grid-free"></div>
+
+        <div class="pixel-input-area" id="pixel-inputs-free">
+          <!-- Generated by JS: 8 input rows -->
+        </div>
+
+        <div class="pixel-presets" id="pixel-presets">
+          <button data-preset="heart">❤️ Herz</button>
+          <button data-preset="smiley">🙂 Smiley</button>
+          <button data-preset="arrow">➡️ Pfeil</button>
+          <button data-preset="clear">🗑️ Leeren</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GATE: Reproduce secret image -->
+    <div class="gate-area" id="pixel-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Rechts siehst du ein Geheimbild. Links sind 8 Eingabezeilen — eine pro Zeile des Bildes.
+        <strong>Übersetze das Bild in Binärcode:</strong> leuchtender Pixel = 1, dunkler Pixel = 0.
+        Gib den Code Zeile für Zeile ein. Das System zeigt dir sofort, welche Zeilen stimmen.
+        <br><span class="aside">(Tipp: Lies das Bild von oben nach unten, von links nach rechts.)</span>
+      </p>
+
+      <div class="pixel-gate-layout">
+        <div class="pixel-input-area" id="pixel-gate-inputs">
+          <!-- Generated by JS: 8 input rows with validation -->
+        </div>
+
+        <div class="pixel-gate-left">
+          <span class="ref-label">▸ Geheimbild</span>
+          <div class="pixel-ref-grid" id="pixel-ref-grid"></div>
+          <span class="ref-label" style="margin-top:0.5rem;">▸ Deine Eingabe</span>
+          <div class="pixel-ref-grid" id="pixel-gate-preview"></div>
+        </div>
+      </div>
+
+      <details class="gate-hint" style="margin-top:1rem;">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          Lies das Geheimbild <strong>Zeile für Zeile</strong>, von oben nach unten.<br>
+          Pro Zeile: ein leuchtender Pixel = <code>1</code>, ein dunkler Pixel = <code>0</code>.<br><br>
+          Beispiel — erste Zeile mit 3 leuchtenden Pixeln links:<br>
+          <code>1 1 1 0 0 0 0 0</code> → eingeben als <code>11100000</code><br><br>
+          Immer genau 8 Zeichen eingeben — keine Leerzeichen.
+        </div>
+      </details>
+      <div class="gate-status checking" id="pixel-gate-status" style="margin-top:1.5rem;">
+        ⏳ Gib den Binärcode für alle 8 Zeilen ein.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 5: PARADOXO-LAB
+     ═══════════════════════════════════════════ -->
+<section id="paradoxo" class="section locked" data-accent="green">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Löse das Rätsel in PIXEL-STUDIO, um diese Einheit freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 05</span>
+      <h2>PARADOXO-LAB</h2>
+      <span class="section-subtitle">🚫 Die Grenzen der Logik — Was kein Computer kann</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Du hast jetzt gelernt, dass Computer im Grunde nur Schalter umdrehen, Regeln befolgen
+        und Zahlen zu Bildern machen. Ziemlich mächtig, oder? Man könnte fast denken, ein
+        ausreichend schneller Computer könnte <em>alles</em> lösen. <span class="highlight">Falsch.</span>
+      </p>
+      <p>
+        1936 — im selben Jahr, in dem er die Turing-Maschine erfand — bewies Alan Turing
+        etwas Verstörendes: Es gibt Fragen, die <span class="highlight">kein Computer jemals
+        beantworten kann</span>. Nicht weil er zu langsam ist. Nicht weil ihm der Speicher
+        ausgeht. Sondern weil die Logik selbst zusammenbricht.
+      </p>
+      <p>
+        Das berühmteste Beispiel heißt das <span class="highlight">Halteproblem</span>. Die Frage
+        lautet: Kann man ein Programm schreiben, das für <em>jedes beliebige andere Programm</em>
+        vorhersagt, ob es irgendwann fertig wird oder sich in einer Endlosschleife verfängt?
+        Die Antwort: Nein. Unmöglich. Und der Beweis ist erschreckend elegant.
+      </p>
+      <p>
+        Das Geniale daran: Der Beweis funktioniert mit einem Trick, der dir bekannt vorkommen
+        könnte. Stell dir vor, du baust das „perfekte Vorhersage-Programm". Dann fütterst du
+        es mit sich selbst. Und genau dann widerspricht es sich — egal was es antwortet, es
+        liegt falsch. Wie ein Satz der sagt: „Dieser Satz ist falsch."
+        <span class="aside">Logik hat Grenzen — und das ist kein Bug, sondern ein bewiesenes Naturgesetz
+        der Mathematik.</span>
+      </p>
+      <p>
+        Drück den Button unten und sieh, was passiert, wenn ein System sich selbst
+        analysieren soll. Und dann löse die Mission — finde den Schritt, an dem die
+        Logik bricht. ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: The Ultimate Test -->
+    <div class="interactive-area">
+      <h3>⬡ DAS ULTIMATIVE PROGRAMM</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Wir haben ein Programm gebaut, das angeblich für jedes andere Programm vorhersagen
+        kann, ob es anhält oder ewig läuft. Wollen wir testen, was passiert, wenn wir es
+        mit <strong>sich selbst</strong> füttern?
+      </p>
+
+      <div style="text-align:center;">
+        <button class="glitch-btn" id="paradox-test-btn">
+          ▶ DAS ULTIMATIVE PROGRAMM TESTEN
+        </button>
+      </div>
+
+      <div class="error-box" id="paradox-error-box">
+        <div class="error-header">⚠ SYSTEM::FEHLER — WIDERSPRUCH ERKANNT</div>
+        <div class="error-text">
+          Das Programm wurde mit sich selbst gefüttert und hat versucht, sein eigenes
+          Verhalten vorherzusagen. Ergebnis:<br><br>
+          → Wenn es sagt „ich halte an" → dann wurde es so gebaut, dass es <em>nicht</em> anhält.<br>
+          → Wenn es sagt „ich halte nicht an" → dann wurde es so gebaut, dass es <em>doch</em> anhält.<br><br>
+          <strong style="color:#ff4444;">WIDERSPRUCH GEFUNDEN: Das System kann sich nicht
+          selbst berechnen.</strong><br><br>
+          <span style="color:var(--text-dim);">Das ist kein Softwarefehler — das ist Mathematik.
+          Alan Turing hat 1936 bewiesen, dass dieses Problem prinzipiell unlösbar ist.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GATE: Find the contradiction step -->
+    <div class="gate-area" id="paradoxo-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Unten steht der Beweis des Halteproblems in 5 Schritten. Schritte 1–4 sind logisch
+        korrekt. <strong>Genau ein Schritt enthält den Widerspruch</strong> — den Moment, in dem
+        die Logik zusammenbricht. Klick auf den Schritt, der unmöglich ist.
+        <br><span class="aside">(Tipp: Lies jeden Schritt sorgfältig. Einer davon beschreibt etwas, das logisch nicht funktionieren kann.)</span>
+      </p>
+
+      <div class="paradox-chain" id="paradox-chain">
+
+        <div class="paradox-step" data-step="1">
+          <span class="step-number">SCHRITT 1</span>
+          <strong>Annahme:</strong> Es gibt ein perfektes Programm H, das für jedes beliebige
+          Programm vorhersagen kann, ob es anhält oder ewig läuft.
+                    <div class="step-feedback">Noch kein Beweis — nur eine Annahme. Wir schauen, ob sie zu einem Widerspruch führt (Widerspruchsbeweis).</div>
+        </div>
+
+        <div class="paradox-step" data-step="2">
+          <span class="step-number">SCHRITT 2</span>
+          <strong>Konstruktion:</strong> Wir bauen ein neues Programm P, das H als Werkzeug
+          benutzt. P fragt H: „Werde ich anhalten?" — und tut dann das <em>Gegenteil</em>
+          von dem, was H vorhersagt.
+          <div class="step-feedback">Logisch gültig. Programme dürfen andere Programme aufrufen — das ist normal.</div>
+        </div>
+
+        <div class="paradox-step" data-step="3">
+          <span class="step-number">SCHRITT 3</span>
+          <strong>Der Test:</strong> Wir füttern P mit sich selbst. <em>P fragt also H:
+          „Wird P anhalten, wenn P sich selbst als Eingabe bekommt?"</em>
+          <div class="step-feedback">Noch erlaubt. Eine Datei kann ihren eigenen Inhalt kennen — unangenehm, aber logisch kein Problem.</div>
+        </div>
+
+        <div class="paradox-step" data-step="4">
+          <span class="step-number">SCHRITT 4</span>
+          <strong>Fall A:</strong> Wenn H sagt „P hält an" → dann macht P das Gegenteil
+          und läuft ewig. Aber H hat gesagt, P hält an. Also hat H gelogen.<br>
+          <strong>Fall B:</strong> Wenn H sagt „P hält nicht an" → dann macht P das
+          Gegenteil und hält sofort an. Aber H hat gesagt, P hält nicht an. Also hat H
+          wieder gelogen.
+          <div class="step-feedback">💥 Hier bricht die Logik. Egal was H antwortet — es liegt immer falsch. Echtes Paradoxon.</div>
+        </div>
+
+        <div class="paradox-step" data-step="5">
+          <span class="step-number">SCHRITT 5</span>
+          <strong>Schlussfolgerung:</strong> Unsere Annahme aus Schritt 1 muss falsch sein.
+          Ein perfektes Programm H, das immer richtig vorhersagt, <em>kann nicht existieren</em>.
+          Das Halteproblem ist unentscheidbar.
+          <div class="step-feedback">Logisch korrekt: Wenn eine Annahme zu einem Widerspruch führt, war die Annahme falsch. Ende des Beweises.</div>
+        </div>
+
+      </div>
+
+      <details class="gate-hint">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          Stell dir vor, du fragst einen Freund: „Wirst du meine Frage mit Nein beantworten?"<br>
+          Sagt er <em>Ja</em> → er antwortet nicht mit Nein, hat also gelogen.<br>
+          Sagt er <em>Nein</em> → er antwortet gerade mit Nein, hat also auch gelogen.<br><br>
+          Genau dieses Paradoxon steckt in einem der 5 Schritte. Es ist der Schritt,<br>
+          bei dem P sich selbst als Eingabe bekommt und H eine Antwort geben muss,<br>
+          die in jedem Fall falsch ist.
+        </div>
+      </details>
+      <div class="gate-status checking" id="paradoxo-gate-status">
+        ⏳ Klick auf den Schritt, der den Widerspruch enthält.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 6: KI-ARENA
+     ═══════════════════════════════════════════ -->
+<section id="ki" class="section locked" data-accent="pink">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Löse das Rätsel in PARADOXO-LAB, um diese Einheit freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">EINHEIT 06</span>
+      <h2>🤖 KI-ARENA</h2>
+      <span class="section-subtitle">🧪 Künstliche Intelligenz — echt intelligent?</span>
+    </div>
+
+    <div class="content-text">
+      <p>Kurze Reise durch das, was du schon weißt: In <strong>Einheit 1</strong> hast du gesehen, dass alles im Computer aus Bits besteht. In <strong>Einheit 2</strong> hast du einer Turing-Maschine — einem Regelfolger aus Nullen und Einsen — beigebracht, Bits umzudrehen. In <strong>Einheit 3</strong> hast du gesehen, wie Schichten Komplexität verstecken. Und in <strong>Einheit 5</strong> weißt du: Kein Programm kann alles berechnen — es gibt mathematische Grenzen. <span class="highlight">Künstliche Intelligenz</span> fügt sich genau hier ein: Sie ist eine neue Abstraktionsschicht, die auf all dem aufbaut — und ihre eigenen Grenzen hat.</p>
+      <p>„Hey ChatGPT, schreib meine Hausaufgaben!" — ja, das haben einige von euch bestimmt schon ausprobiert. Aber was passiert da eigentlich? Spoiler: Kein winziger Roboter sitzt in eurem Handy und denkt nach. Eine KI wie ChatGPT ist ein riesiges statistisches Modell. Sie hat Milliarden von Texten aus dem Internet gelesen und dabei Muster gelernt: Welche Wörter kommen oft nach welchen anderen Wörtern?</p>
+      <p>Stellt euch eine extrem mächtige Autovervollständigung vor. Wenn ihr „Der Himmel ist" tippt, sagt das Modell wahrscheinlich „blau". Nicht, weil es jemals den Himmel gesehen hat, sondern weil in den Trainingsdaten „blau" statistisch am häufigsten nach dieser Wortfolge kam. Es <em>versteht</em> nichts — es <em>berechnet Wahrscheinlichkeiten</em>.</p>
+      <p>Und genau da wird's spannend: Wenn die Trainingsdaten Fehler enthalten, lernt die KI die Fehler mit. Wenn bestimmte Themen unterrepräsentiert sind, weiß die KI darüber weniger. Und wenn ihr eine Frage stellt, die so noch nie jemand geschrieben hat? Dann rät die KI — und zwar mit sehr überzeugend klingendem Unsinn. Das nennt man „Halluzinieren".</p>
+      <p>Trainieren wir jetzt unser eigenes Mini-Modell. Ihr werdet sehen: Die Qualität eurer Trainingsdaten entscheidet alles. Schlechtes Training = dummes Modell. So simpel ist das.</p>
+    </div>
+    <!-- Interaktion: Mini-Neural-Net Trainer -->
+    <div class="ki-training-area" id="ki-trainer">
+      <div class="ki-phase-label" id="ki-phase">PHASE 1 — TRAINING</div>
+
+      <div class="ki-data-card" id="ki-card">
+        <div class="ki-number" id="ki-current-num">—</div>
+        <div class="ki-buttons" id="ki-btn-group">
+          <button class="ki-label-btn" data-label="gerade" id="ki-btn-even">GERADE</button>
+          <button class="ki-label-btn" data-label="ungerade" id="ki-btn-odd">UNGERADE</button>
+        </div>
+      </div>
+
+      <div class="ki-progress-bar"><div class="ki-progress-fill" id="ki-progress" style="width:0%"></div></div>
+
+      <div class="ki-stats" id="ki-stats">
+        <div class="ki-stat"><span class="stat-value neutral" id="ki-trained">0</span><span class="stat-label">Trainiert</span></div>
+        <div class="ki-stat"><span class="stat-value good" id="ki-correct">0</span><span class="stat-label">Richtig</span></div>
+        <div class="ki-stat"><span class="stat-value bad" id="ki-wrong">0</span><span class="stat-label">Falsch</span></div>
+      </div>
+
+      <div class="ki-model-viz" id="ki-model-viz">
+        <span style="color:var(--text-dim)">Modell wartet auf Trainingsdaten…</span>
+      </div>
+
+      <!-- Test phase (hidden initially) -->
+      <div class="ki-test-results" id="ki-test-area" style="display:none;"></div>
+
+      <p class="hint-text" id="ki-hint" style="display:none;"></p>
+    </div>
+
+    <!-- Gate -->
+    <div class="gate-container" id="ki-gate" style="display:none;">
+      <h3>🚪 LETZTE PRÜFUNG — KI-VERSTÄNDNIS</h3>
+      <p class="gate-description">
+        Du hast gesehen, wie ein Modell lernt (oder eben nicht). Jetzt kommen fünf Szenarien aus dem echten Leben. Zeig, dass du verstehst, wann KI sinnvoll ist — und wann nicht. Beantworte alle fünf richtig.
+      </p>
+
+      <div class="ki-scenario-cards" id="ki-scenarios">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="gate-status checking" id="ki-gate-status">
+        ⏳ Beantworte alle fünf Szenarien.
+      </div>
+    </div>
+
+    <!-- Completion celebration (hidden initially) -->
+    <div id="ki-complete" style="display:none; text-align:center; padding:2rem;">
+      <h2 style="font-family:var(--font-head); color:var(--neon-green); font-size:2rem; margin-bottom:1rem; text-shadow:0 0 30px rgba(57,255,20,0.5);">
+        🎉 KURS ABGESCHLOSSEN 🎉
+      </h2>
+      <p style="color:var(--text); font-size:1.1rem; line-height:1.8; max-width:550px; margin:0 auto;">
+        Du hast alle sechs Einheiten durchgearbeitet. Von Bits über Turing-Maschinen bis zur Künstlichen Intelligenz — du weißt jetzt mehr über Informatik als die meisten Erwachsenen. Kein Witz. Jetzt ab zu itslearning und die Fragen beantworten!
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  CYBER::KLASSE v1.0 — Informatik Grundlagen, Klasse 8
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // ─── THEME TOGGLE ───────────────────────
+  const themeToggle = document.getElementById('theme-toggle');
+  const savedTheme = localStorage.getItem('cyber-klasse-theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    if (themeToggle) themeToggle.textContent = '☀️';
+  }
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('cyber-klasse-theme', isDark ? 'dark' : 'light');
+    });
+  }
+
+  // ─── GLOBAL STATE ───────────────────────
+  const SECTIONS = ['werkstatt','logik','turm','pixel','paradoxo','ki'];
+
+  const state = {
+    unlocked: new Set(['werkstatt']),
+    werkstatt: {
+      tape: new Array(16).fill(0),
+      target: [0,1,0,0,1,0,0,0, 0,1,1,0,1,0,0,1] // ASCII "Hi"
+    }
+  };
+
+  // ─── LOCALSTORAGE PERSISTENCE ──────────
+  const STORAGE_KEY = 'cyber-klasse-progress';
+
+  function saveProgress() {
+    const data = { unlocked: [...state.unlocked] };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function applyUnlock(sectionId) {
+    // Silently unlock DOM (no flash, no animation) — used on page load restore
+    const section = document.getElementById(sectionId);
+    const navLink = document.querySelector(`nav a[data-section="${sectionId}"]`);
+    if (section)  section.classList.remove('locked');
+    if (navLink)  navLink.classList.remove('nav-locked');
+  }
+
+  function restoreProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data.unlocked)) return;
+      data.unlocked.forEach(id => {
+        if (SECTIONS.includes(id) && !state.unlocked.has(id)) {
+          state.unlocked.add(id);
+          applyUnlock(id);
+        }
+      });
+    } catch (e) { /* corrupt data — ignore */ }
+  }
+
+  // ─── UNLOCK SYSTEM ─────────────────────
+  function unlockSection(sectionId) {
+    if (state.unlocked.has(sectionId)) return;
+    state.unlocked.add(sectionId);
+    saveProgress();
+
+    const section = document.getElementById(sectionId);
+    const navLink = document.querySelector(`nav a[data-section="${sectionId}"]`);
+
+    // Flash overlay
+    const flash = document.getElementById('unlock-flash');
+    if (flash) {
+      flash.classList.remove('active');
+      void flash.offsetWidth; // reflow
+      flash.classList.add('active');
+    }
+
+    setTimeout(() => {
+      section.classList.remove('locked');
+      section.classList.add('just-unlocked');
+      if (navLink) navLink.classList.remove('nav-locked');
+      setTimeout(() => section.classList.remove('just-unlocked'), 2500);
+    }, 200);
+  }
+
+  // Restore saved progress immediately (before any rendering)
+  restoreProgress();
+
+  // ─── NAVIGATION: Active highlight ──────
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('.section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`nav a[data-section="${entry.target.id}"]`);
+        if (link && !link.classList.contains('nav-locked')) {
+          link.classList.add('active');
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Nav click handler
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      if (link.classList.contains('nav-locked')) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // ─── SEKTION 1: WERKSTATT ──────────────
+
+  // Build free tape
+  const freeTapeEl = document.getElementById('free-tape');
+  const freeDecimalEl = document.getElementById('free-tape-decimal');
+
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'bit-cell';
+    cell.dataset.index = i;
+    cell.textContent = '0';
+    freeTapeEl.appendChild(cell);
+  }
+
+  freeTapeEl.addEventListener('click', (e) => {
+    const cell = e.target.closest('.bit-cell');
+    if (!cell) return;
+    const idx = parseInt(cell.dataset.index);
+    state.werkstatt.tape[idx] ^= 1;
+    cell.textContent = state.werkstatt.tape[idx];
+    cell.classList.toggle('active', state.werkstatt.tape[idx] === 1);
+    updateDecimal();
+    checkWerkstattGate();
+  });
+
+  function updateDecimal() {
+    const binary = state.werkstatt.tape.join('');
+    const decimal = parseInt(binary, 2);
+    freeDecimalEl.textContent = decimal.toLocaleString('de-DE');
+  }
+
+  // Build target display
+  const targetDisplay = document.getElementById('target-tape-display');
+  state.werkstatt.target.forEach(bit => {
+    const cell = document.createElement('div');
+    cell.className = 'target-cell';
+    cell.textContent = bit;
+    targetDisplay.appendChild(cell);
+  });
+
+  // Gate check
+  function checkWerkstattGate() {
+    const statusEl = document.getElementById('werkstatt-gate-status');
+    const match = state.werkstatt.tape.every((b, i) => b === state.werkstatt.target[i]);
+
+    if (match) {
+      statusEl.className = 'gate-status correct';
+      statusEl.innerHTML = '✅ <strong>PERFEKT!</strong> Du hast gerade „Hi" in ASCII-Code geschrieben — genau so speichert dein Computer Text. Jede Zahl steht für einen Buchstaben!<br><br><em>LOGIK-PUZZLE wird freigeschaltet…</em>';
+      unlockSection('logik');
+    } else {
+      const correct = state.werkstatt.tape.filter((b, i) => b === state.werkstatt.target[i]).length;
+      statusEl.className = 'gate-status checking';
+      statusEl.textContent = `⏳ ${correct} von 16 Bits stimmen. Weiter anpassen!`;
+    }
+  }
+
+  // ─── SEKTION 2: LOGIK-PUZZLE (Turing Simulator) ──────────
+
+  const TURING_EXPLORE_INIT = ['1','0','1','1','0','0','1','0'];
+  const TURING_GATE_INPUT   = ['1','1','0','0','1','0','1','0'];
+  const TURING_GATE_TARGET  = ['0','0','1','1','0','1','0','1'];
+  const TAPE_PAD = '_';
+  const VISIBLE_CELLS = 15;
+
+  function createTM(initTape, padSize) {
+    const pad = new Array(padSize).fill(TAPE_PAD);
+    return {
+      tape: [...pad, ...initTape, ...pad],
+      head: padSize,
+      halted: false,
+      steps: 0
+    };
+  }
+
+  function renderTape(tm, containerEl, lastWritten = -1) {
+    containerEl.innerHTML = '';
+    const half = Math.floor(VISIBLE_CELLS / 2);
+    const start = Math.max(0, tm.head - half);
+    const end = Math.min(tm.tape.length, start + VISIBLE_CELLS);
+    for (let i = start; i < end; i++) {
+      const cell = document.createElement('div');
+      let cls = 'turing-tape-cell';
+      if (i === tm.head) cls += ' head';
+      if (i === lastWritten && i !== tm.head) cls += ' just-written';
+      cell.className = cls;
+      cell.textContent = tm.tape[i];
+      containerEl.appendChild(cell);
+    }
+  }
+
+  function readRules(prefix, count) {
+    const rules = {};
+    for (let i = 0; i < count; i++) {
+      const read = document.getElementById(`${prefix}-rule${i}-read`).value;
+      const write = document.getElementById(`${prefix}-rule${i}-write`).value;
+      const dir = document.getElementById(`${prefix}-rule${i}-dir`).value;
+      rules[read] = { write, dir };
+    }
+    return rules;
+  }
+
+  function stepTM(tm, rules) {
+    if (tm.halted) return null;
+    const symbol = tm.tape[tm.head];
+    const rule = rules[symbol];
+    if (!rule) { tm.halted = true; return null; }
+    const writtenAt = tm.head;
+    if (rule.dir === 'H') {
+      tm.tape[tm.head] = rule.write;
+      tm.halted = true;
+      tm.steps++;
+      return writtenAt;
+    }
+    tm.tape[tm.head] = rule.write;
+    tm.head += (rule.dir === 'R' ? 1 : -1);
+    if (tm.head < 0) { tm.tape.unshift(TAPE_PAD); tm.head = 0; writtenAt === 0 || void 0; }
+    if (tm.head >= tm.tape.length) { tm.tape.push(TAPE_PAD); }
+    tm.steps++;
+    return writtenAt;
+  }
+
+  // ═══ EXPLORE MODE ═══
+  let exploreTM = createTM(TURING_EXPLORE_INIT, 5);
+  let exploreRunning = false;
+  let exploreTimer = null;
+  const exploreTapeEl = document.getElementById('turing-explore-tape');
+  const exploreStatusEl = document.getElementById('turing-explore-status');
+  renderTape(exploreTM, exploreTapeEl);
+
+  document.getElementById('turing-explore-run').addEventListener('click', () => {
+    if (exploreRunning) return;
+    exploreRunning = true;
+    const rules = readRules('explore', 2);
+    exploreStatusEl.className = 'turing-status running';
+    function tick() {
+      if (!exploreRunning) return;
+      const written = stepTM(exploreTM, rules);
+      const moved = written !== null || exploreTM.halted;
+      renderTape(exploreTM, exploreTapeEl, written);
+      if (exploreTM.halted) {
+        exploreRunning = false;
+        exploreStatusEl.className = 'turing-status halted';
+        exploreStatusEl.textContent = `Maschine angehalten nach ${exploreTM.steps} Schritten.`;
+        return;
+      }
+      if (exploreTM.steps > 200) {
+        exploreRunning = false;
+        exploreStatusEl.className = 'turing-status error';
+        exploreStatusEl.textContent = 'Abbruch: Über 200 Schritte — Endlosschleife?';
+        return;
+      }
+      exploreStatusEl.textContent = `Schritt ${exploreTM.steps}… Kopf liest: ${exploreTM.tape[exploreTM.head]}`;
+      exploreTimer = setTimeout(tick, 350);
+    }
+    tick();
+  });
+
+  document.getElementById('turing-explore-step').addEventListener('click', () => {
+    if (exploreRunning) return;
+    const rules = readRules('explore', 2);
+    const written = stepTM(exploreTM, rules);
+    renderTape(exploreTM, exploreTapeEl, written);
+    if (exploreTM.halted) {
+      exploreStatusEl.className = 'turing-status halted';
+      exploreStatusEl.textContent = `Maschine angehalten nach ${exploreTM.steps} Schritten.`;
+    } else {
+      exploreStatusEl.className = 'turing-status running';
+      exploreStatusEl.textContent = `Schritt ${exploreTM.steps}. Kopf liest: ${exploreTM.tape[exploreTM.head]}`;
+    }
+  });
+
+  document.getElementById('turing-explore-reset').addEventListener('click', () => {
+    exploreRunning = false;
+    clearTimeout(exploreTimer);
+    exploreTM = createTM(TURING_EXPLORE_INIT, 5);
+    renderTape(exploreTM, exploreTapeEl);
+    exploreStatusEl.className = 'turing-status';
+    exploreStatusEl.textContent = 'Bereit. Stelle deine Regeln ein und drück Ausführen.';
+  });
+
+  // ═══ GATE MODE ═══
+  let gateTM = createTM(TURING_GATE_INPUT, 3);
+  let gateRunning = false;
+  let gateTimer = null;
+  const gateTapeEl = document.getElementById('turing-gate-tape');
+  const gateStatusEl = document.getElementById('turing-gate-status');
+  const gateResultEl = document.getElementById('logik-gate-status');
+
+  const gateInputDisplay = document.getElementById('turing-gate-input-display');
+  TURING_GATE_INPUT.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'turing-tape-cell'; c.textContent = s; c.style.opacity = '0.6';
+    gateInputDisplay.appendChild(c);
+  });
+
+  const gateTargetDisplay = document.getElementById('turing-gate-target-display');
+  TURING_GATE_TARGET.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'target-cell'; c.textContent = s;
+    gateTargetDisplay.appendChild(c);
+  });
+
+  renderTape(gateTM, gateTapeEl);
+
+  function checkGateResult() {
+    const dataStart = gateTM.tape.indexOf(gateTM.tape.find(c => c !== TAPE_PAD));
+    let dataEnd = gateTM.tape.length - 1;
+    while (dataEnd > dataStart && gateTM.tape[dataEnd] === TAPE_PAD) dataEnd--;
+    const result = gateTM.tape.slice(dataStart, dataEnd + 1);
+    const match = TURING_GATE_TARGET.length === result.length &&
+                  TURING_GATE_TARGET.every((v, i) => v === result[i]);
+
+    if (match && gateTM.halted) {
+      gateResultEl.className = 'gate-status correct';
+      gateResultEl.innerHTML = '✅ <strong>GESCHAFFT!</strong> Du hast gerade dein erstes Programm geschrieben — du hast einer Maschine beigebracht, Bits zu invertieren. Genau so funktioniert echte Programmierung: Regeln schreiben, testen, korrigieren.<br><br><em>DER TURM wird freigeschaltet…</em>';
+      unlockSection('turm');
+    } else if (gateTM.halted) {
+      const wrong = [];
+      for (let i = 0; i < TURING_GATE_TARGET.length; i++) {
+        if (i < result.length && result[i] !== TURING_GATE_TARGET[i]) wrong.push(i + 1);
+        else if (i >= result.length) wrong.push(i + 1);
+      }
+      gateResultEl.className = 'gate-status wrong';
+      gateResultEl.textContent = `✗ Maschine angehalten, aber Zelle${wrong.length > 1 ? 'n' : ''} ${wrong.join(', ')} ${wrong.length > 1 ? 'sind' : 'ist'} falsch. Überprüfe deine Regeln und versuch es nochmal!`;
+    }
+  }
+
+  document.getElementById('turing-gate-run').addEventListener('click', () => {
+    if (gateRunning) return;
+    gateRunning = true;
+    const rules = readRules('gate', 3);
+    gateStatusEl.className = 'turing-status running';
+    gateResultEl.className = 'gate-status checking';
+    gateResultEl.textContent = '⏳ Maschine läuft…';
+    function tick() {
+      if (!gateRunning) return;
+      const moved = stepTM(gateTM, rules);
+      renderTape(gateTM, gateTapeEl);
+      if (gateTM.halted || !moved) {
+        gateRunning = false;
+        gateStatusEl.className = 'turing-status halted';
+        gateStatusEl.textContent = `Maschine angehalten nach ${gateTM.steps} Schritten.`;
+        checkGateResult();
+        return;
+      }
+      if (gateTM.steps > 200) {
+        gateRunning = false;
+        gateStatusEl.className = 'turing-status error';
+        gateStatusEl.textContent = 'Abbruch: Über 200 Schritte — Endlosschleife! Drück Reset.';
+        gateResultEl.className = 'gate-status wrong';
+        gateResultEl.textContent = '✗ Die Maschine hat sich in einer Endlosschleife verfangen. Überprüfe deine Regeln!';
+        return;
+      }
+      gateStatusEl.textContent = `Schritt ${gateTM.steps}… Kopf liest: ${gateTM.tape[gateTM.head]}`;
+      gateTimer = setTimeout(tick, 350);
+    }
+    tick();
+  });
+
+  document.getElementById('turing-gate-reset').addEventListener('click', () => {
+    gateRunning = false;
+    clearTimeout(gateTimer);
+    gateTM = createTM(TURING_GATE_INPUT, 3);
+    renderTape(gateTM, gateTapeEl);
+    gateStatusEl.className = 'turing-status';
+    gateStatusEl.textContent = 'Bereit. Programmiere die Regeln und drück Ausführen.';
+    gateResultEl.className = 'gate-status checking';
+    gateResultEl.textContent = '⏳ Die Maschine hat noch nicht das richtige Ergebnis produziert.';
+  });
+
+  // ─── SEKTION 3: DER TURM (Abstraction Slider + Sort Gate) ──────────
+
+  // Slider logic — tower layer cards
+  const TOWER_LAYERS = [
+    { icon: '⚡', name: 'Transistor / Hardware',
+      detail: 'Milliarden winziger Schalter — an oder aus. Strom fließt = <strong>1</strong>, kein Strom = <strong>0</strong>. Alles andere baut darauf auf.' },
+    { icon: '🔢', name: 'Bits (0 und 1)',
+      detail: '<span style="color:var(--neon-blue);letter-spacing:0.12em">01001000 01101001 00100001</span><br>Jedes Bit = ein Transistorzustand. 8 Bits = 1 Byte = 256 Möglichkeiten = z.B. ein Buchstabe.' },
+    { icon: '⚙️', name: 'Maschinencode',
+      detail: '<span style="color:var(--neon-pink)">B8 01 00 00 00 &nbsp; BB 01 00 00 00 &nbsp; CD 80</span><br>Zahlen, die der Prozessor direkt versteht. Für Menschen kaum lesbar.' },
+    { icon: '🖥️', name: 'Betriebssystem (iOS, Windows)',
+      detail: 'Das BS übersetzt App-Befehle in Maschinencode und verwaltet Speicher, Bildschirm, WLAN — unsichtbar für dich.' },
+    { icon: '📝', name: 'Programmiersprache (Python, Java)',
+      detail: '<code style="color:var(--neon-green)">def sende(text): return api.post(text)</code><br>Lesbar für Menschen, automatisch in Maschinencode übersetzt.' },
+    { icon: '📱', name: 'App (Instagram, WhatsApp)',
+      detail: 'Du tippst — die App reagiert. Welcher Maschinencode gerade läuft, weißt du nicht. Genau das ist Abstraktion.' },
+    { icon: '👤', name: 'Nutzer (DU!)',
+      detail: '<span style="color:var(--neon-blue)">Kein Elektrotechnik-Studium nötig.<br>Jahrzehnte smarter Abstraktionsarbeit machen das möglich.</span>' },
+  ];
+
+  const towerSlider  = document.getElementById('tower-slider');
+  const towerStack   = document.getElementById('tower-stack');
+  const towerDetailEl = document.getElementById('tower-detail');
+  const towerLevel   = document.getElementById('tower-level');
+
+  // Build stack (column-reverse → E1 at bottom, E7 at top)
+  TOWER_LAYERS.forEach((layer, i) => {
+    const card = document.createElement('div');
+    card.className = 'tower-card';
+    card.dataset.idx = i;
+    card.innerHTML = `<span class="tc-num">E${i+1}</span><span class="tc-icon">${layer.icon}</span><span class="tc-name">${layer.name}</span>`;
+    towerStack.appendChild(card);
+  });
+
+  function updateTower(val) {
+    towerStack.querySelectorAll('.tower-card').forEach((card, i) => {
+      card.classList.remove('active', 'tc-above');
+      if (i === val) card.classList.add('active');
+      else if (i > val) card.classList.add('tc-above');
+    });
+    towerDetailEl.innerHTML = TOWER_LAYERS[val].detail;
+    towerLevel.textContent = `EBENE ${val + 1} / 7 — ${TOWER_LAYERS[val].name}`;
+  }
+
+  towerSlider.addEventListener('input', () => updateTower(parseInt(towerSlider.value)));
+  updateTower(0);
+
+  // Quiz
+  document.querySelectorAll('#turm-quiz .quiz-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const isCorrect = btn.dataset.correct === 'true';
+      document.querySelectorAll('#turm-quiz .quiz-btn').forEach(b => {
+        b.disabled = true;
+        b.classList.add(b.dataset.correct === 'true' ? 'qb-correct' : 'qb-wrong');
+      });
+      const fb = document.getElementById('turm-quiz-feedback');
+      fb.textContent = isCorrect
+        ? '✓ Richtig! Jede Schicht versteckt ihre Komplexität und bietet der nächsten eine einfache Schnittstelle.'
+        : '✗ Nicht ganz — Abstraktion bedeutet: jede Schicht zeigt nach oben nur das, was gebraucht wird, und verbirgt den Rest.';
+      fb.style.color = isCorrect ? 'var(--neon-green)' : 'var(--neon-pink)';
+    });
+  });
+
+  // Sort Gate — drag & drop
+  const CORRECT_ORDER = [
+    'Transistor / Hardware',
+    'Bits (0 und 1)',
+    'Maschinencode',
+    'Betriebssystem (iOS, Windows)',
+    'Programmiersprache (Python, Java)',
+    'App (Instagram, WhatsApp)',
+    'Nutzer (DU!)'
+  ];
+
+  function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    // Make sure it's actually shuffled
+    if (a.every((v, i) => v === arr[i])) return shuffleArray(arr);
+    return a;
+  }
+
+  const sortContainer = document.getElementById('sort-container');
+  let currentOrder = [];
+  let dragSrcIdx = null;
+
+  function renderSortItems(items) {
+    sortContainer.innerHTML = '';
+    currentOrder = [...items];
+    items.forEach((item, idx) => {
+      const el = document.createElement('div');
+      el.className = 'sort-item';
+      el.draggable = true;
+      el.dataset.index = idx;
+      el.innerHTML = `<span class="sort-num">${idx + 1}.</span> ${item}`;
+
+      // Drag events
+      el.addEventListener('dragstart', (e) => {
+        dragSrcIdx = idx;
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+        sortContainer.querySelectorAll('.sort-item').forEach(s => s.classList.remove('drag-over'));
+      });
+      el.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        el.classList.add('drag-over');
+      });
+      el.addEventListener('dragleave', () => {
+        el.classList.remove('drag-over');
+      });
+      el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        el.classList.remove('drag-over');
+        const targetIdx = parseInt(el.dataset.index);
+        if (dragSrcIdx !== null && dragSrcIdx !== targetIdx) {
+          const moved = currentOrder.splice(dragSrcIdx, 1)[0];
+          currentOrder.splice(targetIdx, 0, moved);
+          renderSortItems(currentOrder);
+        }
+        dragSrcIdx = null;
+      });
+
+      // Touch support for iPad
+      let touchStartY = 0;
+      el.addEventListener('touchstart', (e) => {
+        dragSrcIdx = idx;
+        touchStartY = e.touches[0].clientY;
+        el.classList.add('dragging');
+      }, { passive: true });
+      el.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        sortContainer.querySelectorAll('.sort-item').forEach(s => s.classList.remove('drag-over'));
+        if (target && target.closest('.sort-item')) {
+          target.closest('.sort-item').classList.add('drag-over');
+        }
+      }, { passive: false });
+      el.addEventListener('touchend', (e) => {
+        el.classList.remove('dragging');
+        const touch = e.changedTouches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        sortContainer.querySelectorAll('.sort-item').forEach(s => s.classList.remove('drag-over'));
+        if (target && target.closest('.sort-item')) {
+          const targetIdx = parseInt(target.closest('.sort-item').dataset.index);
+          if (dragSrcIdx !== null && dragSrcIdx !== targetIdx) {
+            const moved = currentOrder.splice(dragSrcIdx, 1)[0];
+            currentOrder.splice(targetIdx, 0, moved);
+            renderSortItems(currentOrder);
+          }
+        }
+        dragSrcIdx = null;
+      });
+
+      sortContainer.appendChild(el);
+    });
+  }
+
+  renderSortItems(shuffleArray(CORRECT_ORDER));
+
+  document.getElementById('turm-shuffle-btn').addEventListener('click', () => {
+    renderSortItems(shuffleArray(CORRECT_ORDER));
+    const statusEl = document.getElementById('turm-gate-status');
+    statusEl.className = 'gate-status checking';
+    statusEl.textContent = '⏳ Bring die Schichten in die richtige Reihenfolge.';
+  });
+
+  document.getElementById('turm-check-btn').addEventListener('click', () => {
+    const statusEl = document.getElementById('turm-gate-status');
+    const items = sortContainer.querySelectorAll('.sort-item');
+    let allCorrect = true;
+
+    items.forEach((el, idx) => {
+      el.classList.remove('correct-pos', 'wrong-pos');
+      if (currentOrder[idx] === CORRECT_ORDER[idx]) {
+        el.classList.add('correct-pos');
+      } else {
+        el.classList.add('wrong-pos');
+        allCorrect = false;
+      }
+    });
+
+    if (allCorrect) {
+      statusEl.className = 'gate-status correct';
+      statusEl.innerHTML = '✅ <strong>PERFEKT!</strong> Du hast den Abstraktionsturm richtig gebaut — von der Hardware ganz unten bis zu dir ganz oben. Jede Schicht braucht die darunter, und keine muss wissen, wie die andere intern funktioniert.<br><br><em>PIXEL-STUDIO wird freigeschaltet…</em>';
+      unlockSection('pixel');
+    } else {
+      const wrongCount = currentOrder.filter((v, i) => v !== CORRECT_ORDER[i]).length;
+      statusEl.className = 'gate-status wrong';
+      statusEl.textContent = `✗ ${wrongCount} Schicht${wrongCount > 1 ? 'en sind' : ' ist'} noch falsch. Die grünen stimmen schon — konzentrier dich auf die roten!`;
+    }
+  });
+
+  // ─── SEKTION 4: PIXEL-STUDIO ──────────
+
+  // Presets
+  const PIXEL_PRESETS = {
+    heart: [
+      '01100110',
+      '11111111',
+      '11111111',
+      '11111111',
+      '01111110',
+      '00111100',
+      '00011000',
+      '00000000'
+    ],
+    smiley: [
+      '00111100',
+      '01000010',
+      '10100101',
+      '10000001',
+      '10100101',
+      '10011001',
+      '01000010',
+      '00111100'
+    ],
+    arrow: [
+      '00010000',
+      '00110000',
+      '01110000',
+      '11111111',
+      '11111111',
+      '01110000',
+      '00110000',
+      '00010000'
+    ],
+    clear: ['00000000','00000000','00000000','00000000','00000000','00000000','00000000','00000000']
+  };
+
+  // Gate secret image: a key 🔑
+  const PIXEL_SECRET = [
+    '00000110',
+    '00001001',
+    '00001001',
+    '00000110',
+    '11111100',
+    '10010000',
+    '10110000',
+    '11111100'
+  ];
+
+  // --- Free Grid ---
+  const freeGrid = document.getElementById('pixel-grid-free');
+  const freeInputsContainer = document.getElementById('pixel-inputs-free');
+  let freeState = Array.from({length: 8}, () => new Array(8).fill(0));
+
+  // Build grid cells
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'pixel-cell';
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      freeGrid.appendChild(cell);
+    }
+  }
+
+  // Build input rows
+  const freeInputs = [];
+  for (let r = 0; r < 8; r++) {
+    const row = document.createElement('div');
+    row.className = 'pixel-input-row';
+    row.innerHTML = `<label>Z${r + 1}:</label><input type="text" maxlength="8" placeholder="00000000" data-row="${r}">`;
+    freeInputsContainer.appendChild(row);
+    freeInputs.push(row.querySelector('input'));
+  }
+
+  function renderFreeGrid() {
+    const cells = freeGrid.querySelectorAll('.pixel-cell');
+    cells.forEach(cell => {
+      const r = parseInt(cell.dataset.row);
+      const c = parseInt(cell.dataset.col);
+      cell.classList.toggle('lit', freeState[r][c] === 1);
+    });
+    // Sync inputs
+    for (let r = 0; r < 8; r++) {
+      freeInputs[r].value = freeState[r].join('');
+    }
+  }
+
+  // Click on grid cells
+  freeGrid.addEventListener('click', (e) => {
+    const cell = e.target.closest('.pixel-cell');
+    if (!cell) return;
+    const r = parseInt(cell.dataset.row);
+    const c = parseInt(cell.dataset.col);
+    freeState[r][c] ^= 1;
+    renderFreeGrid();
+  });
+
+  // Type into inputs
+  freeInputs.forEach((input, r) => {
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/[^01]/g, '').slice(0, 8);
+      for (let c = 0; c < 8; c++) {
+        freeState[r][c] = input.value[c] === '1' ? 1 : 0;
+      }
+      renderFreeGrid();
+    });
+  });
+
+  // Presets
+  document.getElementById('pixel-presets').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn || !btn.dataset.preset) return;
+    const preset = PIXEL_PRESETS[btn.dataset.preset];
+    if (!preset) return;
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        freeState[r][c] = preset[r][c] === '1' ? 1 : 0;
+      }
+    }
+    renderFreeGrid();
+  });
+
+  // --- Gate: Secret Image ---
+  const refGrid = document.getElementById('pixel-ref-grid');
+  const previewGrid = document.getElementById('pixel-gate-preview');
+  const gateInputsContainer = document.getElementById('pixel-gate-inputs');
+
+  // Build reference grid (the secret image to reproduce)
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'pixel-ref-cell' + (PIXEL_SECRET[r][c] === '1' ? ' ref-lit' : '');
+      refGrid.appendChild(cell);
+    }
+  }
+
+  // Build preview grid (shows student's live input)
+  for (let i = 0; i < 64; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'pixel-ref-cell';
+    previewGrid.appendChild(cell);
+  }
+
+  // Build gate input rows
+  const gatePixelInputs = [];
+  for (let r = 0; r < 8; r++) {
+    const row = document.createElement('div');
+    row.className = 'pixel-input-row';
+    row.innerHTML = `<label>Z${r + 1}:</label><input type="text" maxlength="8" placeholder="________" data-row="${r}"><span class="row-status"></span>`;
+    gateInputsContainer.appendChild(row);
+    gatePixelInputs.push({
+      input: row.querySelector('input'),
+      status: row.querySelector('.row-status')
+    });
+  }
+
+  function checkPixelGate() {
+    const statusEl = document.getElementById('pixel-gate-status');
+    let allCorrect = true;
+    let allFilled = true;
+    const previewCells = previewGrid.querySelectorAll('.pixel-ref-cell');
+
+    for (let r = 0; r < 8; r++) {
+      const { input, status } = gatePixelInputs[r];
+      const val = input.value.replace(/[^01]/g, '').slice(0, 8);
+      input.value = val;
+
+      // Update preview
+      for (let c = 0; c < 8; c++) {
+        const idx = r * 8 + c;
+        previewCells[idx].classList.toggle('ref-lit', val[c] === '1');
+      }
+
+      if (val.length < 8) {
+        allFilled = false;
+        status.textContent = '';
+        input.classList.remove('row-correct', 'row-wrong');
+        continue;
+      }
+
+      if (val === PIXEL_SECRET[r]) {
+        status.textContent = '✓';
+        input.classList.add('row-correct');
+        input.classList.remove('row-wrong');
+      } else {
+        status.textContent = '✗';
+        input.classList.add('row-wrong');
+        input.classList.remove('row-correct');
+        allCorrect = false;
+      }
+    }
+
+    if (allFilled && allCorrect) {
+      statusEl.className = 'gate-status correct';
+      statusEl.innerHTML = '✅ <strong>ENTSCHLÜSSELT!</strong> Du hast gerade ein Bild aus purem Binärcode rekonstruiert. Exakt so speichert dein Computer jedes einzelne Bild — als Tabelle aus Zahlen. Nur eben mit Millionen von Pixeln statt 64.<br><br><em>PARADOXO-LAB wird freigeschaltet…</em>';
+      unlockSection('paradoxo');
+    } else if (!allFilled) {
+      statusEl.className = 'gate-status checking';
+      statusEl.textContent = '⏳ Gib den Binärcode für alle 8 Zeilen ein.';
+    } else {
+      const wrongCount = gatePixelInputs.filter(({input}) =>
+        input.value.length === 8 && input.value !== PIXEL_SECRET[parseInt(input.dataset?.row)]
+      ).length;
+      // Count wrong from the inputs
+      let wc = 0;
+      for (let r = 0; r < 8; r++) {
+        if (gatePixelInputs[r].input.value.length === 8 && gatePixelInputs[r].input.value !== PIXEL_SECRET[r]) wc++;
+      }
+      statusEl.className = 'gate-status wrong';
+      statusEl.textContent = `✗ ${wc} Zeile${wc > 1 ? 'n sind' : ' ist'} noch falsch. Vergleich mit dem Geheimbild!`;
+    }
+  }
+
+  gatePixelInputs.forEach(({ input }) => {
+    input.addEventListener('input', checkPixelGate);
+  });
+
+  // ─── SEKTION 5: PARADOXO-LAB ──────────
+
+  // Glitch button
+  const paradoxBtn = document.getElementById('paradox-test-btn');
+  const errorBox = document.getElementById('paradox-error-box');
+
+  paradoxBtn.addEventListener('click', () => {
+    paradoxBtn.classList.add('glitching');
+    paradoxBtn.disabled = true;
+
+    // Simulate "computing" with text changes
+    const phases = [
+      'ANALYSIERE PROGRAMM…',
+      'PRÜFE HALTEBEDINGUNG…',
+      'FÜTTERE MIT SICH SELBST…',
+      'BERECHNE ERGEBNIS…',
+      '█▓▒░ FEHLER ░▒▓█'
+    ];
+
+    let phase = 0;
+    const interval = setInterval(() => {
+      if (phase < phases.length) {
+        paradoxBtn.textContent = phases[phase];
+        phase++;
+      } else {
+        clearInterval(interval);
+        paradoxBtn.textContent = '⚠ WIDERSPRUCH';
+        paradoxBtn.style.borderColor = '#ff4444';
+        paradoxBtn.style.color = '#ff4444';
+        errorBox.classList.add('visible');
+      }
+    }, 500);
+
+    setTimeout(() => {
+      paradoxBtn.classList.remove('glitching');
+    }, 600);
+  });
+
+  // Gate: Find the contradiction step
+  const CORRECT_PARADOX_STEP = 4; // Step 4 is the contradiction
+  let paradoxAttempts = 0;
+
+  document.getElementById('paradox-chain').addEventListener('click', (e) => {
+    const step = e.target.closest('.paradox-step');
+    if (!step) return;
+    const stepNum = parseInt(step.dataset.step);
+    const statusEl = document.getElementById('paradoxo-gate-status');
+
+    // Clear previous selections
+    document.querySelectorAll('.paradox-step').forEach(s => {
+      s.classList.remove('selected', 'wrong-step', 'correct-step');
+    });
+
+    step.classList.add('selected');
+    paradoxAttempts++;
+
+    if (stepNum === CORRECT_PARADOX_STEP) {
+      step.classList.add('correct-step');
+      statusEl.className = 'gate-status correct';
+      statusEl.innerHTML = '✅ <strong>RICHTIG!</strong> Schritt 4 ist der Widerspruch — egal was H antwortet, es liegt falsch. Das beweist: Ein Programm, das für alle Programme vorhersagt ob sie anhalten, kann logisch nicht existieren. Das ist Turings berühmtes Halteproblem.<br><br><em>KI-ARENA wird freigeschaltet…</em>';
+      unlockSection('ki');
+    } else {
+      step.classList.add('wrong-step');
+      statusEl.className = 'gate-status wrong';
+
+      if (paradoxAttempts >= 3) {
+        statusEl.textContent = `✗ Das war Versuch ${paradoxAttempts}. Tipp: Suche den Schritt, in dem etwas passiert, das in BEIDEN Fällen zum Widerspruch führt.`;
+      } else {
+        statusEl.textContent = `✗ Schritt ${stepNum} ist noch logisch korrekt. Lies das Feedback und versuch es erneut!`;
+      }
+    }
+  });
+
+  /* ═══════════════════════════════════════════
+     SEKTION 6: KI-ARENA
+     ═══════════════════════════════════════════ */
+  (function initKI() {
+    // --- Training data: 10 random numbers ---
+    const trainingNums = [];
+    const usedNums = new Set();
+    while (trainingNums.length < 10) {
+      const n = Math.floor(Math.random() * 99) + 1;
+      if (!usedNums.has(n)) { usedNums.add(n); trainingNums.push(n); }
+    }
+
+    let trainIndex = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let trainedLabels = []; // {num, labeledEven (bool), actualEven (bool), correct (bool)}
+
+    const phaseEl = document.getElementById('ki-phase');
+    const numEl = document.getElementById('ki-current-num');
+    const progressEl = document.getElementById('ki-progress');
+    const trainedEl = document.getElementById('ki-trained');
+    const correctEl = document.getElementById('ki-correct');
+    const wrongEl = document.getElementById('ki-wrong');
+    const vizEl = document.getElementById('ki-model-viz');
+    const btnEven = document.getElementById('ki-btn-even');
+    const btnOdd = document.getElementById('ki-btn-odd');
+    const testArea = document.getElementById('ki-test-area');
+    const hintEl = document.getElementById('ki-hint');
+    const gateEl = document.getElementById('ki-gate');
+    const card = document.getElementById('ki-card');
+
+    function showTrainingCard() {
+      if (trainIndex >= trainingNums.length) {
+        startTestPhase();
+        return;
+      }
+      numEl.textContent = trainingNums[trainIndex];
+      numEl.style.opacity = '0';
+      requestAnimationFrame(() => {
+        numEl.style.transition = 'opacity 0.3s';
+        numEl.style.opacity = '1';
+      });
+    }
+
+    function handleLabel(labeledEven) {
+      const num = trainingNums[trainIndex];
+      const actualEven = num % 2 === 0;
+      const isCorrect = (labeledEven === actualEven);
+
+      trainedLabels.push({ num, labeledEven, actualEven, correct: isCorrect });
+      if (isCorrect) correctCount++; else wrongCount++;
+      trainIndex++;
+
+      // Flash feedback
+      const btn = labeledEven ? btnEven : btnOdd;
+      btn.classList.add(isCorrect ? 'correct-label' : 'wrong-label');
+      setTimeout(() => btn.classList.remove('correct-label', 'wrong-label'), 500);
+
+      // Update UI
+      trainedEl.textContent = trainIndex;
+      correctEl.textContent = correctCount;
+      wrongEl.textContent = wrongCount;
+      progressEl.style.width = ((trainIndex / trainingNums.length) * 100) + '%';
+
+      updateModelViz();
+
+      setTimeout(() => showTrainingCard(), 600);
+    }
+
+    function updateModelViz() {
+      // Show a simplified "weight" bar based on training accuracy
+      const accuracy = trainIndex > 0 ? correctCount / trainIndex : 0;
+      const pct = Math.round(accuracy * 100);
+      const hue = accuracy > 0.7 ? 130 : accuracy > 0.4 ? 45 : 0; // green / yellow / red
+      vizEl.innerHTML = `
+        <span style="color:var(--text-dim); margin-right:0.5rem;">Modell-Genauigkeit:</span>
+        <div style="flex:1; height:20px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+          <div class="weight-bar" style="width:${pct}%; height:100%; background:hsl(${hue},80%,55%);"></div>
+        </div>
+        <span style="color:hsl(${hue},80%,65%); font-weight:700; margin-left:0.5rem;">${pct}%</span>
+      `;
+    }
+
+    btnEven.addEventListener('click', () => handleLabel(true));
+    btnOdd.addEventListener('click', () => handleLabel(false));
+
+    // --- Test phase ---
+    function startTestPhase() {
+      phaseEl.textContent = 'PHASE 2 — TEST';
+      card.style.display = 'none';
+
+      const accuracy = correctCount / trainingNums.length;
+
+      // Generate 5 test numbers (different from training)
+      const testNums = [];
+      while (testNums.length < 5) {
+        const n = Math.floor(Math.random() * 99) + 1;
+        if (!usedNums.has(n) && !testNums.includes(n)) testNums.push(n);
+      }
+
+      // Model "predicts" based on training accuracy:
+      // If accuracy >= 0.8, model gets all right.
+      // Otherwise, model randomly fails proportional to error rate.
+      let modelCorrect = 0;
+      testArea.style.display = 'flex';
+      testArea.innerHTML = '';
+
+      testNums.forEach((num, i) => {
+        const actualEven = num % 2 === 0;
+        let predictedEven;
+
+        if (accuracy >= 0.8) {
+          predictedEven = actualEven; // good model
+        } else {
+          // bad model: each prediction has (1-accuracy) chance of being wrong
+          predictedEven = Math.random() < accuracy ? actualEven : !actualEven;
+        }
+
+        const correct = predictedEven === actualEven;
+        if (correct) modelCorrect++;
+
+        const row = document.createElement('div');
+        row.className = 'ki-test-row ' + (correct ? 'test-correct' : 'test-wrong');
+        row.innerHTML = `
+          <span class="test-num">Zahl: ${num}</span>
+          <span class="test-prediction"><strong>Modell tippt:</strong> ${predictedEven ? 'gerade' : 'ungerade'} &nbsp;·&nbsp; Richtig: ${actualEven ? 'gerade' : 'ungerade'}</span>
+          <span class="test-result">${correct ? '✓' : '✗'}</span>
+        `;
+        row.style.opacity = '0';
+        testArea.appendChild(row);
+
+        // Stagger animation
+        setTimeout(() => { row.style.transition = 'opacity 0.4s'; row.style.opacity = '1'; }, (i + 1) * 400);
+      });
+
+      // Show result summary after animations
+      setTimeout(() => {
+        const allCorrect = modelCorrect === 5;
+        hintEl.style.display = 'block';
+
+        if (accuracy < 0.8) {
+          hintEl.innerHTML = `<strong>Ergebnis: ${modelCorrect}/5 richtig.</strong> Dein Training war zu ungenau (${Math.round(accuracy * 100)}%). Das Modell hat Fehler gelernt und macht jetzt selbst Fehler. Genau wie echte KI: <em>Garbage in, garbage out.</em> Aber keine Sorge — das Gate unten testet dein Verständnis, nicht die Modell-Genauigkeit.`;
+          hintEl.style.borderColor = 'rgba(255,68,68,0.3)';
+        } else {
+          hintEl.innerHTML = `<strong>Ergebnis: ${modelCorrect}/5 richtig.</strong> Sauberes Training führt zu einem brauchbaren Modell. Aber merke: Selbst ein „gutes" Modell <em>versteht</em> nichts — es wiederholt nur Muster.`;
+          hintEl.style.borderColor = 'rgba(57,255,20,0.3)';
+        }
+
+        // Show gate
+        gateEl.style.display = 'block';
+        buildScenarios();
+      }, 5 * 400 + 800);
+    }
+
+    // --- Gate: 5 Scenario Questions ---
+    const scenarios = [
+      {
+        question: 'Eine KI soll Röntgenbilder analysieren und Knochenbrüche erkennen. Sie wurde mit 100.000 Röntgenbildern trainiert, die von Ärzten markiert wurden. Was kann diese KI?',
+        options: [
+          { text: 'Sie versteht, was ein Knochenbruch ist', correct: false },
+          { text: 'Sie erkennt Muster, die Ärzte als Brüche markiert haben', correct: true }
+        ],
+        feedback: 'Die KI erkennt Pixelmuster, die statistisch mit dem Label „Bruch" korrelieren. Sie hat kein Konzept von Knochen, Schmerz oder Anatomie. Wenn die Trainingsbilder falsch markiert wären, würde sie den Fehler reproduzieren.'
+      },
+      {
+        question: 'Ein Chatbot sagt: „Die Hauptstadt von Australien ist Sydney." Warum macht er diesen Fehler?',
+        options: [
+          { text: 'Er hat nicht genug nachgedacht', correct: false },
+          { text: 'Sydney kam statistisch häufiger mit „Australien + Hauptstadt" vor', correct: true }
+        ],
+        feedback: 'Der Bot denkt gar nicht. In vielen Texten wird Sydney im Kontext von Australien erwähnt, weil es die bekannteste Stadt ist. Die richtige Antwort „Canberra" kommt seltener vor. Das Modell gibt die statistische Wahrscheinlichkeit wieder, nicht die Wahrheit.'
+      },
+      {
+        question: 'Ein Unternehmen trainiert eine KI, um Bewerbungen zu bewerten. Die KI wurde mit Daten der letzten 10 Jahre trainiert, in denen 90% der eingestellten Personen männlich waren. Was passiert?',
+        options: [
+          { text: 'Die KI bevorzugt männliche Bewerber', correct: true },
+          { text: 'Die KI ist neutral, weil sie keine Vorurteile hat', correct: false }
+        ],
+        feedback: 'Die KI lernt die Muster der Vergangenheit — inklusive der Diskriminierung. Sie hat kein Konzept von Fairness. Dieses Problem heißt „Bias" und ist eines der größten Probleme echter KI-Systeme. Amazon hatte genau dieses Problem und musste sein KI-Bewerbungssystem abschalten.'
+      },
+      {
+        question: 'Du fragst eine KI: „Wie viele Beine hat eine Sonne?" Die KI antwortet: „Eine Sonne hat keine Beine." Versteht die KI die Frage?',
+        options: [
+          { text: 'Ja, sie erkennt, dass die Frage unsinnig ist', correct: false },
+          { text: 'Nein, sie gibt eine wahrscheinliche Antwort auf das Wortmuster', correct: true }
+        ],
+        feedback: 'Die KI findet im Trainingsmaterial wahrscheinlich viele Texte, in denen „Sonne" + „Beine" → „keine" vorkommt (z. B. Kinderfragen). Sie versteht weder „Sonne" noch „Bein" als Konzept. Sie erkennt nicht, dass die Frage absurd ist — sie berechnet nur die wahrscheinlichste Antwort.'
+      },
+      {
+        question: 'Eine KI kann perfekt Schach spielen und hat den Weltmeister geschlagen. Kann dieselbe KI jetzt auch Dame spielen?',
+        options: [
+          { text: 'Nein, sie kann nur exakt das, wofür sie trainiert wurde', correct: true },
+          { text: 'Ja, Schach und Dame sind ähnlich genug', correct: false }
+        ],
+        feedback: 'Eine KI ist kein Alleskönner. Sie kann nur exakt die Aufgabe, für die sie trainiert wurde. Die Schach-KI „weiß" nicht einmal, dass es andere Spiele gibt. Das unterscheidet aktuelle KI grundlegend von menschlicher Intelligenz: Wir können Wissen übertragen. KI (noch) nicht.'
+      }
+    ];
+
+    let scenarioAnswered = 0;
+    let scenarioCorrect = 0;
+
+    function buildScenarios() {
+      const container = document.getElementById('ki-scenarios');
+      container.innerHTML = '';
+
+      scenarios.forEach((sc, i) => {
+        const card = document.createElement('div');
+        card.className = 'ki-scenario';
+        card.dataset.index = i;
+
+        let btnHTML = '';
+        sc.options.forEach((opt, oi) => {
+          btnHTML += `<button class="scenario-btn" data-option="${oi}">${opt.text}</button>`;
+        });
+
+        card.innerHTML = `
+          <div class="scenario-question"><strong>${i + 1}.</strong> ${sc.question}</div>
+          <div class="scenario-buttons">${btnHTML}</div>
+          <div class="scenario-feedback"></div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Event delegation
+      container.addEventListener('click', function(e) {
+        const btn = e.target.closest('.scenario-btn');
+        if (!btn) return;
+        const scenarioCard = btn.closest('.ki-scenario');
+        if (scenarioCard.classList.contains('answered')) return;
+
+        const idx = parseInt(scenarioCard.dataset.index);
+        const optIdx = parseInt(btn.dataset.option);
+        const sc = scenarios[idx];
+        const isCorrect = sc.options[optIdx].correct;
+
+        scenarioCard.classList.add('answered');
+        scenarioAnswered++;
+        if (isCorrect) scenarioCorrect++;
+
+        // Style buttons
+        scenarioCard.querySelectorAll('.scenario-btn').forEach((b, bi) => {
+          b.classList.add('chosen');
+          if (bi === optIdx) {
+            b.classList.add(isCorrect ? 'chosen-correct' : 'chosen-wrong');
+          } else if (sc.options[bi].correct) {
+            b.classList.add('chosen-correct');
+          }
+        });
+
+        // Show feedback
+        scenarioCard.querySelector('.scenario-feedback').textContent = sc.feedback;
+
+        // Check completion
+        const statusEl = document.getElementById('ki-gate-status');
+        if (scenarioAnswered === 5) {
+          if (scenarioCorrect === 5) {
+            statusEl.className = 'gate-status correct';
+            statusEl.textContent = '✓ Alle richtig! Du verstehst, wie KI wirklich funktioniert.';
+
+            // Show celebration
+            setTimeout(() => {
+              document.getElementById('ki-complete').style.display = 'block';
+              document.getElementById('ki-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 800);
+          } else {
+            statusEl.className = 'gate-status wrong';
+            statusEl.textContent = `✗ ${scenarioCorrect}/5 richtig. Lies die Erklärungen nochmal und lade die Seite neu, um es erneut zu versuchen.`;
+          }
+        } else {
+          statusEl.textContent = `⏳ ${scenarioAnswered}/5 beantwortet…`;
+        }
+      });
+    }
+
+    // Show first training card
+    showTrainingCard();
+  })();
+
+})();
+</script>
+
+</body>
+</html>

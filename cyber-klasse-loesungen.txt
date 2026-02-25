@@ -1,0 +1,179 @@
+═══════════════════════════════════════════════════════════════
+  CYBER::KLASSE — LÖSUNGEN DER RÄTSEL
+  Mit kurzen Erklärungen für jedes Gate
+═══════════════════════════════════════════════════════════════
+
+
+──────────────────────────────────────────────
+🔧 EINHEIT 01 — WERKSTATT: Bit-Muster nachbauen
+──────────────────────────────────────────────
+
+AUFGABE:
+  Stelle das 16-Bit-Band so ein, dass es dem Zielmuster entspricht.
+
+LÖSUNG:
+  Zielmuster: 01001000 01101001
+  (= ASCII-Code für "Hi")
+
+ERKLÄRUNG:
+  Computer speichern Text als Zahlen. Jeder Buchstabe hat eine
+  Nummer im ASCII-Standard. "H" = 72 = 01001000, "i" = 105 = 01101001.
+  Die Schüler lernen dabei: Selbst einfacher Text ist im Computer
+  nur eine Folge aus Nullen und Einsen.
+
+TIPP FALLS SCHÜLER STECKEN BLEIBEN:
+  Einfach das Zielmuster Bit für Bit von links nach rechts auf
+  dem Band nachklicken. Der Zähler zeigt an, wie viele stimmen.
+
+
+──────────────────────────────────────────────
+🧩 EINHEIT 02 — LOGIK-PUZZLE: Turing-Maschine programmieren
+──────────────────────────────────────────────
+
+AUFGABE:
+  Programmiere 3 Regeln so, dass die Turing-Maschine das
+  Eingabe-Band 11001010 invertiert zu 00110101 und dann anhält.
+
+LÖSUNG:
+  Regel 1: WENN 0 → SCHREIBE 1 → GEHE RECHTS
+  Regel 2: WENN 1 → SCHREIBE 0 → GEHE RECHTS
+  Regel 3: WENN _ (leer) → SCHREIBE _ (leer) → HALT
+
+ERKLÄRUNG:
+  Die Maschine liest das aktuelle Feld. Steht dort eine 0,
+  schreibt sie eine 1 (und umgekehrt), dann geht sie einen
+  Schritt nach rechts. Wenn sie auf ein leeres Feld trifft
+  (hinter den 8 Datenbits), hält sie an. So wird jedes Bit
+  invertiert — genau wie ein NOT-Operator in echten CPUs.
+
+HÄUFIGE FEHLER:
+  - Vergessen, bei Regel 3 "HALT" einzustellen → Endlosschleife
+  - Die Richtung auf "LINKS" gestellt → Maschine läuft rückwärts
+  - Regel 1 und 2 lesen das gleiche Symbol → eine Regel wird ignoriert
+
+
+──────────────────────────────────────────────
+🏗️ EINHEIT 03 — DER TURM: Schichten sortieren
+──────────────────────────────────────────────
+
+AUFGABE:
+  Sortiere die 7 Abstraktionsschichten von unten (niedrigste)
+  nach oben (höchste).
+
+LÖSUNG (von oben nach unten auf dem Bildschirm = von unten nach oben im Turm):
+  1. Transistor / Hardware          (unterste Schicht)
+  2. Bits (0 und 1)
+  3. Maschinencode
+  4. Betriebssystem (iOS, Windows)
+  5. Programmiersprache (Python, Java)
+  6. App (Instagram, WhatsApp)
+  7. Nutzer (DU!)                   (oberste Schicht)
+
+ERKLÄRUNG:
+  Jede Schicht baut auf der darunterliegenden auf. Transistoren
+  schalten Strom → das erzeugt Bits → Bits bilden Maschinencode →
+  das Betriebssystem organisiert die Hardware → Programmiersprachen
+  vereinfachen den Maschinencode → Apps werden in Programmiersprachen
+  geschrieben → der Nutzer interagiert nur mit der App.
+
+TIPP:
+  Merksatz: "Transistor Braucht Maschinen, Betriebssysteme
+  Programmieren Apps Nutzer" (T-B-M-B-P-A-N)
+
+
+──────────────────────────────────────────────
+🎨 EINHEIT 04 — PIXEL-STUDIO: Geheimbild entschlüsseln
+──────────────────────────────────────────────
+
+AUFGABE:
+  Übersetze das angezeigte Geheimbild (ein Schlüssel 🔑) in
+  8 Zeilen Binärcode.
+
+LÖSUNG:
+  Zeile 1: 00000110
+  Zeile 2: 00001001
+  Zeile 3: 00001001
+  Zeile 4: 00000110
+  Zeile 5: 11111100
+  Zeile 6: 10010000
+  Zeile 7: 10110000
+  Zeile 8: 11111100
+
+ERKLÄRUNG:
+  Jeder leuchtende Pixel = 1, jeder dunkle Pixel = 0.
+  Man liest das Bild zeilenweise von links nach rechts,
+  von oben nach unten. Die oberen 4 Zeilen bilden den
+  runden Griff des Schlüssels, die unteren 4 den Schaft
+  mit den Zähnen.
+
+TIPP:
+  Zuerst die einfachen Zeilen machen (z.B. Zeile 5 und 8
+  mit vielen Einsen), dann die komplizierten.
+
+
+──────────────────────────────────────────────
+🌀 EINHEIT 05 — PARADOXO-LAB: Widerspruch finden
+──────────────────────────────────────────────
+
+AUFGABE:
+  Lies die 5 Schritte des Halteproblems und klicke auf den
+  Schritt, der den logischen Widerspruch enthält.
+
+LÖSUNG:
+  ✓ Schritt 4
+
+ERKLÄRUNG:
+  Schritt 4 beschreibt, was passiert, wenn man das
+  "Vorhersage-Programm" mit sich selbst füttert:
+  
+  - Wenn H sagt "P hält an" → P macht das Gegenteil → P läuft ewig
+    → aber H hat gesagt, P hält an → WIDERSPRUCH
+  - Wenn H sagt "P hält nicht an" → P macht das Gegenteil → P hält an
+    → aber H hat gesagt, P hält nicht an → WIDERSPRUCH
+
+  In beiden Fällen liegt H falsch. Das beweist: Ein solches
+  "perfektes Vorhersage-Programm" kann nicht existieren.
+
+WARUM NICHT DIE ANDEREN SCHRITTE?
+  - Schritt 1: Nur eine Annahme (erlaubt bei Widerspruchsbeweis)
+  - Schritt 2: Programme können andere Programme aufrufen (normal)
+  - Schritt 3: Programme können sich selbst als Input bekommen (erlaubt)
+  - Schritt 5: Nur die logische Schlussfolgerung aus Schritt 4
+
+
+──────────────────────────────────────────────
+🤖 EINHEIT 06 — KI-ARENA: Szenarien beurteilen
+──────────────────────────────────────────────
+
+AUFGABE:
+  Beantworte alle 5 KI-Szenarien richtig.
+
+LÖSUNGEN:
+
+  1. Röntgenbild-KI:
+     ✓ "Sie erkennt Muster, die Ärzte als Brüche markiert haben"
+     (KI erkennt Pixel-Korrelationen, kein Verständnis von Anatomie)
+
+  2. Chatbot: Hauptstadt Australiens:
+     ✓ "Sydney kam statistisch häufiger mit 'Australien + Hauptstadt' vor"
+     (Statistische Wahrscheinlichkeit ≠ Wahrheit)
+
+  3. Bewerbungs-KI:
+     ✓ "Die KI bevorzugt männliche Bewerber"
+     (KI lernt historische Muster inkl. Diskriminierung = Bias)
+
+  4. "Wie viele Beine hat eine Sonne?":
+     ✓ "Nein, sie gibt eine wahrscheinliche Antwort auf das Wortmuster"
+     (Kein Konzeptverständnis, nur Wortwahrscheinlichkeiten)
+
+  5. Schach-KI und Dame:
+     ✓ "Nein, sie kann nur exakt das, wofür sie trainiert wurde"
+     (Keine Wissensübertragung bei aktueller KI)
+
+HINWEIS ZUM TRAINING:
+  Das vorherige KI-Training (gerade/ungerade) hat keinen Einfluss
+  auf das Gate. Auch bei schlechtem Training werden die Szenarien
+  freigeschaltet. Das Training dient nur der Veranschaulichung.
+
+
+═══════════════════════════════════════════════════════════════
