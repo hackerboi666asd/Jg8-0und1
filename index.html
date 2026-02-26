@@ -397,12 +397,16 @@ nav a:not(.nav-locked):not(.active):hover {
   flex-shrink: 0; user-select: none;
 }
 .turing-tape-cell.head {
-  background: var(--bg-card);
+  background: rgba(0,119,170,0.18);
   border-color: var(--neon-blue);
-  box-shadow: 0 0 0 2px var(--neon-blue), 0 0 14px rgba(0,212,255,0.25);
+  box-shadow: 0 0 0 2px var(--neon-blue), 0 0 18px rgba(0,136,170,0.55);
   color: var(--neon-blue);
   font-weight: bold;
   position: relative; z-index: 1;
+}
+body.dark-mode .turing-tape-cell.head {
+  background: rgba(0,212,255,0.18);
+  box-shadow: 0 0 0 2px var(--neon-blue), 0 0 22px rgba(0,212,255,0.55);
 }
 .turing-tape-cell.just-written {
   animation: writeFlash 0.7s ease-out;
@@ -1029,6 +1033,13 @@ details.info-detail .info-panel {
 .fn { color: var(--neon-blue); }
 .cm { color: var(--text-dim); font-style: italic; }
 
+.error-box { margin: 0.8rem 0; }
+.error-box.visible { display: block; }
+.paradox-step.correct-step { border-color: var(--neon-green); background: rgba(0,200,100,0.07); }
+.paradox-step.wrong-step   { border-color: var(--neon-pink);  background: rgba(255,45,120,0.06); }
+.gate-status.correct { color: var(--neon-green); border-color: rgba(0,200,100,0.3); }
+.gate-status.wrong   { color: var(--neon-pink);  }
+
 /* cyber-btn alias */
 .cyber-btn, .btn.primary { background: var(--neon-blue); color: #fff; }
 .cyber-btn:hover { filter: brightness(1.1); }
@@ -1037,6 +1048,180 @@ details.info-detail .info-panel {
 .decimal-value { font-family: var(--font-head); font-size: 2rem; color: var(--neon-blue); }
 .checking { color: var(--neon-blue); }
 .error-header { font-family: var(--font-head); font-size: 0.65rem; color: var(--neon-pink); letter-spacing: 0.1em; margin-bottom: 0.3rem; display: block; }
+
+/* ═══════════════════════════════════════════
+   INTRO — MODULE GRID
+   ═══════════════════════════════════════════ */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.module-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 1rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  cursor: default;
+}
+.module-card.mod-unlocked { border-color: rgba(0,136,170,0.35); cursor: pointer; }
+.module-card.mod-unlocked:hover { transform: translateY(-3px); border-color: var(--neon-blue); box-shadow: 0 4px 16px rgba(0,136,170,0.2); }
+.module-card.mod-locked  { opacity: 0.35; }
+.module-card.mod-done   { border-color: var(--neon-green); }
+.module-num  { font-family: var(--font-head); font-size: 0.55rem; letter-spacing: 0.12em; color: var(--neon-blue); }
+.module-icon { font-size: 1.8rem; }
+.module-name { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-bright); }
+.module-desc { font-size: 0.72rem; color: var(--text-dim); }
+.module-card.mod-done .module-num::after { content: ' ✓'; color: var(--neon-green); }
+
+/* ═══════════════════════════════════════════
+   CHATBOT-BAUKASTEN (Einheit 02 Bonus)
+   ═══════════════════════════════════════════ */
+.chatbot-builder {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+@media (max-width: 640px) { .chatbot-builder { grid-template-columns: 1fr; } }
+.chatbot-rules { display: flex; flex-direction: column; gap: 0.5rem; }
+.chatbot-rule-row {
+  background: var(--bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.chatbot-rule-row select {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: var(--bg-card);
+  color: var(--text-bright);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 0.25rem 0.4rem;
+  flex: 1;
+  min-width: 80px;
+}
+.chatbot-rule-label { font-family: var(--font-head); font-size: 0.55rem; letter-spacing: 0.08em; color: var(--text-dim); white-space: nowrap; }
+.chatbot-preview { background: var(--bg); border: 1px solid var(--border-dim); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+.chatbot-header { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--neon-blue); padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border-dim); background: var(--bg-card); }
+.chatbot-messages { flex: 1; min-height: 140px; max-height: 200px; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.chatbot-msg { padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.82rem; max-width: 88%; }
+.chatbot-msg.user-msg { background: rgba(0,136,170,0.12); border: 1px solid rgba(0,136,170,0.2); color: var(--neon-blue); align-self: flex-end; }
+.chatbot-msg.bot-msg  { background: var(--bg-card); border: 1px solid var(--border-dim); color: var(--text); align-self: flex-start; }
+.chatbot-input-row { padding: 0.6rem; border-top: 1px solid var(--border-dim); display: flex; gap: 0.5rem; }
+.chatbot-input-row select { flex: 1; font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-card); color: var(--text-bright); border: 1px solid var(--border-dim); border-radius: 4px; padding: 0.3rem 0.5rem; }
+
+/* ═══════════════════════════════════════════
+   07 KRYPTO — CAESAR ENCODER
+   ═══════════════════════════════════════════ */
+.word-pool { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.word-tile {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-dim);
+  background: var(--bg);
+  color: var(--text-bright);
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+}
+.word-tile:hover { border-color: var(--neon-blue); color: var(--neon-blue); transform: translateY(-1px); }
+.caesar-message-display {
+  min-height: 48px;
+  background: var(--bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.msg-word-chip { padding: 0.2rem 0.5rem; background: rgba(0,136,170,0.12); border: 1px solid rgba(0,136,170,0.25); border-radius: 4px; cursor: pointer; transition: opacity 0.2s; }
+.msg-word-chip:hover { opacity: 0.7; }
+.caesar-slider-row { display: flex; align-items: center; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+.caesar-slider-row label { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-dim); white-space: nowrap; }
+.caesar-slider-row input[type=range] { flex: 1; accent-color: var(--neon-blue); }
+.caesar-key-display { font-family: var(--font-head); font-size: 1.4rem; color: var(--neon-blue); min-width: 2.5rem; text-align: center; }
+.caesar-output { background: var(--bg); border: 1px solid var(--border-dim); border-radius: 6px; padding: 1rem; margin-top: 0.5rem; }
+.caesar-output-label { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 0.5rem; display: block; }
+.caesar-encoded-text { font-family: var(--font-mono); font-size: 1.05rem; color: var(--neon-pink); letter-spacing: 0.08em; word-break: break-all; }
+.caesar-binary-row { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); line-height: 2.2; }
+.caesar-binary-row .bin-byte { color: var(--neon-blue); margin-right: 0.5rem; }
+
+/* ═══════════════════════════════════════════
+   08 DATEN — PASSWORT-BAUKASTEN
+   ═══════════════════════════════════════════ */
+.pw-pools-wrap { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
+.pw-pool-section { display: flex; flex-direction: column; gap: 0.4rem; }
+.pw-pool-label { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--text-dim); }
+.pw-tile-row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.pw-tile {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-dim);
+  background: var(--bg);
+  color: var(--text-bright);
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+}
+.pw-tile:hover { border-color: var(--neon-blue); color: var(--neon-blue); transform: translateY(-1px); }
+.pw-display-box { background: var(--bg); border: 2px solid var(--border-dim); border-radius: 8px; padding: 0.8rem 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; min-height: 52px; transition: border-color 0.3s; }
+.pw-text { font-family: var(--font-mono); font-size: 1.05rem; color: var(--text-bright); letter-spacing: 0.05em; word-break: break-all; flex: 1; }
+.pw-clear-btn { font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-dim); background: var(--bg-card); color: var(--text-dim); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+.pw-clear-btn:hover { border-color: var(--neon-pink); color: var(--neon-pink); }
+.pw-strength-bar { height: 8px; background: var(--border-dim); border-radius: 4px; margin-bottom: 0.5rem; overflow: hidden; }
+.pw-strength-fill { height: 100%; border-radius: 4px; transition: width 0.4s, background 0.4s; }
+.pw-strength-label { font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.pw-entropy-info { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 0.8rem; }
+.pw-entropy-info strong { color: var(--text-bright); }
+
+/* Scenario buttons (ki-scenarios + daten-scenarios) */
+.scenario-btn {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-dim);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.4rem;
+}
+.scenario-btn:hover:not([disabled]) { border-color: var(--neon-blue); color: var(--neon-blue); }
+.scenario-btn.chosen-correct { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,200,100,0.08); }
+.scenario-btn.chosen-wrong   { border-color: var(--neon-pink);  color: var(--neon-pink);  background: rgba(255,45,120,0.08); }
+.scenario-question { font-size: 0.9rem; color: var(--text-bright); margin-bottom: 0.8rem; line-height: 1.7; background: var(--bg); border: 1px solid rgba(0,136,170,0.15); border-radius: 6px; padding: 0.7rem 0.9rem; }
+.scenario-feedback { font-size: 0.84rem; color: var(--text-dim); line-height: 1.7; padding: 0.5rem 0.8rem; background: rgba(0,136,170,0.04); border-left: 2px solid var(--border-dim); border-radius: 0 4px 4px 0; margin-top: 0.5rem; display: none; }
+.scenario-feedback.open { display: block; }
+.daten-scenario-card { background: var(--bg-card); border: 1px solid var(--border-dim); border-radius: 8px; padding: 1.2rem; margin-bottom: 1rem; transition: border-color 0.3s; }
+.daten-scenario-card.answered { border-color: rgba(0,136,170,0.3); }
 </style>
 </head>
 <body>
@@ -1046,16 +1231,114 @@ details.info-detail .info-panel {
 
 <!-- ═══════════ NAVIGATION ═══════════ -->
 <nav id="main-nav">
-  <a href="#werkstatt" class="active" data-section="werkstatt">🔧 01 WERKSTATT</a>
+  <a href="#intro" data-section="intro">🚀 START</a>
+  <a href="#werkstatt" class="active" data-section="werkstatt">🔧 01 NULLEN UND EINSEN</a>
   <a href="#logik" class="nav-locked" data-section="logik">🧩 02 LOGIK</a>
   <a href="#turm" class="nav-locked" data-section="turm">🏗️ 03 TURM</a>
   <a href="#pixel" class="nav-locked" data-section="pixel">🎨 04 PIXEL</a>
-  <a href="#paradoxo" class="nav-locked" data-section="paradoxo">🌀 05 PARADOXO</a>
+  <a href="#paradoxo" class="nav-locked" data-section="paradoxo">🌀 05 PARADOXON</a>
   <a href="#ki" class="nav-locked" data-section="ki">🤖 06 KI</a>
+  <a href="#krypto" class="nav-locked" data-section="krypto">🔐 07 KRYPTO</a>
+  <a href="#daten" class="nav-locked" data-section="daten">🛡️ 08 DATEN</a>
 </nav>
 
 <!-- Flash overlay for unlock animation -->
 <div class="unlock-flash" id="unlock-flash"></div>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 0: START & EINLEITUNG
+     ═══════════════════════════════════════════ -->
+<section id="intro" class="section" data-accent="blue" style="min-height:auto; padding-bottom:4rem;">
+  <div class="section-inner">
+
+    <div class="section-header" style="margin-top:1rem;">
+      <span class="section-number">CYBER::KLASSE</span>
+      <h2>WILLKOMMEN</h2>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Das Thema: <strong>Wie ein Computer wirklich funktioniert</strong> &mdash; von einem einzelnen Bit
+        über die Turing-Maschine, Algorithmen, Pixel und Künstliche Intelligenz bis hin zu Verschlüsselung und
+        deinen eigenen Daten. Alles hängt zusammen.
+      </p>
+      <p>
+        Du arbeitest dich durch <strong>8 interaktive Einheiten</strong> &mdash;
+        jede baut auf der vorherigen auf. Bevor du zur nächsten Einheit kommst, musst du eine
+        <span class="highlight">Mission</span> lösen. Kein Klicken ohne Nachdenken.
+      </p>
+      <p>
+        <span class="highlight">Wie der Ablauf funktioniert:</span> Lies den Text jeder Einheit, probiere die
+        interaktive Aufgabe aus, und löse dann die Mission (<span style="color:var(--neon-pink)">rotes Gate</span>).
+        Wenn deine Lösung stimmt, öffnet sich die nächste Einheit automatisch.
+      </p>
+    </div>
+
+    <div class="module-grid" id="module-grid">
+      <div class="module-card" data-section="werkstatt">
+        <span class="module-num">01</span>
+        <span class="module-icon">🔧</span>
+        <span class="module-name">NULLEN UND EINSEN</span>
+        <span class="module-desc">Bits &amp; ASCII</span>
+      </div>
+      <div class="module-card" data-section="logik">
+        <span class="module-num">02</span>
+        <span class="module-icon">🧩</span>
+        <span class="module-name">LOGIK</span>
+        <span class="module-desc">Turing-Maschine</span>
+      </div>
+      <div class="module-card" data-section="turm">
+        <span class="module-num">03</span>
+        <span class="module-icon">🏗️</span>
+        <span class="module-name">DER TURM</span>
+        <span class="module-desc">Abstraktion</span>
+      </div>
+      <div class="module-card" data-section="pixel">
+        <span class="module-num">04</span>
+        <span class="module-icon">🎨</span>
+        <span class="module-name">PIXEL-STUDIO</span>
+        <span class="module-desc">Binärbilder</span>
+      </div>
+      <div class="module-card" data-section="paradoxo">
+        <span class="module-num">05</span>
+        <span class="module-icon">🌀</span>
+        <span class="module-name">PARADOXON</span>
+        <span class="module-desc">Halteproblem</span>
+      </div>
+      <div class="module-card" data-section="ki">
+        <span class="module-num">06</span>
+        <span class="module-icon">🤖</span>
+        <span class="module-name">KI-ARENA</span>
+        <span class="module-desc">Künstliche Intelligenz</span>
+      </div>
+      <div class="module-card" data-section="krypto">
+        <span class="module-num">07</span>
+        <span class="module-icon">🔐</span>
+        <span class="module-name">KRYPTO</span>
+        <span class="module-desc">Verschlüsselung</span>
+      </div>
+      <div class="module-card" data-section="daten">
+        <span class="module-num">08</span>
+        <span class="module-icon">🛡️</span>
+        <span class="module-name">DATEN</span>
+        <span class="module-desc">Datenschutz</span>
+      </div>
+    </div>
+
+    <div class="step-callout" style="margin-top:1.5rem; flex-direction:column; gap:0.4rem; background:rgba(196,24,88,0.06); border-color:var(--neon-pink);">
+      <span class="sc-num" style="color:var(--neon-pink); min-width:unset;">LEISTUNGSÜBERPRÜFUNG</span>
+      <span class="sc-text">
+        Am Ende des Kurses findest du im <strong>itslearning-Kurs</strong> eine <strong>benotete Abschluss-Leistungsüberprüfung</strong>.
+        Alles, was du hier erarbeitest, bereitet dich darauf vor &mdash; geh also sorgfältig vor!
+      </span>
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="#werkstatt" class="btn btn-primary" style="text-decoration:none;">&#9654; KURS STARTEN</a>
+    </div>
+
+  </div>
+</section>
 
 <!-- ═══════════════════════════════════════════
      SEKTION 1: WERKSTATT
@@ -1065,7 +1348,7 @@ details.info-detail .info-panel {
 
     <div class="section-header">
       <span class="section-number">EINHEIT 01</span>
-      <h2>WERKSTATT</h2>
+      <h2>NULLEN UND EINSEN</h2>
       <span class="section-subtitle">⚡ Hardware & Bits — Was steckt wirklich in deinem Gerät?</span>
     </div>
 
@@ -1081,6 +1364,12 @@ details.info-detail .info-panel {
         eine riesige Reihe aus Nullen und Einsen. 1936 bewies der Mathematiker
         <span class="highlight">Alan Turing</span>, dass eine absurd einfache Maschine (ein Band, ein Lesekopf, ein paar Regeln) alles berechnen kann, was überhaupt berechenbar ist.
       </p>
+      <div style="text-align:center; margin:1.2rem 0;">
+        <img src="https://cdn.britannica.com/81/191581-050-8C0A8CD3/Alan-Turing.jpg"
+             alt="Porträt Alan Turing"
+             style="width:180px; height:auto; border-radius:6px; border:1px solid var(--border-dim); display:inline-block;">
+        <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.4rem;">Alan Turing (1912–1954) — Mathematiker, Informatik-Pionier</div>
+      </div>
       <p>
         Warum ist das wichtig für dich? Die App, mit der du Musik hörst, das Spiel, das du abends zockst, und die KI, die deine Fragen beantwortet — all das läuft auf exakt demselben Grundprinzip. Nicht drei verschiedene Maschinen für drei Aufgaben, sondern ein einziger Typ: der universelle Schalter-Umdreh-Automat. Dein Gerät ist im Kern genau das — nur mit Milliarden Schaltern statt Papierband.
       </p>
@@ -1128,6 +1417,32 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <!-- ASCII REFERENZTABELLE -->
+    <details class="gate-hint" style="margin-top:1.2rem;">
+      <summary style="font-family:var(--font-head); font-size:0.65rem; letter-spacing:0.1em; color:var(--neon-blue); cursor:pointer; list-style:none; padding:0.4rem 0;">
+        📋 ASCII-TABELLE ANZEIGEN (Nr. 1–255)
+      </summary>
+      <div class="hint-body" style="padding:1rem 0 0.5rem;">
+        <p style="font-size:0.82rem; color:var(--text); line-height:1.7; margin-bottom:0.8rem;">
+          <strong>Woher kommt ASCII?</strong> 1963 legte das <em>American Standards Institute</em> (ASA, heute ANSI) fest, welche Zahl für welches Zeichen stehen soll — ursprünglich für Telegrafie und Fernschreiber. Ziel: Verschiedene Hersteller, gleiche Bedeutung. Das System heißt <strong>ASCII</strong> (American Standard Code for Information Interchange). Bis heute bildet es die Grundlage für alle gängigen Textformate — auch Unicode baut auf ASCII auf und ist zu ihm abwärtskompatibel.
+        </p>
+        <p style="font-size:0.78rem; color:var(--text-dim); margin-bottom:1rem;">
+          Nr. 1–31: Steuerzeichen (unsichtbar, z.&nbsp;B. Zeilenumbruch, Tabulatur) &nbsp;|&nbsp; Nr. 32: Leerzeichen &nbsp;|&nbsp; Nr. 33–126: druckbare Zeichen &nbsp;|&nbsp; Nr. 128–255: Erweiterungen (je nach Kodierung unterschiedlich)
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="ascii-table-mini" id="ascii-full-table" style="width:100%; font-size:0.78rem;">
+            <thead>
+              <tr>
+                <th>Nr.</th><th>Zeichen</th><th>Nr.</th><th>Zeichen</th><th>Nr.</th><th>Zeichen</th><th>Nr.</th><th>Zeichen</th>
+              </tr>
+            </thead>
+            <tbody id="ascii-tbody"></tbody>
+          </table>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-dim); margin-top:0.6rem;">* Steuerzeichen (1–31) werden mit ihrer Bezeichnung angezeigt, z.&nbsp;B. [LF] für Zeilenumbruch.</p>
+      </div>
+    </details>
+
     <!-- GATE: Pattern Match -->
     <div class="gate-area" id="werkstatt-gate">
       <h3>🔓 DEINE MISSION</h3>
@@ -1161,7 +1476,7 @@ details.info-detail .info-panel {
 <section id="logik" class="section locked" data-accent="green">
   <div class="section-lock-overlay">
     <div class="lock-icon">🔒</div>
-    <p>Löse das Rätsel in WERKSTATT, um diese Einheit freizuschalten.</p>
+    <p>Löse das Rätsel in NULLEN UND EINSEN, um diese Einheit freizuschalten.</p>
   </div>
   <div class="section-inner">
 
@@ -1206,7 +1521,7 @@ details.info-detail .info-panel {
     <div class="interactive-area">
       <h3>⬡ Turing-Simulator — Erkunden</h3>
       <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
-        Unten siehst du das Band der Turing-Maschine. Der grün leuchtende Bereich ist der
+        Unten siehst du das Band der Turing-Maschine. Der <strong>blau leuchtende</strong> Bereich ist der
         <strong>Lesekopf</strong> — die Position, die gerade gelesen wird. Stell deine Regeln
         ein und drück „Ausführen". Beobachte, wie die Maschine Schritt für Schritt arbeitet.
       </p>
@@ -1323,11 +1638,38 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <!-- BONUS: Chatbot-Baukasten -->
+    <div class="interactive-area" id="chatbot-baukasten" style="margin-top:2rem;">
+      <h3>🤖 BONUS: Chatbot-Baukasten</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1rem;">
+        Ein Chatbot ist nichts anderes als eine Turing-Maschine mit Wörtern statt Symbolen:
+        <strong>WENN</strong> [Eingabe] → <strong>DANN</strong> [Antwort]. Montiere deinen eigenen Bot aus Regeln
+        — und sieh sofort im Live-Test, wie er reagiert.
+      </p>
+      <div class="chatbot-builder">
+        <div class="chatbot-rules" id="chatbot-rules"></div>
+        <div class="chatbot-preview">
+          <div class="chatbot-header">▸ LIVE-TEST</div>
+          <div class="chatbot-messages" id="chatbot-messages">
+            <div class="chatbot-msg bot-msg">Hallo! Ich bin dein Bot. Teste mich!</div>
+          </div>
+          <div class="chatbot-input-row">
+            <select id="chatbot-test-input">
+              <option value="Hallo">Hallo</option>
+              <option value="Wie heißt du?">Wie heißt du?</option>
+              <option value="Was kannst du?">Was kannst du?</option>
+              <option value="Was ist ein Bit?">Was ist ein Bit?</option>
+              <option value="Tschüss">Tschüss</option>
+              <option value="???">??? (unbekannte Eingabe)</option>
+            </select>
+            <button class="btn btn-secondary" id="chatbot-send-btn" style="margin-top:0;">▶ SENDEN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
-
-<!-- ═══════════════════════════════════════════
-     SEKTION 3: DER TURM
      ═══════════════════════════════════════════ -->
 <section id="turm" class="section locked" data-accent="pink">
   <div class="section-lock-overlay">
@@ -1559,7 +1901,7 @@ details.info-detail .info-panel {
 
     <div class="section-header">
       <span class="section-number">EINHEIT 05</span>
-      <h2>PARADOXO-LAB</h2>
+      <h2>PARADOXON</h2>
       <span class="section-subtitle">🚫 Die Grenzen der Logik — Was kein Computer kann</span>
     </div>
 
@@ -1667,7 +2009,6 @@ details.info-detail .info-panel {
           <strong>Fall B:</strong> Wenn H sagt „P hält nicht an" → dann macht P das
           Gegenteil und hält sofort an. Aber H hat gesagt, P hält nicht an. Also hat H
           wieder gelogen.
-          <div class="step-feedback">💥 Hier bricht die Logik. Egal was H antwortet — es liegt immer falsch. Echtes Paradoxon.</div>
         </div>
 
         <div class="paradox-step" data-step="5">
@@ -1705,7 +2046,7 @@ details.info-detail .info-panel {
 <section id="ki" class="section locked" data-accent="pink">
   <div class="section-lock-overlay">
     <div class="lock-icon">🔒</div>
-    <p>Löse das Rätsel in PARADOXO-LAB, um diese Einheit freizuschalten.</p>
+    <p>Löse das Rätsel in PARADOXON, um diese Einheit freizuschalten.</p>
   </div>
   <div class="section-inner">
     <div class="section-header">
@@ -1715,13 +2056,19 @@ details.info-detail .info-panel {
     </div>
 
     <div class="content-text">
-      <p>Kurze Reise durch das, was du schon weißt: In <strong>Einheit 1</strong> hast du gesehen, dass alles im Computer aus Bits besteht. In <strong>Einheit 2</strong> hast du einer Turing-Maschine — einem Regelfolger aus Nullen und Einsen — beigebracht, Bits umzudrehen. In <strong>Einheit 3</strong> hast du gesehen, wie Schichten Komplexität verstecken. Und in <strong>Einheit 5</strong> weißt du: Kein Programm kann alles berechnen — es gibt mathematische Grenzen. <span class="highlight">Künstliche Intelligenz</span> fügt sich genau hier ein: Sie ist eine neue Abstraktionsschicht, die auf all dem aufbaut — und ihre eigenen Grenzen hat.</p>
+      <p>Kurze Reise durch das, was du schon weißt: In <strong>Einheit 1</strong> hast du gesehen, dass alles im Computer aus Bits besteht. In <strong>Einheit 2</strong> hast du einer Turing-Maschine — einem Regelfolger aus Nullen und Einsen — beigebracht, Bits umzudrehen. In <strong>Einheit 3</strong> hast du gesehen, wie Schichten Komplexität verstecken. In <strong>Einheit 4</strong> hast du gesehen, dass Bilder am Ende nur Tabellen aus Zahlen sind — genau das Format, in dem Bild-KIs trainiert werden. Und in <strong>Einheit 5</strong> weißt du: Kein Programm kann alles berechnen — es gibt mathematische Grenzen. <span class="highlight">Künstliche Intelligenz</span> fügt sich genau hier ein: Sie ist eine neue Abstraktionsschicht, die auf all dem aufbaut — und ihre eigenen Grenzen hat.</p>
       <p>„Hey ChatGPT, schreib meine Hausaufgaben!" — ja, das haben einige von euch bestimmt schon ausprobiert. Aber was passiert da eigentlich? Spoiler: Kein winziger Roboter sitzt in eurem Handy und denkt nach. Eine KI wie ChatGPT ist ein riesiges statistisches Modell. Sie hat Milliarden von Texten aus dem Internet gelesen und dabei Muster gelernt: Welche Wörter kommen oft nach welchen anderen Wörtern?</p>
       <p>Stellt euch eine extrem mächtige Autovervollständigung vor. Wenn ihr „Der Himmel ist" tippt, sagt das Modell wahrscheinlich „blau". Nicht, weil es jemals den Himmel gesehen hat, sondern weil in den Trainingsdaten „blau" statistisch am häufigsten nach dieser Wortfolge kam. Es <em>versteht</em> nichts — es <em>berechnet Wahrscheinlichkeiten</em>.</p>
       <p>Und genau da wird's spannend: Wenn die Trainingsdaten Fehler enthalten, lernt die KI die Fehler mit. Wenn bestimmte Themen unterrepräsentiert sind, weiß die KI darüber weniger. Und wenn ihr eine Frage stellt, die so noch nie jemand geschrieben hat? Dann rät die KI — und zwar mit sehr überzeugend klingendem Unsinn. Das nennt man „Halluzinieren".</p>
       <p>Trainieren wir jetzt unser eigenes Mini-Modell. Ihr werdet sehen: Die Qualität eurer Trainingsdaten entscheidet alles. Schlechtes Training = dummes Modell. So simpel ist das.</p>
     </div>
     <!-- Interaktion: Mini-Neural-Net Trainer -->
+    <div style="text-align:center; margin:0.5rem 0 1.4rem;">
+      <img src="https://i0.wp.com/katzlberger.ai/wp-content/uploads/2019/03/neural-net.png?resize=493%2C308&ssl=1"
+           alt="Vereinfachtes neuronales Netz"
+           style="max-width:100%; width:440px; height:auto; border-radius:6px; border:1px solid var(--border-dim);">
+      <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.4rem;">Vereinfachtes neuronales Netz — Eingaben (links) → versteckte Schichten → Ausgabe (rechts)</div>
+    </div>
     <div class="ki-training-area" id="ki-trainer">
       <div class="ki-phase-label" id="ki-phase">PHASE 1 — TRAINING</div>
 
@@ -1753,7 +2100,7 @@ details.info-detail .info-panel {
 
     <!-- Gate -->
     <div class="gate-container" id="ki-gate" style="display:none;">
-      <h3>🚪 LETZTE PRÜFUNG — KI-VERSTÄNDNIS</h3>
+      <h3>🚪 LETZTE LEISTUNGSÜBERPRÜFUNG — KI-VERSTÄNDNIS</h3>
       <p class="gate-description">
         Du hast gesehen, wie ein Modell lernt (oder eben nicht). Jetzt kommen fünf Szenarien aus dem echten Leben. Zeig, dass du verstehst, wann KI sinnvoll ist — und wann nicht. Beantworte alle fünf richtig.
       </p>
@@ -1767,21 +2114,257 @@ details.info-detail .info-panel {
       </div>
     </div>
 
-    <!-- Completion celebration (hidden initially) -->
+    <!-- Einheit 06 abgeschlossen -->
     <div id="ki-complete" style="display:none; text-align:center; padding:2rem;">
-      <h2 style="font-family:var(--font-head); color:var(--neon-green); font-size:2rem; margin-bottom:1rem; text-shadow:0 0 30px rgba(57,255,20,0.5);">
-        🎉 KURS ABGESCHLOSSEN 🎉
+      <h2 style="font-family:var(--font-head); color:var(--neon-green); font-size:1.8rem; margin-bottom:1rem;">
+        ✅ EINHEIT 06 ABGESCHLOSSEN
       </h2>
-      <p style="color:var(--text); font-size:1.1rem; line-height:1.8; max-width:550px; margin:0 auto;">
-        Du hast alle sechs Einheiten durchgearbeitet. Von Bits über Turing-Maschinen bis zur Künstlichen Intelligenz — du weißt jetzt mehr über Informatik als die meisten Erwachsenen. Kein Witz. Jetzt ab zu itslearning und die Fragen beantworten!
+      <p style="color:var(--text); font-size:0.95rem; line-height:1.8; max-width:550px; margin:0 auto 1.5rem;">
+        KI-Arena besiegt! Du weißt jetzt, was KI wirklich ist — und was nicht.
+        Weiter geht’s mit <strong>Einhheit 07: KRYPTO</strong> — wie Alan Turing im Zweiten Weltkrieg Codes knackte.
       </p>
     </div>
 
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════
+     SEKTION 7: KRYPTO
+     ═══════════════════════════════════════════ -->
+<section id="krypto" class="section locked" data-accent="blue">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Schließe die KI-ARENA ab, um Verschlüsselung freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 07</span>
+      <h2>KRYPTO</h2>
+      <span class="section-subtitle">🔐 Verschlüsselung — Wie Turing Codes knackte</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Alan Turing war nicht nur Theoretiker — im Zweiten Weltkrieg knackte er die
+        <span class="highlight">Enigma</span>, eine Chiffriermaschine der deutschen Wehrmacht.
+        Die Enigma ersetzte jeden Buchstaben durch einen anderen, nach einem täglich wechselnden Muster.
+        Turing baute dagegen die erste automatische Codebrecher-Maschine der Geschichte.
+      </p>
+      <p>
+        Das Grundprinzip ist überraschend einfach: die <span class="highlight">Caesar-Chiffre</span>.
+        Julius Caesar verschob alle Buchstaben um 3 Stellen: A → D, B → E, Z → C.
+        Eine simple Regel — aber für jemanden ohne den Schlüssel unlesbar.
+      </p>
+      <p>
+        Was hat das mit Einheit 01 zu tun? Jeder Buchstabe ist eine Zahl (ASCII — du weißt das!).
+        Verschlüsseln heißt: <span class="highlight">rechne mit diesen Zahlen</span>.
+        Bei Caesar addierst du den Schlüssel. Bei XOR-Verschlüsselung — die dein WLAN nutzt —
+        kippst du gezielt Bits: genau wie in Einheit 02 mit der Turing-Maschine.
+        <span class="aside">Kryptographie ist angewandte Bits und Algorithmen.</span>
+      </p>
+      <p>
+        <span class="highlight">Heute</span> verschlüsselt dein Handy automatisch jede Nachricht, jedes Foto,
+        jede Suchanfrage — mit Algorithmen so komplex, dass selbst die schnellsten Computer Milliarden
+        Jahre bräuchten, um sie zu knacken. Du nutzt das täglich. Jetzt verstehst du das Grundprinzip. ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: Caesar Encoder Baukasten -->
+    <div style="text-align:center; margin:0 0 1.4rem;">
+      <img src="https://i.ytimg.com/vi/nxtunxsnJvY/maxresdefault.jpg"
+           alt="Caesar-Chiffre-Scheibe"
+           style="max-width:100%; width:661px; height:auto; border-radius:6px; border:1px solid var(--border-dim);">
+      <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.4rem;">Caesar-Scheibe: Der äußere Ring zeigt den Klartext, der innere Ring den verschlüsselten Buchstaben bei einem gewählten Versatz.</div>
+    </div>
+    <div class="interactive-area" id="caesar-encoder">
+      <h3>⧡ Verschlüsselungs-Werkzeug — Caesar-Chiffre</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Wähle Wörter aus dem Pool, baue deine Nachricht — und sieh sofort, wie sie verschlüsselt aussieht.
+        Klick auf ein gewähltes Wort in der Anzeige, um es zu entfernen.
+      </p>
+
+      <div class="step-callouts">
+        <div class="step-callout">
+          <span class="sc-num">SCHRITT 1</span>
+          <span class="sc-text">Klick auf Wörter aus dem Pool, um deine Nachricht zusammenzubauen.</span>
+        </div>
+        <div class="step-callout">
+          <span class="sc-num">SCHRITT 2</span>
+          <span class="sc-text">Verschiebe den <strong>Schlüssel</strong>-Regler. Jeder Buchstabe wird um diese Anzahl Stellen verschoben. Schlüssel 13 heißt A→N, B→O usw. (ROT13)</span>
+        </div>
+      </div>
+
+      <div class="word-pool" id="word-pool"></div>
+
+      <div class="caesar-message-display" id="caesar-message-display">
+        <span style="color:var(--text-dim); font-style:italic; font-size:0.85rem;">← Wörter anklicken um Nachricht zu bauen</span>
+      </div>
+
+      <div class="caesar-slider-row">
+        <label>SCHLÜSSEL</label>
+        <input type="range" min="1" max="25" value="13" id="caesar-key-slider">
+        <span class="caesar-key-display" id="caesar-key-val">13</span>
+        <label style="flex:0">/ 25</label>
+      </div>
+
+      <div class="caesar-output">
+        <span class="caesar-output-label">▸ VERSCHLÜSSELT (Caesar, Schlüssel <span id="caesar-key-label">13</span>)</span>
+        <div class="caesar-encoded-text" id="caesar-encoded-text">—</div>
+        <div class="caesar-binary-row" id="caesar-binary-row"></div>
+      </div>
+    </div>
+
+    <!-- GATE: Decrypt VASBEZNGVBA -->
+    <div class="gate-area" id="krypto-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Unten steht eine verschlüsselte Botschaft. Der Schlüssel ist <strong>13</strong> (ROT13).
+        Entschlüssle diesen Begriff und gib ihn ein:
+      </p>
+      <div style="text-align:center; margin:1.2rem 0;">
+        <code class="caesar-encoded-text" style="font-size:1.4rem; letter-spacing:0.15em;">VASBEZNGVBA</code>
+      </div>
+      <p class="gate-description"><span class="aside">(Tipp: Nutze das Werkzeug oben — oder verschiebe jeden Buchstaben 13 Stellen rückwärts im Alphabet.)</span></p>
+      <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+        <input type="text" id="krypto-gate-input" placeholder="Entschlüsselter Begriff…"
+          style="font-family:var(--font-mono); font-size:1rem; background:var(--bg); color:var(--text-bright); border:1px solid var(--border-dim); border-radius:6px; padding:0.6rem 1rem; outline:none; flex:1; max-width:300px; text-transform:uppercase; transition:border-color 0.3s;">
+        <button class="btn btn-primary" id="krypto-check-btn">PRÜFEN</button>
+      </div>
+      <details class="gate-hint">
+        <summary>HINWEIS ANZEIGEN</summary>
+        <div class="hint-body">
+          ROT13: Jeder Buchstabe wird um 13 Stellen verschoben. A↔N, B↔O, C↔P … M↔Z.<br>
+          Buchstabe für Buchstabe: V→I, A→N, S→F, B→O, E→R, Z→M, N→A, G→T, V→I, B→O, A→N<br><br>
+          Das ergibt ein bekanntes Wort aus dem Informatik-Bereich.
+        </div>
+      </details>
+      <div class="gate-status checking" id="krypto-gate-status">
+        ⏳ Entschlüssle den Begriff und gib ihn oben ein.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEKTION 8: DATEN
+     ═══════════════════════════════════════════ -->
+<section id="daten" class="section locked" data-accent="pink">
+  <div class="section-lock-overlay">
+    <div class="lock-icon">🔒</div>
+    <p>Schließe KRYPTO ab, um Datenschutz freizuschalten.</p>
+  </div>
+  <div class="section-inner">
+
+    <div class="section-header">
+      <span class="section-number">EINHEIT 08</span>
+      <h2>DATEN</h2>
+      <span class="section-subtitle">🛡️ Datenschutz — Deine Bits, deine Rechte</span>
+    </div>
+
+    <div class="section-text">
+      <p>
+        Stell dir vor: Du bewirbst dich für einen Ausbildungsplatz. Eine KI bewertet deine Bewerbung
+        — bevor ein Mensch sie liest. Die KI kennt nicht deinen Namen, aber sie kennt deinen Schulort,
+        deine App-Nutzung, deine Social-Media-Posts. Klingt nach Science Fiction?
+        <span class="highlight">Passiert heute.</span>
+      </p>
+      <p>
+        Jede App sammelt Bits — Einheit 01. Algorithmen werten diese Bits zu einem Profil aus — Einheiten 02 und 06.
+        Und dein Passwort wird als <span class="highlight">Hash</span> gespeichert: eine Einweg-Verschlüsselung
+        (Prinzip aus Einheit 07). Zurückrechnen ist unmöglich. Wenn ein Dienst gehackt wird, sehen Angreifer
+        nur diesen unleserlichen Hash — <em>wenn das Passwort stark genug war.</em>
+      </p>
+      <p>
+        Die gute Nachricht: Die <span class="highlight">DSGVO</span> (Datenschutz-Grundverordnung) legt fest:
+        Deine Daten gehören dir. Firmen dürfen sie nicht einfach sammeln und weitergeben. Du hast das Recht
+        zu fragen: „Was habt ihr über mich gespeichert?“ — und das Recht, es löschen zu lassen.
+        Dieses Gesetz gilt auch für US-Firmen wie Google, wenn sie europäische Nutzer haben.
+      </p>
+      <p>
+        Gutes Passwort, schlechtes Passwort — das ist reine Mathematik. Unten siehst du live,
+        wie viele Bits dein Passwort enthält. <span class="aside">(Einheit 01: Ein Bit = zwei Möglichkeiten.
+        Jedes zusätzliche Bit verdoppelt die Anzahl der möglichen Kombinationen.)</span> ↓
+      </p>
+    </div>
+
+    <!-- INTERACTION: Passwort-Baukasten -->
+    <div class="interactive-area" id="pw-baukasten">
+      <h3>⧡ Passwort-Baukasten — Wie stark bist du?</h3>
+      <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1.25rem;">
+        Klick Bausteine an, um dein Passwort zusammenzusetzen. Die Entropie (Bits) zeigt dir sofort,
+        wie sicher es wirklich ist — und warum Länge wichtiger ist als komplizierte Sonderzeichen.
+      </p>
+
+      <div class="pw-display-box" id="pw-display-box">
+        <span class="pw-text" id="pw-display">—</span>
+        <button class="pw-clear-btn" id="pw-clear">🗑️ Leeren</button>
+      </div>
+
+      <div class="pw-strength-bar">
+        <div class="pw-strength-fill" id="pw-strength-fill" style="width:0%; background:#ff4444;"></div>
+      </div>
+      <div class="pw-strength-label" id="pw-strength-label" style="color:var(--text-dim);">Kein Passwort</div>
+      <div class="pw-entropy-info" id="pw-entropy-info"></div>
+
+      <div class="pw-pools-wrap">
+        <div class="pw-pool-section">
+          <div class="pw-pool-label">▸ WÖRTER</div>
+          <div class="pw-tile-row" id="pw-pool-words"></div>
+        </div>
+        <div class="pw-pool-section">
+          <div class="pw-pool-label">▸ ZAHLEN</div>
+          <div class="pw-tile-row" id="pw-pool-numbers"></div>
+        </div>
+        <div class="pw-pool-section">
+          <div class="pw-pool-label">▸ SONDERZEICHEN</div>
+          <div class="pw-tile-row" id="pw-pool-special"></div>
+        </div>
+        <div class="pw-pool-section">
+          <div class="pw-pool-label">▸ GROSSBUCHSTABEN</div>
+          <div class="pw-tile-row" id="pw-pool-upper"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GATE: 3 Data Protection Scenarios -->
+    <div class="gate-area" id="daten-gate">
+      <h3>🔓 DEINE MISSION</h3>
+      <p class="gate-description">
+        Drei Szenarien aus deinem Alltag. Zeig, dass du verstehst, was datenschutzkonform ist —
+        und was nicht. Alle drei müssen richtig sein.
+      </p>
+      <div id="daten-scenarios"></div>
+      <div class="gate-status checking" id="daten-gate-status">
+        ⏳ Beantworte alle drei Szenarien.
+      </div>
+    </div>
+
+    <!-- Final completion block -->
+    <div id="daten-complete" style="display:none; text-align:center; padding:2rem;">
+      <h2 style="font-family:var(--font-head); color:var(--neon-blue); font-size:2rem; margin-bottom:1rem; text-shadow:var(--h2-shadow);">
+        ✅ ALLE 8 EINHEITEN ABGESCHLOSSEN
+      </h2>
+      <p style="color:var(--text); font-size:1rem; line-height:1.9; max-width:600px; margin:0 auto 1.5rem;">
+        Von Bits über Turing-Maschinen, Algorithmen, KI und Kryptographie bis zum Datenschutz —
+        du hast das komplette Fundament der Informatik erarbeitet. Du weißt jetzt mehr über die Grundlagen
+        unserer digitalen Welt als die meisten Erwachsenen. Kein Witz.
+      </p>
+      <div class="step-callout" style="max-width:600px; margin:0 auto 1rem; flex-direction:column; gap:0.4rem; text-align:left; background:rgba(196,24,88,0.06); border-color:var(--neon-pink);">
+        <span class="sc-num" style="color:var(--neon-pink); min-width:unset;">LEISTUNGSÜBERPRÜFUNG</span>
+        <span class="sc-text">
+          Jetzt geht’s zur <strong>benoteten Leistungsüberprüfung</strong> im <strong>itslearning-Kurs</strong>.
+          Öffne den Kurs, navigiere zur Leistungsüberprüfung und beantworte die Fragen.
+          Was du hier gelernt hast, reicht — du bist vorbereitet.
+        </span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <footer>
-  CYBER::KLASSE v1.0 — Informatik Grundlagen, Klasse 8
 </footer>
 
 <!-- ═══════════════════════════════════════════
@@ -1807,8 +2390,38 @@ details.info-detail .info-panel {
     });
   }
 
+  // ─── ASCII TABLE BUILDER ────────────────
+  (function buildAsciiTable() {
+    const tbody = document.getElementById('ascii-tbody');
+    if (!tbody) return;
+    const controlNames = {
+      1:'[SOH]',2:'[STX]',3:'[ETX]',4:'[EOT]',5:'[ENQ]',6:'[ACK]',
+      7:'[BEL]',8:'[BS]',9:'[TAB]',10:'[LF]',11:'[VT]',12:'[FF]',
+      13:'[CR]',14:'[SO]',15:'[SI]',16:'[DLE]',17:'[DC1]',18:'[DC2]',
+      19:'[DC3]',20:'[DC4]',21:'[NAK]',22:'[SYN]',23:'[ETB]',24:'[CAN]',
+      25:'[EM]',26:'[SUB]',27:'[ESC]',28:'[FS]',29:'[GS]',30:'[RS]',31:'[US]',
+      32:'[SP]',127:'[DEL]'
+    };
+    function charLabel(n) {
+      if (controlNames[n]) return controlNames[n];
+      try { return String.fromCharCode(n); } catch(e) { return '?'; }
+    }
+    // Build rows of 4 entries each
+    const rows = [];
+    for (let i = 1; i <= 255; i += 4) {
+      const cols = [];
+      for (let j = i; j < i + 4 && j <= 255; j++) {
+        cols.push(`<td style="color:var(--text-dim); font-size:0.75rem;">${j}</td><td class="mono">${charLabel(j)}</td>`);
+      }
+      // Pad if last row is short
+      while (cols.length < 4) cols.push('<td></td><td></td>');
+      rows.push(`<tr>${cols.join('')}</tr>`);
+    }
+    tbody.innerHTML = rows.join('');
+  })();
+
   // ─── GLOBAL STATE ───────────────────────
-  const SECTIONS = ['werkstatt','logik','turm','pixel','paradoxo','ki'];
+  const SECTIONS = ['werkstatt','logik','turm','pixel','paradoxo','ki','krypto','daten'];
 
   const state = {
     unlocked: new Set(['werkstatt']),
@@ -2570,7 +3183,7 @@ details.info-detail .info-panel {
 
     if (allFilled && allCorrect) {
       statusEl.className = 'gate-status correct';
-      statusEl.innerHTML = '✅ <strong>ENTSCHLÜSSELT!</strong> Du hast gerade ein Bild aus purem Binärcode rekonstruiert. Exakt so speichert dein Computer jedes einzelne Bild — als Tabelle aus Zahlen. Nur eben mit Millionen von Pixeln statt 64.<br><br><em>PARADOXO-LAB wird freigeschaltet…</em>';
+      statusEl.innerHTML = '✅ <strong>ENTSCHLÜSSELT!</strong> Du hast gerade ein Bild aus purem Binärcode rekonstruiert. Exakt so speichert dein Computer jedes einzelne Bild — als Tabelle aus Zahlen. Nur eben mit Millionen von Pixeln statt 64.<br><br><em>PARADOXON wird freigeschaltet…</em>';
       unlockSection('paradoxo');
     } else if (!allFilled) {
       statusEl.className = 'gate-status checking';
@@ -2849,10 +3462,10 @@ details.info-detail .info-panel {
       {
         question: 'Du fragst eine KI: „Wie viele Beine hat eine Sonne?" Die KI antwortet: „Eine Sonne hat keine Beine." Versteht die KI die Frage?',
         options: [
-          { text: 'Ja, sie erkennt, dass die Frage unsinnig ist', correct: false },
-          { text: 'Nein, sie gibt eine wahrscheinliche Antwort auf das Wortmuster', correct: true }
+          { text: 'Ja, moderne Reasoning-KIs können erkennen, dass die Frage unsinnig ist', correct: true },
+          { text: 'Nein, KIs berechnen nur die wahrscheinlichste Wortfolge', correct: false }
         ],
-        feedback: 'Die KI findet im Trainingsmaterial wahrscheinlich viele Texte, in denen „Sonne" + „Beine" → „keine" vorkommt (z. B. Kinderfragen). Sie versteht weder „Sonne" noch „Bein" als Konzept. Sie erkennt nicht, dass die Frage absurd ist — sie berechnet nur die wahrscheinlichste Antwort.'
+        feedback: 'Aktuelle KI-Modelle mit Reasoning-Fähigkeit denken in strukturierten Schritten nach, bevor sie antworten — sie erkennen, dass diese Frage keinen Sinn ergibt. Ältere Sprachmodelle ohne Reasoning konnten nur Wortmuster vergleichen: „Sonne" + „Beine" → „keine". Der Unterschied liegt nicht in der Rechenleistung, sondern im Ansatz: Reasoning bedeutet, Zwischenschritte zu überprüfen — nicht nur die wahrscheinlichste Wortfolge zu berechnen.'
       },
       {
         question: 'Eine KI kann perfekt Schach spielen und hat den Weltmeister geschlagen. Kann dieselbe KI jetzt auch Dame spielen?',
@@ -2924,10 +3537,11 @@ details.info-detail .info-panel {
         if (scenarioAnswered === 5) {
           if (scenarioCorrect === 5) {
             statusEl.className = 'gate-status correct';
-            statusEl.textContent = '✓ Alle richtig! Du verstehst, wie KI wirklich funktioniert.';
+            statusEl.textContent = '\u2713 Alle richtig! Du verstehst, wie KI wirklich funktioniert.';
 
-            // Show celebration
+            // Unlock krypto & show intermediate celebration
             setTimeout(() => {
+              unlockSection('krypto');
               document.getElementById('ki-complete').style.display = 'block';
               document.getElementById('ki-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 800);
@@ -2943,6 +3557,444 @@ details.info-detail .info-panel {
 
     // Show first training card
     showTrainingCard();
+  })();
+
+  // ─── MODULE GRID (intro) ──────────────────────
+  (function initModuleGrid() {
+    const grid = document.getElementById('module-grid');
+    if (!grid) return;
+
+    function updateGrid() {
+      grid.querySelectorAll('.module-card').forEach(card => {
+        const sec = card.dataset.section;
+        card.classList.remove('mod-unlocked','mod-locked','mod-done');
+        if (state.unlocked.has(sec)) {
+          card.classList.add('mod-unlocked');
+        } else {
+          card.classList.add('mod-locked');
+        }
+      });
+    }
+
+    // Click to scroll to section
+    grid.addEventListener('click', (e) => {
+      const card = e.target.closest('.module-card');
+      if (!card || card.classList.contains('mod-locked')) return;
+      const sec = card.dataset.section;
+      const el = document.getElementById(sec);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Patch unlockSection to also update grid
+    const origUnlock = unlockSection;
+    window._origUnlockSection = origUnlock;
+    // Re-read state on each render (state.unlocked is live)
+    setInterval(updateGrid, 800);
+    updateGrid();
+  })();
+
+  // ─── CHATBOT-BAUKASTEN (Einheit 02 Bonus) ─────
+  (function initChatbot() {
+    const rulesContainer = document.getElementById('chatbot-rules');
+    const messagesEl = document.getElementById('chatbot-messages');
+    const sendBtn = document.getElementById('chatbot-send-btn');
+    const inputSel = document.getElementById('chatbot-test-input');
+    if (!rulesContainer) return;
+
+    const TRIGGERS = ['Hallo', 'Wie hei\u00dft du?', 'Was kannst du?', 'Was ist ein Bit?', 'Tsch\u00fcss', '* (alles andere)'];
+    const ANSWERS  = [
+      'Hallo! Ich bin bereit.',
+      'Ich bin BOTTY-01, dein Turing-Bot.',
+      'Ich kann nur antworten, was meine Regeln sagen.',
+      'Ein Bit ist die kleinste Informationseinheit: 0 oder 1.',
+      'Tsch\u00fcss! Auf Wiedersehen.',
+      'Auf deine Eingabe habe ich keine Regel.',
+      'Tur-ing! Tur-ing!',
+      'Fehler 42: Antwort nicht gefunden.',
+      'Interessant. Ich wei\u00df leider nicht mehr.',
+      'Das kann ich nicht beantworten.'
+    ];
+
+    const NUM_RULES = 5;
+    const rules = [];
+
+    for (let i = 0; i < NUM_RULES; i++) {
+      const row = document.createElement('div');
+      row.className = 'chatbot-rule-row';
+      const readSel = document.createElement('select');
+      TRIGGERS.forEach((t, ti) => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        if (ti === i % TRIGGERS.length) opt.selected = true;
+        readSel.appendChild(opt);
+      });
+      const arrow = document.createElement('span');
+      arrow.className = 'chatbot-rule-label';
+      arrow.textContent = '\u2192';
+      const writeSel = document.createElement('select');
+      ANSWERS.forEach((a, ai) => {
+        const opt = document.createElement('option');
+        opt.value = a;
+        opt.textContent = a.length > 30 ? a.slice(0,28)+'\u2026' : a;
+        if (ai === i % ANSWERS.length) opt.selected = true;
+        writeSel.appendChild(opt);
+      });
+      row.innerHTML = '';
+      const lbl = document.createElement('span');
+      lbl.className = 'chatbot-rule-label';
+      lbl.textContent = 'WENN';
+      row.appendChild(lbl);
+      row.appendChild(readSel);
+      row.appendChild(arrow);
+      row.appendChild(writeSel);
+      rulesContainer.appendChild(row);
+      rules.push({ readSel, writeSel });
+    }
+
+    function addMessage(text, isUser) {
+      const msg = document.createElement('div');
+      msg.className = 'chatbot-msg ' + (isUser ? 'user-msg' : 'bot-msg');
+      msg.textContent = text;
+      messagesEl.appendChild(msg);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const input = inputSel.value;
+        addMessage(input, true);
+        let response = null;
+        for (const rule of rules) {
+          const trigger = rule.readSel.value;
+          if (trigger === '* (alles andere)') continue; // fallback handled below
+          if (trigger === input) { response = rule.writeSel.value; break; }
+        }
+        // Fallback: wildcard rule
+        if (!response) {
+          for (const rule of rules) {
+            if (rule.readSel.value === '* (alles andere)') { response = rule.writeSel.value; break; }
+          }
+        }
+        if (!response) response = 'Keine passende Regel gefunden.';
+        setTimeout(() => addMessage(response, false), 350);
+      });
+    }
+  })();
+
+  // ─── SEKTION 7: KRYPTO (Caesar Encoder + Gate) ────
+  (function initKrypto() {
+    const wordPoolEl    = document.getElementById('word-pool');
+    const msgDisplayEl  = document.getElementById('caesar-message-display');
+    const keySlider     = document.getElementById('caesar-key-slider');
+    const keyValEl      = document.getElementById('caesar-key-val');
+    const keyLabelEl    = document.getElementById('caesar-key-label');
+    const encodedTextEl = document.getElementById('caesar-encoded-text');
+    const binaryRowEl   = document.getElementById('caesar-binary-row');
+    const gateInput     = document.getElementById('krypto-gate-input');
+    const gateCheckBtn  = document.getElementById('krypto-check-btn');
+    const gateStatus    = document.getElementById('krypto-gate-status');
+
+    if (!wordPoolEl) return;
+
+    const WORD_POOL = ['Hallo','Welt','Computer','Bit','Byte','Code','Turing','Maschine','Daten','Schl\u00fcssel','Enigma','Geheim'];
+    let currentWords = [];
+
+    // Build word pool tiles
+    WORD_POOL.forEach(w => {
+      const tile = document.createElement('span');
+      tile.className = 'word-tile';
+      tile.textContent = w;
+      tile.addEventListener('click', () => {
+        currentWords.push(w);
+        renderMessage();
+      });
+      wordPoolEl.appendChild(tile);
+    });
+
+    function caesarChar(ch, shift) {
+      const code = ch.charCodeAt(0);
+      if (code >= 65 && code <= 90) return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+      if (code >= 97 && code <= 122) return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+      return ch;
+    }
+
+    function caesarEncode(text, shift) {
+      return text.split('').map(c => caesarChar(c, shift)).join('');
+    }
+
+    function charToBinary(ch) {
+      return ch.charCodeAt(0).toString(2).padStart(8, '0');
+    }
+
+    function renderMessage() {
+      const shift = parseInt(keySlider ? keySlider.value : 13);
+      keyValEl && (keyValEl.textContent = shift);
+      keyLabelEl && (keyLabelEl.textContent = shift);
+
+      if (currentWords.length === 0) {
+        if (msgDisplayEl) msgDisplayEl.innerHTML = '<span style="color:var(--text-dim); font-style:italic; font-size:0.85rem;">&larr; W\u00f6rter anklicken um Nachricht zu bauen</span>';
+        if (encodedTextEl) encodedTextEl.textContent = '\u2014';
+        if (binaryRowEl) binaryRowEl.innerHTML = '';
+        return;
+      }
+
+      // Render chips
+      if (msgDisplayEl) {
+        msgDisplayEl.innerHTML = '';
+        currentWords.forEach((w, i) => {
+          const chip = document.createElement('span');
+          chip.className = 'msg-word-chip';
+          chip.textContent = w;
+          chip.title = 'Klicken zum Entfernen';
+          chip.addEventListener('click', () => {
+            currentWords.splice(i, 1);
+            renderMessage();
+          });
+          msgDisplayEl.appendChild(chip);
+        });
+      }
+
+      const plainText = currentWords.join(' ').toUpperCase();
+      const encoded   = caesarEncode(plainText, shift);
+      if (encodedTextEl) encodedTextEl.textContent = encoded;
+
+      // Binary display (first 5 chars max to keep compact)
+      if (binaryRowEl) {
+        const sample = plainText.slice(0, 5);
+        binaryRowEl.innerHTML = sample.split('').map(c =>
+          `<span class="bin-byte">${c}=${charToBinary(c)}</span>`
+        ).join(' ');
+        if (plainText.length > 5) binaryRowEl.innerHTML += ' <span style="color:var(--text-dim)">&hellip;</span>';
+      }
+    }
+
+    if (keySlider) keySlider.addEventListener('input', renderMessage);
+    renderMessage();
+
+    // Gate check (VASBEZNGVBA = ROT13(INFORMATION))
+    const GATE_ANSWER = 'INFORMATION';
+    if (gateCheckBtn && gateInput) {
+      gateCheckBtn.addEventListener('click', () => {
+        const val = (gateInput.value || '').trim().toUpperCase().replace(/[\s-]/g,'');
+        if (val === GATE_ANSWER) {
+          gateStatus.className = 'gate-status correct';
+          gateStatus.innerHTML = '\u2705 <strong>RICHTIG!</strong> VASBEZNGVBA \u2192 INFORMATION (ROT13, Schl\u00fcssel 13). '
+            + 'Du hast gerade erfolgreich eine Caesar-Chiffre geknackt \u2014 genau wie Turing und sein Team die Enigma.'
+            + '<br><br><em>DATEN wird freigeschaltet\u2026</em>';
+          unlockSection('daten');
+        } else {
+          gateStatus.className = 'gate-status wrong';
+          gateStatus.textContent = '\u2717 Noch nicht ganz. Probiere den Hinweis!';
+        }
+      });
+      gateInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') gateCheckBtn.click(); });
+    }
+  })();
+
+  // ─── SEKTION 8: DATEN (Passwort-Baukasten + Gate) ──
+  (function initDaten() {
+    // --- Password Builder ---
+    const pwDisplay     = document.getElementById('pw-display');
+    const pwDisplayBox  = document.getElementById('pw-display-box');
+    const pwStrengthFill= document.getElementById('pw-strength-fill');
+    const pwStrengthLbl = document.getElementById('pw-strength-label');
+    const pwEntropyInfo = document.getElementById('pw-entropy-info');
+    const pwClearBtn    = document.getElementById('pw-clear');
+    if (!pwDisplay) return;
+
+    let pwParts = [];
+
+    const PW_POOLS = {
+      words:   ['Hund','Baum','Berg','Nacht','Sonne','Blitz','Auto','Stern','Meer','Wald','Pixel','Byte'],
+      numbers: ['0','1','2','3','4','5','6','7','8','9','42','99','2025','13'],
+      special: ['!','@','#','$','%','&','*','?','_','-','+','='],
+      upper:   ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    };
+
+    const poolEls = {
+      words:   document.getElementById('pw-pool-words'),
+      numbers: document.getElementById('pw-pool-numbers'),
+      special: document.getElementById('pw-pool-special'),
+      upper:   document.getElementById('pw-pool-upper')
+    };
+
+    // Entropy calculation
+    function calcEntropy(parts) {
+      const pw = parts.join('');
+      if (pw.length === 0) return 0;
+      let charsetSize = 0;
+      if (/[a-z]/.test(pw)) charsetSize += 26;
+      if (/[A-Z]/.test(pw)) charsetSize += 26;
+      if (/[0-9]/.test(pw)) charsetSize += 10;
+      if (/[^a-zA-Z0-9]/.test(pw)) charsetSize += 32;
+      if (charsetSize === 0) charsetSize = 26;
+      return Math.floor(pw.length * Math.log2(charsetSize));
+    }
+
+    function updatePwUI() {
+      const pw = pwParts.join('');
+      pwDisplay.textContent = pw || '\u2014';
+      const bits = calcEntropy(pwParts);
+      const maxBits = 80;
+      const pct = Math.min(100, Math.round((bits / maxBits) * 100));
+
+      let strength, color;
+      if (bits === 0)        { strength = 'Kein Passwort'; color = '#888'; }
+      else if (bits < 28)   { strength = 'SCHWACH (⚠️)';     color = '#e74c3c'; }
+      else if (bits < 50)   { strength = 'MITTEL (🟡)';      color = '#e67e22'; }
+      else if (bits < 65)   { strength = 'STARK (✅)';        color = '#27ae60'; }
+      else                   { strength = 'SEHR STARK (🔒)';   color = '#00d4ff'; }
+
+      pwStrengthFill.style.width  = pct + '%';
+      pwStrengthFill.style.background = color;
+      pwStrengthLbl.textContent = strength;
+      pwStrengthLbl.style.color = color;
+
+      if (bits > 0) {
+        const crackSeconds = Math.pow(2, bits) / 1e12; // assume 10^12 guesses/sec
+        let crackStr;
+        if (crackSeconds < 1) crackStr = 'unter einer Sekunde';
+        else if (crackSeconds < 60) crackStr = Math.round(crackSeconds) + ' Sekunden';
+        else if (crackSeconds < 3600) crackStr = Math.round(crackSeconds/60) + ' Minuten';
+        else if (crackSeconds < 86400) crackStr = Math.round(crackSeconds/3600) + ' Stunden';
+        else if (crackSeconds < 3.15e7) crackStr = Math.round(crackSeconds/86400) + ' Tage';
+        else if (crackSeconds < 3.15e9) crackStr = Math.round(crackSeconds/3.15e7) + ' Jahre';
+        else crackStr = 'Milliarden Jahre';
+
+        pwEntropyInfo.innerHTML = `<strong>${bits} Bits Entropie</strong> \u2014 Ein moderner Computer br\u00e4uchte bei Hochgeschwindigkeit <strong>${crackStr}</strong>, um dieses Passwort zu knacken. Warum? 2<sup>${bits}</sup> m\u00f6gliche Kombinationen.`;
+        pwDisplayBox.style.borderColor = color;
+      } else {
+        pwEntropyInfo.innerHTML = '';
+        pwDisplayBox.style.borderColor = '';
+      }
+    }
+
+    // Build pool tiles
+    Object.entries(PW_POOLS).forEach(([type, items]) => {
+      const container = poolEls[type];
+      if (!container) return;
+      items.forEach(item => {
+        const tile = document.createElement('span');
+        tile.className = 'pw-tile';
+        tile.textContent = item;
+        tile.addEventListener('click', () => {
+          pwParts.push(item);
+          updatePwUI();
+        });
+        container.appendChild(tile);
+      });
+    });
+
+    if (pwClearBtn) {
+      pwClearBtn.addEventListener('click', () => {
+        pwParts = [];
+        updatePwUI();
+      });
+    }
+
+    updatePwUI();
+
+    // --- Daten Gate: 3 Scenarios ---
+    const datenScenarios = [
+      {
+        question: 'Eine App fragt beim ersten Start: "Darf die App deinen Standort immer im Hintergrund verfolgen?" Die App ist ein einfacher Taschenrechner. Was sagst du?',
+        options: [
+          { text: 'Ablehnen \u2014 ein Taschenrechner braucht keinen Standort', correct: true },
+          { text: 'Erlauben \u2014 schadet ja nichts', correct: false }
+        ],
+        feedback: 'Datensparsamkeit ist ein DSGVO-Grundprinzip: Apps d\u00fcrfen nur Daten sammeln, die sie wirklich brauchen. Ein Taschenrechner braucht keinen Standortzugriff \u2014 wer sch\u00e4n ihn trotzdem fragt, will deine Daten f\u00fcr andere Zwecke.'
+      },
+      {
+        question: 'Dein Instagram-Passwort ist: "Lisa12". Du nutzt es auch f\u00fcr deine E-Mail. Ein Angriff legt Instagram lahm und die Passwort-Hashes werden geklaut. Was passiert?',
+        options: [
+          { text: 'Nichts \u2014 der Hash ist doch unleserlich', correct: false },
+          { text: 'Deine E-Mail ist in Gefahr \u2014 kurze Passw\u00f6rter werden per Brute-Force geknackt', correct: true }
+        ],
+        feedback: '"Lisa12" hat nur ~35 Bits Entropie. Angreifer probieren Millionen einfacher Passw\u00f6rter aus (Dictionary Attack). Wenn der Hash stimmt, kennen sie dein Passwort \u2014 und k\u00f6nnen sich \u00fcberall einloggen, wo du es nutzt. Niemals Passw\u00f6rter wiederverwenden!'
+      },
+      {
+        question: 'Du findest heraus, dass eine App Daten \u00fcber dich gesammelt hat, die du nie freigegeben hast. Was kannst du laut DSGVO tun?',
+        options: [
+          { text: 'Nichts \u2014 wenn du die App installiert hast, geh\u00f6ren die Daten der Firma', correct: false },
+          { text: 'Auskunft verlangen und L\u00f6schung fordern \u2014 das ist dein Recht', correct: true }
+        ],
+        feedback: 'Die DSGVO gibt dir das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16) und L\u00f6schung (Art. 17, "Recht auf Vergessenwerden"). Du kannst jederzeit fragen: Was habt ihr von mir? \u2014 und fordern: L\u00f6scht es. Das gilt auch f\u00fcr Google, Meta und TikTok.'
+      }
+    ];
+
+    const datenScenariosEl = document.getElementById('daten-scenarios');
+    const datenGateStatus  = document.getElementById('daten-gate-status');
+    const datenCompleteEl  = document.getElementById('daten-complete');
+    if (!datenScenariosEl) return;
+
+    let answered = 0;
+    let allCorrect = true;
+
+    function buildDatenScenarios() {
+      datenScenarios.forEach((sc, i) => {
+        const card = document.createElement('div');
+        card.className = 'daten-scenario-card';
+        card.dataset.index = i;
+
+        const q = document.createElement('div');
+        q.className = 'scenario-question';
+        q.innerHTML = '<strong>' + (i+1) + '.</strong> ' + sc.question;
+        card.appendChild(q);
+
+        sc.options.forEach((opt, oi) => {
+          const btn = document.createElement('button');
+          btn.className = 'scenario-btn';
+          btn.textContent = opt.text;
+          btn.addEventListener('click', () => {
+            if (card.classList.contains('answered')) return;
+            card.classList.add('answered');
+            answered++;
+
+            const isCorrect = opt.correct;
+            if (!isCorrect) allCorrect = false;
+
+            // Style buttons
+            card.querySelectorAll('.scenario-btn').forEach((b, bi) => {
+              b.disabled = true;
+              if (bi === oi) b.classList.add(isCorrect ? 'chosen-correct' : 'chosen-wrong');
+              else if (sc.options[bi].correct) b.classList.add('chosen-correct');
+            });
+
+            // Show feedback
+            let fb = card.querySelector('.scenario-feedback');
+            fb.textContent = sc.feedback;
+            fb.classList.add('open');
+
+            // Check all answered
+            if (answered === datenScenarios.length) {
+              if (allCorrect) {
+                datenGateStatus.className = 'gate-status correct';
+                datenGateStatus.innerHTML = '\u2705 <strong>PERFEKT!</strong> Du weist, wie du deine Daten sch\u00fctzt. Herzlichen Gl\u00fcckwunsch \u2014 du hast alle 8 Einheiten abgeschlossen!';
+                setTimeout(() => {
+                  datenCompleteEl.style.display = 'block';
+                  datenCompleteEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 1000);
+              } else {
+                datenGateStatus.className = 'gate-status wrong';
+                datenGateStatus.textContent = '\u2717 Nicht alle richtig. Lies die Erkl\u00e4rungen und lade die Seite neu zum Neustart.';
+              }
+            } else {
+              datenGateStatus.textContent = '\u23f3 ' + answered + '/' + datenScenarios.length + ' beantwortet\u2026';
+            }
+          });
+          card.appendChild(btn);
+        });
+
+        const fb = document.createElement('div');
+        fb.className = 'scenario-feedback';
+        card.appendChild(fb);
+
+        datenScenariosEl.appendChild(card);
+      });
+    }
+
+    buildDatenScenarios();
   })();
 
 })();

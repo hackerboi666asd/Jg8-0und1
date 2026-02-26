@@ -1,5 +1,5 @@
 ═══════════════════════════════════════════════════════════════
-  CYBER::KLASSE — 30 itslearning-Fragen (5 pro Einheit)
+  CYBER::KLASSE — 30 itslearning-Fragen (alle 8 Einheiten)
   Informatik Grundlagen, Klasse 8
 ═══════════════════════════════════════════════════════════════
 
@@ -10,221 +10,176 @@ Legende:
 
 
 ───────────────────────────────────────────────────────────────
-EINHEIT 01 — DIE WERKSTATT (Bits & Bytes)
+EINHEIT 01 — NULLEN UND EINSEN (Bits & Bytes)
 ───────────────────────────────────────────────────────────────
 
-1. [J/N] Ein einzelnes Bit kann genau zwei Zustände haben: 0 oder 1.
+1. [J/N] Ein Bit kann genau zwei Zustände haben: 0 oder 1.
 
    ✓ Ja
 
 
-2. [MC] Wie viele verschiedene Werte kann man mit 8 Bit (= 1 Byte) darstellen?
+2. [MC] Wie viele verschiedene Werte lassen sich mit 8 Bit (= 1 Byte) darstellen?
 
    a) 8
-   b) 128
-   c) 256
-   d) 1024
+   b) 16
+   c) 128
+   d) 256
 
-   ✓ c) 256
-
-
-3. [MC] Was passiert, wenn du eine Datei auf dem Computer speicherst?
-
-   a) Der Computer merkt sich den Inhalt in Worten
-   b) Der Inhalt wird in eine Folge von Nullen und Einsen umgewandelt
-   c) Der Monitor fotografiert den Bildschirm ab
-   d) Die Datei wird an Google gesendet
-
-   ✓ b) Der Inhalt wird in eine Folge von Nullen und Einsen umgewandelt
+   ✓ d) 256
 
 
-4. [J/N] Ein Computer kann Buchstaben direkt verstehen, ohne sie in Zahlen umzuwandeln.
+3. [MC] Warum kann ein Smartphone gleichzeitig Musik abspielen, Videos zeigen und KI-Anfragen beantworten?
 
-   ✓ Nein
+   a) Es hat für jede Aufgabe eine eigene spezialisierte Maschine
+   b) Es basiert auf demselben Grundprinzip: dem universellen Schalter-Umdreh-Automaten
+   c) Es nutzt WLAN als Energiequelle für verschiedene Funktionen
+   d) Verschiedene Apps greifen auf unterschiedliche Physikgesetze zurück
+
+   ✓ b) Es basiert auf demselben Grundprinzip: dem universellen Schalter-Umdreh-Automaten
 
 
-5. [MC] Welche Aussage über Bits ist FALSCH?
+4. [MC] Was bedeutet die Abkürzung ASCII?
 
-   a) Ein Bit ist die kleinste Informationseinheit
-   b) 8 Bit ergeben 1 Byte
-   c) Ein Bit kann die Werte 0, 1 oder 2 haben
-   d) Alle Daten im Computer bestehen aus Bits
+   a) Advanced Simple Computer Interface
+   b) American Standard Code for Information Interchange
+   c) Automatic System for Character Input
+   d) Algorithmic Signal Coding Index
 
-   ✓ c) Ein Bit kann die Werte 0, 1 oder 2 haben
+   ✓ b) American Standard Code for Information Interchange
 
 
 ───────────────────────────────────────────────────────────────
 EINHEIT 02 — LOGIK-PUZZLE (Turing-Maschine & Algorithmen)
 ───────────────────────────────────────────────────────────────
 
-6. [MC] Was ist ein Algorithmus?
+5. [MC] Was ist ein Algorithmus?
 
-   a) Ein spezieller Computerchip
-   b) Eine Schritt-für-Schritt-Anleitung zur Lösung eines Problems
-   c) Eine Programmiersprache
-   d) Ein Passwort
+   a) Ein spezieller Prozessortyp
+   b) Ein Betriebssystem
+   c) Eine Schritt-für-Schritt-Anleitung zur Lösung eines Problems
+   d) Ein verschlüsseltes Passwort
 
-   ✓ b) Eine Schritt-für-Schritt-Anleitung zur Lösung eines Problems
+   ✓ c) Eine Schritt-für-Schritt-Anleitung zur Lösung eines Problems
 
 
-7. [J/N] Eine Turing-Maschine kann nur eine einzige fest einprogrammierte Aufgabe lösen.
+6. [MC] Was macht eine Turing-Maschine, nachdem sie ein Feld gelesen hat?
+
+   a) Sie fragt den Nutzer um Erlaubnis
+   b) Sie entscheidet nach einer Regel, was sie schreibt, und bewegt sich dann nach links oder rechts
+   c) Sie löscht das gesamte Band und beginnt neu
+   d) Sie vergleicht das Ergebnis mit allen vorherigen Berechnungen
+
+   ✓ b) Sie entscheidet nach einer Regel, was sie schreibt, und bewegt sich dann nach links oder rechts
+
+
+7. [J/N] Wenn ein Computerprogramm ein falsches Ergebnis liefert, liegt es an der Maschine — nicht an den Regeln, die der Programmierer aufgeschrieben hat.
 
    ✓ Nein
 
 
-8. [MC] Was braucht eine Turing-Maschine, um zu funktionieren?
-
-   a) WLAN und einen Bildschirm
-   b) Ein Band mit Symbolen und eine Regeltabelle
-   c) Einen Touchscreen
-   d) Mindestens 8 GB RAM
-
-   ✓ b) Ein Band mit Symbolen und eine Regeltabelle
-
-
-9. [J/N] Jedes Computerprogramm — egal wie komplex — lässt sich theoretisch auf einer Turing-Maschine ausführen.
+8. [J/N] Theoretisch lässt sich jede berechenbare Aufgabe auf einer Turing-Maschine ausführen.
 
    ✓ Ja
-
-
-10. [MC] Was passiert, wenn eine Turing-Maschine keine passende Regel für den aktuellen Zustand findet?
-
-    a) Sie rät eine Antwort
-    b) Sie hält an (stoppt)
-    c) Sie löscht das ganze Band
-    d) Sie wechselt zu einer anderen Maschine
-
-    ✓ b) Sie hält an (stoppt)
 
 
 ───────────────────────────────────────────────────────────────
 EINHEIT 03 — DER TURM (Abstraktion & Schichten)
 ───────────────────────────────────────────────────────────────
 
-11. [MC] Was bedeutet „Abstraktion" in der Informatik?
+9. [MC] Welche Reihenfolge der Abstraktionsschichten ist korrekt — von unten nach oben?
 
-    a) Alles so kompliziert wie möglich machen
-    b) Unwichtige Details verstecken, damit man sich auf das Wesentliche konzentrieren kann
-    c) Programme in einer fremden Sprache schreiben
-    d) Den Computer ausschalten
+   a) App → Betriebssystem → Maschinencode → Bits
+   b) Bits → Maschinencode → Programmiersprache → Betriebssystem → App
+   c) Betriebssystem → Bits → Programmiersprache → App
+   d) Programmiersprache → Bits → Betriebssystem → App
 
-    ✓ b) Unwichtige Details verstecken, damit man sich auf das Wesentliche konzentrieren kann
+   ✓ b) Bits → Maschinencode → Programmiersprache → Betriebssystem → App
 
 
-12. [J/N] Wenn du eine App benutzt, musst du verstehen, wie die darunterliegenden Transistoren funktionieren.
+10. [MC] Was bedeutet „Abstraktion" in der Informatik?
+
+    a) Alles so einfach wie möglich programmieren
+    b) Komplexität verstecken, damit jede Schicht sich nur um ihre eigene Aufgabe kümmern muss
+    c) Fehler im Code unsichtbar machen
+    d) Computer ohne Bildschirm betreiben
+
+    ✓ b) Komplexität verstecken, damit jede Schicht sich nur um ihre eigene Aufgabe kümmern muss
+
+
+11. [J/N] Damit ein 15-Jähriger eine App programmieren kann, muss er verstehen, wie einzelne Transistoren schalten.
 
     ✓ Nein
 
 
-13. [MC] Welche Reihenfolge ist korrekt — von der untersten zur obersten Schicht?
+───────────────────────────────────────────────────────────────
+EINHEIT 04 — PIXEL-STUDIO (Digitale Bilder)
+───────────────────────────────────────────────────────────────
 
-    a) App → Betriebssystem → Hardware
-    b) Transistor → Betriebssystem → App
-    c) Betriebssystem → Transistor → App
-    d) App → Transistor → Betriebssystem
-
-    ✓ b) Transistor → Betriebssystem → App
-
-
-14. [MC] Warum verwenden Programmierer Abstraktionsschichten?
-
-    a) Damit der Computer langsamer wird
-    b) Damit man nicht jedes Mal bei Null anfangen muss
-    c) Weil es gesetzlich vorgeschrieben ist
-    d) Damit niemand den Code versteht
-
-    ✓ b) Damit man nicht jedes Mal bei Null anfangen muss
-
-
-15. [J/N] Ein Betriebssystem (z. B. Windows, iOS) ist eine Abstraktionsschicht zwischen Hardware und Apps.
+12. [J/N] Auf einem Schwarz-Weiß-Bildschirm reicht genau 1 Bit, um einen einzelnen Pixel darzustellen.
 
     ✓ Ja
 
 
-───────────────────────────────────────────────────────────────
-EINHEIT 04 — PIXEL-STUDIO (Digitale Darstellung)
-───────────────────────────────────────────────────────────────
+13. [MC] Wie viele Bits braucht man, um ein 8×8-Pixel-Bild in Schwarz-Weiß zu speichern?
 
-16. [MC] Woraus besteht ein digitales Bild?
+    a) 8
+    b) 16
+    c) 32
+    d) 64
 
-    a) Aus Farbtöpfen
-    b) Aus einzelnen Pixeln (Bildpunkten)
-    c) Aus Vektoren
-    d) Aus Buchstaben
-
-    ✓ b) Aus einzelnen Pixeln (Bildpunkten)
+    ✓ d) 64
 
 
-17. [J/N] Um ein Schwarz-Weiß-Bild digital zu speichern, reicht ein Bit pro Pixel.
+14. [MC] Welche drei Farbkanäle kombiniert ein Farbbildschirm pro Pixel, um jede Farbe darstellen zu können?
 
-    ✓ Ja
+    a) Rot, Gelb, Blau
+    b) Cyan, Magenta, Gelb
+    c) Rot, Grün, Blau
+    d) Schwarz, Weiß, Grau
 
-
-18. [MC] Du hast ein 8×8-Pixel-Bild in Schwarz-Weiß. Wie viele Bit brauchst du, um es zu speichern?
-
-    a) 8 Bit
-    b) 16 Bit
-    c) 64 Bit
-    d) 256 Bit
-
-    ✓ c) 64 Bit
+    ✓ c) Rot, Grün, Blau
 
 
-19. [MC] Warum sehen Fotos auf dem Handy glatter aus als ein 8×8-Pixel-Bild?
+15. [MC] Was sind digitale Bilder im Kern?
 
-    a) Weil das Handy mehr Farben kennt
-    b) Weil das Foto aus Millionen von Pixeln besteht
-    c) Weil das Handy die Bilder malt
-    d) Weil JPG-Dateien keine Pixel haben
+    a) Sammlungen von Vektorkurven
+    b) Fotografische Abzüge, die eingescannt wurden
+    c) Tabellen aus Zahlen, wobei jede Zahl einem Pixel entspricht
+    d) Textdateien mit Farbbezeichnungen
 
-    ✓ b) Weil das Foto aus Millionen von Pixeln besteht
-
-
-20. [J/N] Die Binärzahl 11111111 ergibt eine Reihe von 8 weißen Pixeln (bei 1 = weiß, 0 = schwarz).
-
-    ✓ Ja
+    ✓ c) Tabellen aus Zahlen, wobei jede Zahl einem Pixel entspricht
 
 
 ───────────────────────────────────────────────────────────────
-EINHEIT 05 — PARADOXO-LAB (Halteproblem & Grenzen)
+EINHEIT 05 — PARADOXON (Halteproblem & Grenzen der Logik)
 ───────────────────────────────────────────────────────────────
 
-21. [MC] Was ist das Halteproblem?
+16. [MC] Was ist das „Halteproblem"?
 
-    a) Die Frage, warum Computer manchmal abstürzen
-    b) Die Frage, ob man vorhersagen kann, ob ein Programm jemals aufhört
-    c) Ein Problem mit der Festplatte
+    a) Ein technischer Fehler, der Computer zum Einfrieren bringt
+    b) Die Frage, ob man für jedes beliebige Programm vorhersagen kann, ob es irgendwann endet
+    c) Ein Problem durch zu wenig Arbeitsspeicher
     d) Ein Fehler im Betriebssystem
 
-    ✓ b) Die Frage, ob man vorhersagen kann, ob ein Programm jemals aufhört
+    ✓ b) Die Frage, ob man für jedes beliebige Programm vorhersagen kann, ob es irgendwann endet
 
 
-22. [J/N] Es ist mathematisch bewiesen, dass kein Programm existieren kann, das für JEDES beliebige andere Programm vorhersagt, ob es anhält oder endlos läuft.
+17. [J/N] Das Halteproblem ist unlösbar, weil heutige Computer noch zu langsam sind.
 
-    ✓ Ja
-
-
-23. [MC] Wer hat bewiesen, dass das Halteproblem unlösbar ist?
-
-    a) Steve Jobs
-    b) Alan Turing
-    c) Albert Einstein
-    d) Elon Musk
-
-    ✓ b) Alan Turing
+    ✓ Nein
 
 
-24. [MC] Warum ist das Halteproblem wichtig?
+18. [MC] Mit welchem Beispiel vergleicht der Text den Beweis des Halteproblems?
 
-    a) Es zeigt, dass Computer nicht alles berechnen können
-    b) Es hilft beim Bau schnellerer Prozessoren
-    c) Es ist nur ein theoretisches Gedankenexperiment ohne praktische Bedeutung
-    d) Es erklärt, warum WLAN manchmal langsam ist
+    a) Einem Zirkel, der sich selbst zeichnen soll
+    b) Dem Satz: „Dieser Satz ist falsch."
+    c) Einem Computer, dem mitten in der Berechnung der Speicher ausgeht
+    d) Einem Algorithmus, der keine Eingabe bekommt
 
-    ✓ a) Es zeigt, dass Computer nicht alles berechnen können
+    ✓ b) Dem Satz: „Dieser Satz ist falsch."
 
 
-25. [J/N] Wenn ein Programm „Tester" sich selbst testet und macht das Gegenteil von dem, was es vorhersagt, entsteht ein logischer Widerspruch.
+19. [J/N] Das Halteproblem ist kein Softwarefehler, sondern ein bewiesenes mathematisches Naturgesetz.
 
     ✓ Ja
 
@@ -233,46 +188,109 @@ EINHEIT 05 — PARADOXO-LAB (Halteproblem & Grenzen)
 EINHEIT 06 — KI-ARENA (Künstliche Intelligenz)
 ───────────────────────────────────────────────────────────────
 
-26. [MC] Was macht eine KI wie ChatGPT eigentlich?
+20. [MC] Wie beschreibt der Text eine KI wie ChatGPT am treffendsten?
 
-    a) Sie denkt wie ein Mensch
-    b) Sie berechnet, welches Wort statistisch am wahrscheinlichsten als nächstes kommt
-    c) Sie sucht die Antwort in einer Enzyklopädie
-    d) Sie fragt heimlich einen Menschen
+    a) Als denkende Maschine mit echtem Bewusstsein
+    b) Als winzigen Roboter im Handy, der nachdenkt
+    c) Als extrem mächtige Autovervollständigung, die statistische Wahrscheinlichkeiten berechnet
+    d) Als Datenbank, die gespeicherte Antworten nachschlägt
 
-    ✓ b) Sie berechnet, welches Wort statistisch am wahrscheinlichsten als nächstes kommt
-
-
-27. [J/N] Eine KI kann Fehler machen, wenn ihre Trainingsdaten fehlerhaft oder einseitig sind.
-
-    ✓ Ja
+    ✓ c) Als extrem mächtige Autovervollständigung, die statistische Wahrscheinlichkeiten berechnet
 
 
-28. [MC] Was bedeutet „Halluzinieren" bei einer KI?
-
-    a) Die KI hat Fieber
-    b) Die KI erfindet überzeugend klingende, aber falsche Informationen
-    c) Die KI zeigt Bilder an, die nicht existieren
-    d) Die KI wird langsamer
-
-    ✓ b) Die KI erfindet überzeugend klingende, aber falsche Informationen
-
-
-29. [J/N] Eine KI, die perfekt Schach spielen kann, kann automatisch auch Dame spielen.
+21. [J/N] Eine KI versteht den Inhalt von Texten so, wie ein Mensch ihn versteht.
 
     ✓ Nein
 
 
-30. [MC] Was ist „Bias" (Voreingenommenheit) bei KI?
+22. [MC] Was bedeutet „Halluzinieren" bei einer KI?
 
-    a) Ein Fehler im Stromkabel
-    b) Wenn die KI Vorurteile aus den Trainingsdaten übernimmt
-    c) Eine besonders schnelle Berechnung
-    d) Ein Schutz gegen Hacker
+    a) Die KI reagiert nicht mehr auf Eingaben
+    b) Die KI erfindet überzeugend klingende, aber falsche Informationen
+    c) Die KI verarbeitet versehentlich ein Bild statt eines Texts
+    d) Die KI wird durch zu viele gleichzeitige Anfragen verlangsamt
 
-    ✓ b) Wenn die KI Vorurteile aus den Trainingsdaten übernimmt
+    ✓ b) Die KI erfindet überzeugend klingende, aber falsche Informationen
+
+
+23. [MC] Warum bevorzugte eine KI bei Amazon männliche Bewerber gegenüber weiblichen?
+
+    a) Die KI war absichtlich diskriminierend programmiert worden
+    b) Die Trainingsdaten der letzten 10 Jahre spiegelten vor allem Einstellungen von Männern wider
+    c) Die KI konnte weibliche Namen nicht korrekt lesen
+    d) Es handelte sich um einen externen Hackerangriff
+
+    ✓ b) Die Trainingsdaten der letzten 10 Jahre spiegelten vor allem Einstellungen von Männern wider
+
+
+───────────────────────────────────────────────────────────────
+EINHEIT 07 — KRYPTO (Verschlüsselung)
+───────────────────────────────────────────────────────────────
+
+24. [MC] Was tat Alan Turing im Zweiten Weltkrieg?
+
+    a) Er entwickelte das erste Betriebssystem
+    b) Er erfand das Internet
+    c) Er knackte die Enigma-Chiffriermaschine der deutschen Wehrmacht
+    d) Er baute den ersten Transistor
+
+    ✓ c) Er knackte die Enigma-Chiffriermaschine der deutschen Wehrmacht
+
+
+25. [J/N] Bei der Caesar-Chiffre wird jeder Buchstabe um genau 3 Stellen im Alphabet verschoben — aus A wird D, aus B wird E.
+
+    ✓ Ja
+
+
+26. [MC] Was bedeutet ROT13?
+
+    a) Buchstaben werden 3 Stellen verschoben
+    b) Buchstaben werden 13 Stellen verschoben, sodass z. B. A↔N und B↔O gilt
+    c) Buchstaben werden durch zweistellige Zahlen ersetzt
+    d) Nur Großbuchstaben werden verschlüsselt, Kleinbuchstaben bleiben unverändert
+
+    ✓ b) Buchstaben werden 13 Stellen verschoben, sodass z. B. A↔N und B↔O gilt
+
+
+27. [MC] Warum ist Verschlüsselung direkt mit dem Thema aus Einheit 01 verbunden?
+
+    a) Weil Verschlüsselung nur auf Schwarz-Weiß-Daten funktioniert
+    b) Weil jeder Buchstabe als ASCII-Zahlenwert gespeichert ist und Verschlüsseln bedeutet, mit diesen Zahlen zu rechnen
+    c) Weil Turing-Maschinen ausschließlich Buchstaben verarbeiten können
+    d) Weil Bits immer alphabetisch geordnet gespeichert werden
+
+    ✓ b) Weil jeder Buchstabe als ASCII-Zahlenwert gespeichert ist und Verschlüsseln bedeutet, mit diesen Zahlen zu rechnen
+
+
+───────────────────────────────────────────────────────────────
+EINHEIT 08 — DATEN (Datenschutz & DSGVO)
+───────────────────────────────────────────────────────────────
+
+28. [J/N] Die DSGVO gibt dir das Recht zu fragen, welche Daten eine Firma über dich gespeichert hat — und sie löschen zu lassen.
+
+    ✓ Ja
+
+
+29. [MC] Was ist ein „Hash" bei der Passwortspeicherung?
+
+    a) Eine Verschlüsselung, aus der man das Originalpasswort leicht zurückrechnen kann
+    b) Eine Einweg-Umwandlung des Passworts, die nicht rückgängig gemacht werden kann
+    c) Eine Übertragungsmethode für Passwörter im WLAN
+    d) Ein besonders langes Passwort mit Sonderzeichen
+
+    ✓ b) Eine Einweg-Umwandlung des Passworts, die nicht rückgängig gemacht werden kann
+
+
+30. [MC] Was passiert mit der Sicherheit eines Passworts, wenn man ein weiteres Bit hinzufügt?
+
+    a) Sie verdoppelt sich
+    b) Sie verdreifacht sich
+    c) Sie steigt um genau 10 %
+    d) Sie verändert sich nicht merklich
+
+    ✓ a) Sie verdoppelt sich
 
 
 ═══════════════════════════════════════════════════════════════
-  Ende — 30 Fragen für itslearning
+  Ende — 30 Fragen für alle 8 Einheiten
 ═══════════════════════════════════════════════════════════════
