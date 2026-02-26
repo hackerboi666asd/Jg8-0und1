@@ -18,6 +18,7 @@ Eine **einzelne HTML-Datei** (`cyber-klasse.html`) — eine interaktive Lernwebs
 | `cyber-klasse-loesungen.txt` | Lösungen aller 8 Gates für Lehrkräfte |
 | `itslearning-fragen.txt` | 30 fertige Multiple-Choice-Fragen (5 pro Einheit) für itslearning |
 | `projektinfo.md` | Diese Datei |
+| `cyber-3d/` | **CYBER::TOWER** — 3D-Browser-Game (siehe unten) |
 
 ---
 
@@ -180,4 +181,69 @@ cd /home/julian/Documents/vibecoding/Jg8-0und1 && python3 -m http.server 8765
 
 ---
 
-*Aktualisiert: Februar 2026 · Projekt: CYBER::KLASSE · Informatik Klasse 8 · 8 Einheiten · 4004 Zeilen*
+## CYBER::TOWER — 3D-Browser-Game
+
+### Was ist das?
+
+Ein **interaktives 3D-FPS-Spiel** im Browser (Three.js). Spieler läuft mit WASD + Maus durch einen Cyberpunk-Turm mit 5 Stockwerken. Jedes Stockwerk enthält ein Informatik-Puzzle aus der CYBER::KLASSE-Website. Spielzeit: ca. 20–30 Minuten.
+
+- **Tech:** Three.js v0.162.0 (CDN), ES Modules, UnrealBloomPass, Web Audio API
+- **Controls:** Desktop: PointerLock + WASD · iPad/Touch: Dual-Joysticks
+- **Hosting:** GitHub Pages fähig (rein statisch, kein Server nötig)
+
+### Dateistruktur
+
+```
+cyber-3d/
+├── index.html              (Entry, importmap, HTML Overlays)
+├── css/style.css           (UI, HUD, Terminal, Transitions)
+└── js/
+    ├── main.js             (Game Loop, Room Registry)
+    ├── constants.js        (Farben, Maße, Floor-Daten)
+    ├── state.js            (GameState + Event Emitter)
+    ├── scene.js            (Three.js Scene + Bloom)
+    ├── controls.js         (FPS Controls, Touch Joysticks)
+    ├── physics.js          (AABB Collision + Gravity)
+    ├── hud.js              (HUD Updates + Notifications)
+    ├── interaction.js      (Raycaster-Interaktion, E-Taste)
+    ├── elevator.js         (Stockwerk-Wechsel mit Fade)
+    ├── fragments.js        (15 sammelbare Datenfragmente)
+    ├── audio.js            (Prozeduraler Ambient-Drone + SFX)
+    └── rooms/
+        ├── Room.js         (Basis-Klasse für alle Räume)
+        ├── lobby.js        (EG — Tutorial, Hologramm)
+        ├── keller.js       (B1 — Bits & Bytes, 8 Schalter)
+        ├── pixel.js        (F2 — 8×8 Pixel-Grid Puzzle)
+        ├── krypto.js       (F3 — Caesar/ROT13 Cipher)
+        └── dach.js         (Dach — Finale + Geheimraum)
+```
+
+### Die 5 Stockwerke
+
+| Stock | ID | Thema | Puzzle | Neon-Farbe |
+|---|---|---|---|---|
+| EG | `lobby` | Tutorial | Terminals erkunden | Blau |
+| B1 | `keller` | Bits & Bytes | 8 Schalter → ASCII "H" | Grün |
+| F2 | `pixel` | Pixel-Darstellung | 8×8 Grid → Schlüssel-Symbol | Blau |
+| F3 | `krypto` | Verschlüsselung | Caesar-Shift ROT13 | Pink |
+| Dach | `dach` | Finale | Statistik-Anzeige, Geheimraum | Multi |
+
+### Erweiterbarkeit
+
+Neuen Raum hinzufügen:
+1. Neue Datei in `js/rooms/` erstellen, `Room` extenden
+2. `build()` überschreiben, Puzzle-Logik + Elevator-Interactable einbauen
+3. In `js/main.js` importieren und in `ROOM_CLASSES` registrieren
+4. In `js/constants.js` den Floor in `FLOORS` eintragen
+5. Optional: Fragment-Positionen in `js/fragments.js` → `FRAGMENT_POSITIONS` hinzufügen
+
+### Dev-Server
+
+```bash
+cd /home/julian/Documents/vibecoding/Jg8-0und1 && python3 -m http.server 8765
+# → http://localhost:8765/cyber-3d/index.html
+```
+
+---
+
+*Aktualisiert: Februar 2026 · Projekt: CYBER::KLASSE · Informatik Klasse 8 · 8 Einheiten · 4004 Zeilen + CYBER::TOWER 3D (~4200 Zeilen)*
