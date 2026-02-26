@@ -1222,6 +1222,77 @@ details.info-detail .info-panel {
 .scenario-feedback.open { display: block; }
 .daten-scenario-card { background: var(--bg-card); border: 1px solid var(--border-dim); border-radius: 8px; padding: 1.2rem; margin-bottom: 1rem; transition: border-color 0.3s; }
 .daten-scenario-card.answered { border-color: rgba(0,136,170,0.3); }
+
+/* ─── CHALLENGE BLOCKS ─────────────────────────────────── */
+details.challenge-block {
+  margin-top: 1.5rem;
+  border: 2px dashed var(--neon-green);
+  border-radius: 10px;
+  background: rgba(26,122,10,0.04);
+}
+body.dark-mode details.challenge-block {
+  background: rgba(0,255,136,0.03);
+}
+details.challenge-block > summary {
+  padding: 0.85rem 1.2rem;
+  cursor: pointer;
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  color: var(--neon-green);
+  letter-spacing: 0.1em;
+  list-style: none;
+  user-select: none;
+}
+details.challenge-block > summary::-webkit-details-marker { display: none; }
+details.challenge-block > summary::before { content: '▸  '; }
+details.challenge-block[open] > summary::before { content: '▾  '; }
+.challenge-body {
+  padding: 1.2rem 1.3rem;
+  border-top: 1px dashed var(--neon-green);
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+.challenge-tag {
+  display: inline-block;
+  background: var(--neon-green);
+  color: #000;
+  font-family: var(--font-head);
+  font-size: 0.6rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+}
+.pixel-share-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 30px);
+  gap: 3px;
+  margin: 0.5rem 0;
+}
+.pixel-share-cell {
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  cursor: pointer;
+  transition: background 0.08s;
+}
+.pixel-share-cell.lit { background: var(--neon-pink); border-color: var(--neon-pink); }
+.share-code-box {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  margin: 0.6rem 0;
+  word-break: break-all;
+  color: var(--neon-blue);
+  letter-spacing: 0.12em;
+  min-height: 2rem;
+}
 </style>
 </head>
 <body>
@@ -1467,6 +1538,15 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Das Tape zeigt gerade „Hi". Klick die Bits für den Buchstaben <strong>„A"</strong> (ASCII 65) und dann für <strong>„a"</strong> (ASCII 97). Was ist der Unterschied in Binär — welches einzige Bit ändert sich? Das gilt für <em>alle</em> Buchstaben.</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>97 − 65 = 32 = 2<sup>5</sup>. Bit Nummer 6 von rechts (das 32er-Bit) ist bei Kleinbuchstaben immer 1, bei Großbuchstaben 0. Schau nach: stimmt das für B/b, C/c?</em></p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -1638,6 +1718,15 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Erfinde eine eigene Turing-Maschine. Ziel: Die Maschine soll alle <strong>0er durch 1 ersetzen</strong>, aber alle <strong>1er in Ruhe lassen</strong> — also alles auf 1 setzen. Wie lauten die drei Regeln? Teste es im Simulator oben.</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>Schwerer: Kann deine Maschine so gebaut werden, dass sie nach der letzten Zelle wieder von vorne anfängt — sie also in einer Endlosschleife hängt? Was erinnert dich das?</em></p>
+      </div>
+    </details>
+
     <!-- BONUS: Chatbot-Baukasten -->
     <div class="interactive-area" id="chatbot-baukasten" style="margin-top:2rem;">
       <h3>🤖 BONUS: Chatbot-Baukasten</h3>
@@ -1778,6 +1867,15 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Denk an einen konkreten Moment: Du öffnest Instagram und ein Reel startet. <strong>Welche der 5 Schichten ist gerade aktiv — und was genau tut sie?</strong> Geh von unten nach oben: Was schalten die Transistoren? Was organisiert das Betriebssystem? Was macht die App?</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>Extra: Wenn die App einfriert — auf welcher Schicht ist der Fehler wahrscheinlich? Wenn das WLAN ausfällt — auf welcher?</em></p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -1885,6 +1983,33 @@ details.info-detail .info-panel {
         ⏳ Gib den Binärcode für alle 8 Zeilen ein.
       </div>
     </div>
+
+    <details class="challenge-block" id="pixel-share-challenge">
+      <summary>⚡ HERAUSFORDERUNG — Pixel-Botschaft für eine Mitschülerin / einen Mitschüler</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Mal etwas auf dem Raster — einen Buchstaben, ein Symbol, ein Mini-Bild. Klick „Code erstellen" und gib den 16-stelligen Code an eine Mitschülerin oder einen Mitschüler weiter. Wer den Code eingibt, sieht sofort dein Bild — übertragen als reine Bits. 📡</p>
+        <div style="display:flex; gap:2rem; flex-wrap:wrap; margin-top:1.4rem; align-items:flex-start;">
+          <div>
+            <div style="font-size:0.72rem; color:var(--text-dim); letter-spacing:0.08em; margin-bottom:0.5rem;">▸ MAL HIER</div>
+            <div class="pixel-share-grid" id="pixel-share-draw"></div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.8rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" id="pixel-share-generate" style="font-size:0.8rem; padding:0.5rem 1rem;">Code erstellen</button>
+              <button class="btn" id="pixel-share-clear" style="font-size:0.8rem; padding:0.5rem 1rem;">🗑 Leeren</button>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-dim); margin-top:1rem; margin-bottom:0.3rem; letter-spacing:0.08em;">▸ DEIN CODE (weitergeben!)</div>
+            <div id="pixel-share-code-box" class="share-code-box" style="display:none;"></div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; color:var(--text-dim); letter-spacing:0.08em; margin-bottom:0.5rem;">▸ CODE EMPFANGEN? HIER EINGEBEN:</div>
+            <input type="text" id="pixel-share-input" maxlength="16" placeholder="16-stelligen Code eingeben…"
+              style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg); color:var(--text-bright); border:1px solid var(--border-dim); border-radius:6px; padding:0.55rem 0.9rem; width:230px; outline:none; transition:border-color 0.3s; letter-spacing:0.1em;">
+            <div style="font-size:0.72rem; color:var(--text-dim); margin:1rem 0 0.4rem; letter-spacing:0.08em;">▸ EMPFANGENES BILD</div>
+            <div class="pixel-share-grid" id="pixel-share-recv"></div>
+          </div>
+        </div>
+      </div>
+    </details>
 
   </div>
 </section>
@@ -2037,6 +2162,15 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Das klassische Lügner-Paradoxon: <strong>„Dieser Satz ist falsch."</strong> — Ist er wahr oder falsch? Wenn er wahr ist, muss er falsch sein. Wenn er falsch ist, muss er wahr sein. Wo hat das Halteproblem damit zu tun?</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>Turing hat bewiesen: Ein Computer kann nicht allgemein prüfen, ob ein Programm anhält — weil so ein Prüfer sich selbst widersprechen würde. Genau wie der Lügner-Satz. Logische Grenzen sind keine Fehler — sie sind mathematisch beweisbar.</em></p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -2113,6 +2247,15 @@ details.info-detail .info-panel {
         ⏳ Beantworte alle fünf Szenarien.
       </div>
     </div>
+
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Trainiere das Modell mit Absicht falsch: Labele 0–4 als „ungerade" und 5–9 als „gerade". Dann teste es. Was passiert? Warum liefert das Modell trotzdem „sichere" Antworten — und was hat das mit echten KI-Systemen zu tun, die z.B. Bewerber bewerten?</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>Stichwort: „Garbage in, garbage out." Eine KI ist immer nur so gut wie ihre Trainingsdaten. Sie erkennt keine Wahrheit — sie erkennt Muster in dem, was Menschen ihr gezeigt haben.</em></p>
+      </div>
+    </details>
 
     <!-- Einheit 06 abgeschlossen -->
     <div id="ki-complete" style="display:none; text-align:center; padding:2rem;">
@@ -2244,6 +2387,15 @@ details.info-detail .info-panel {
       </div>
     </div>
 
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>ROT13 ist selbst-invers: ROT13(ROT13(„HALLO")) = „HALLO". <strong>Warum?</strong> Und warum ist Schlüssel 13 bei einem Alphabet mit 26 Buchstaben besonders — was passiert bei Schlüssel 26? Bei Schlüssel 1?</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>Probier es im Tool: ROT13 anwenden → Ergebnis nochmal ROT13 anwenden → du bist wieder am Anfang. 13 + 13 = 26 = kompletter Kreis durch das Alphabet.</em></p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -2340,6 +2492,15 @@ details.info-detail .info-panel {
         ⏳ Beantworte alle drei Szenarien.
       </div>
     </div>
+
+    <details class="challenge-block">
+      <summary>⚡ HERAUSFORDERUNG — Für Schnelle</summary>
+      <div class="challenge-body">
+        <span class="challenge-tag">OPTIONAL</span>
+        <p>Was ist <strong>Zwei-Faktor-Authentifizierung (2FA)</strong>? Du kennst das Prinzip aus Einheit 01: Mehr Bits = mehr Sicherheit. Wie viele extra Kombinationen gibt 2FA theoretisch — wenn ein 6-stelliger SMS-Code genutzt wird?</p>
+        <p style="margin-top:0.6rem; color:var(--text-dim); font-size:0.84rem;">→ <em>6 Stellen mit je 10 Möglichkeiten (0–9) = 10<sup>6</sup> = 1.000.000 Kombinationen. Das ist ~20 Bit extra. Ein Angreifer bräuchte im Schnitt 500.000 Versuche — innerhalb von 30 Sekunden, bevor der Code abläuft. Fast unmöglich.</em></p>
+      </div>
+    </details>
 
     <!-- Final completion block -->
     <div id="daten-complete" style="display:none; text-align:center; padding:2rem;">
@@ -3205,6 +3366,94 @@ details.info-detail .info-panel {
   gatePixelInputs.forEach(({ input }) => {
     input.addEventListener('input', checkPixelGate);
   });
+
+  // ─── PIXEL SHARE (Classmate Challenge) ──────────────────
+  (function initPixelShare() {
+    const drawGridEl = document.getElementById('pixel-share-draw');
+    const recvGridEl = document.getElementById('pixel-share-recv');
+    const generateBtn = document.getElementById('pixel-share-generate');
+    const clearBtn    = document.getElementById('pixel-share-clear');
+    const codeBox     = document.getElementById('pixel-share-code-box');
+    const codeInput   = document.getElementById('pixel-share-input');
+    if (!drawGridEl || !recvGridEl) return;
+
+    const drawState = Array(64).fill(0);
+    let isDrawing = false;
+    let drawMode = 1; // 1 = set, 0 = clear
+
+    // Build draw grid with drag support
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pixel-share-cell';
+      cell.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        isDrawing = true;
+        drawMode = drawState[i] === 1 ? 0 : 1;
+        drawState[i] = drawMode;
+        cell.classList.toggle('lit', drawMode === 1);
+      });
+      cell.addEventListener('mouseover', () => {
+        if (!isDrawing) return;
+        drawState[i] = drawMode;
+        cell.classList.toggle('lit', drawMode === 1);
+      });
+      drawGridEl.appendChild(cell);
+    }
+    document.addEventListener('mouseup', () => { isDrawing = false; });
+
+    // Build receive grid (read-only)
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pixel-share-cell';
+      cell.style.cursor = 'default';
+      recvGridEl.appendChild(cell);
+    }
+
+    function stateToHex() {
+      let hex = '';
+      for (let r = 0; r < 8; r++) {
+        let byte = 0;
+        for (let c = 0; c < 8; c++) byte = (byte << 1) | drawState[r * 8 + c];
+        hex += byte.toString(16).padStart(2, '0').toUpperCase();
+      }
+      return hex;
+    }
+
+    function hexToGrid(hex, cells) {
+      if (!/^[0-9a-fA-F]{16}$/.test(hex)) return false;
+      for (let r = 0; r < 8; r++) {
+        const byte = parseInt(hex.slice(r * 2, r * 2 + 2), 16);
+        for (let c = 0; c < 8; c++) {
+          cells[r * 8 + c].classList.toggle('lit', !!((byte >> (7 - c)) & 1));
+        }
+      }
+      return true;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const code = stateToHex();
+      codeBox.textContent = code;
+      codeBox.style.display = 'block';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      drawState.fill(0);
+      drawGridEl.querySelectorAll('.pixel-share-cell').forEach(c => c.classList.remove('lit'));
+      codeBox.style.display = 'none';
+    });
+
+    codeInput.addEventListener('input', () => {
+      const val = codeInput.value.trim();
+      const recvCells = Array.from(recvGridEl.querySelectorAll('.pixel-share-cell'));
+      if (val.length === 16) {
+        const ok = hexToGrid(val, recvCells);
+        codeInput.style.borderColor = ok ? 'var(--neon-green)' : 'var(--neon-pink)';
+      } else {
+        recvCells.forEach(c => c.classList.remove('lit'));
+        codeInput.style.borderColor = '';
+      }
+    });
+  })();
 
   // ─── SEKTION 5: PARADOXO-LAB ──────────
 

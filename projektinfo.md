@@ -10,12 +10,12 @@ Eine **einzelne HTML-Datei** (`cyber-klasse.html`) — eine interaktive Lernwebs
 
 ---
 
-## Dateien auf dem Desktop
+## Dateien im Projektordner
 
 | Datei | Inhalt |
 |---|---|
-| `cyber-klasse.html` | Die komplette Website (~2600 Zeilen, eine Datei) |
-| `cyber-klasse-loesungen.txt` | Lösungen aller 6 Gates für Lehrkräfte |
+| `index.html` | Die komplette Website (~4004 Zeilen, eine Datei) |
+| `cyber-klasse-loesungen.txt` | Lösungen aller 8 Gates für Lehrkräfte |
 | `itslearning-fragen.txt` | 30 fertige Multiple-Choice-Fragen (5 pro Einheit) für itslearning |
 | `projektinfo.md` | Diese Datei |
 
@@ -26,21 +26,22 @@ Eine **einzelne HTML-Datei** (`cyber-klasse.html`) — eine interaktive Lernwebs
 **Bewusst als eine Datei** — einfache Weitergabe per USB/Email, kein Build-Tool, kein Server.
 
 ```
-cyber-klasse.html
+index.html
 ├── <head>                    Zeile ~1–9
 │   └── Google Fonts: Orbitron (Headlines), Share Tech Mono (Mono)
-├── <style>                   Zeile ~10–810
+├── <style>                   Zeile ~10–1230
 │   ├── CSS-Variablen: --bg, --text, --neon-blue/-green/-pink, etc.
 │   ├── Light-Mode :root (Standard)
 │   ├── body.dark-mode { ... } (Dark-Mode per Klasse)
 │   ├── Nav, Sections, Gates, Buttons, Feedback
 │   └── Pro Sektion: eigene Komponenten-CSS
-├── <body>                    Zeile ~812–1380
+├── <body>                    Zeile ~1231–2430
 │   ├── #theme-toggle Button (fixed, bottom-right, 🌙/☀️)
-│   ├── <nav>  (6 Links, zentriert, 01–06)
+│   ├── <nav>  (8+START Links, zentriert)
 │   ├── .unlock-flash (Overlay für Gate-Animation)
-│   └── 6× <section> (siehe unten)
-└── <script>                  Zeile ~1392–2610
+│   ├── <section id="intro"> (Willkommensseite, kein Gate)
+│   └── 8× <section> (siehe unten)
+└── <script>                  Zeile ~2431–4004
     ├── Theme Toggle (localStorage: 'cyber-klasse-theme')
     ├── State-Objekt (unlocked: Set, Tape-Daten, etc.)
     ├── unlockSection(id) — entsperrt Section, aktualisiert Nav
@@ -49,7 +50,7 @@ cyber-klasse.html
 
 ---
 
-## Die 6 Sektionen
+## Die 8 Sektionen (+ Intro)
 
 ### 01 — WERKSTATT (Bits & Bytes)
 - **Thema:** Was ist ein Bit? ASCII, Binärdarstellung
@@ -85,7 +86,20 @@ cyber-klasse.html
 ### 06 — KI-ARENA (Künstliche Intelligenz)
 - **Thema:** Wie funktioniert KI/ML, Bias, Halluzinieren, Grenzen
 - **Interaktion:** Mini-Trainings-Simulator (Zahlen als gerade/ungerade labeln → Modell testen)
-- **Kein Gate** (letzte Einheit)
+- **Gate-Lösung:** 5 Szenario-Fragen zu KI-Grenzen und Bias korrekt beantworten
+- **Freischaltet:** Sektion 07
+
+### 07 — KRYPTO (Verschlüsselung)
+- **Thema:** Caesar-Chiffre, ROT13, Enigma, Turing als Codeknacker; Verbindung zu Einheit 01 (ASCII = Zahlen) und 02 (XOR = Bits kippen)
+- **Interaktion:** Caesar-Encoder-Baukasten — Wörter aus Pool zusammenbauen, Schlüssel-Regler 1–25, Binärdarstellung live
+- **Gate-Lösung:** `VASBEZNGVBA` → ROT13 entschlüsseln → `INFORMATION`
+- **Freischaltet:** Sektion 08
+
+### 08 — DATEN (Datenschutz)
+- **Thema:** DSGVO, Passwort-Sicherheit, Hashing, KI in der Bewerbung, Lebensweltbezug
+- **Interaktion:** Passwort-Baukasten mit Live-Entropie-Anzeige (Bits) und Stärkemeter
+- **Gate-Lösung:** 3 Datenschutz-Szenarien aus dem Schüleralltag korrekt einordnen
+- **Kein Auto-Unlock** (letzte Einheit, zeigt Abschluss-Block mit Verweis auf itslearning)
 
 ---
 
@@ -128,8 +142,8 @@ cyber-klasse.html
 ## HTTP-Dev-Server
 
 ```bash
-cd /home/julian/Desktop && python3 -m http.server 8765
-# → http://localhost:8765/cyber-klasse.html
+cd /home/julian/Documents/vibecoding/Jg8-0und1 && python3 -m http.server 8765
+# → http://localhost:8765/index.html
 ```
 
 ---
@@ -143,10 +157,14 @@ cd /home/julian/Desktop && python3 -m http.server 8765
 5. ✅ Turing-Signifikanz-Absatz ergänzt
 6. ✅ Emojis in Nav + Subtitles
 7. ✅ Light-Mode als Standard, Dark-Mode Toggle (🌙/☀️)
-8. ✅ CSS-Block nach Korruption komplett neu geschrieben (810 Zeilen sauber)
+8. ✅ CSS-Block nach Korruption komplett neu geschrieben (sauber)
 9. ✅ Lösungsdatei `cyber-klasse-loesungen.txt` erstellt
 10. ✅ 30 itslearning-Fragen in `itslearning-fragen.txt`
 11. ✅ Nav zentriert (`justify-content: center`)
+12. ✅ Sektion 07 KRYPTO: Caesar-Encoder-Baukasten + ROT13-Gate
+13. ✅ Sektion 08 DATEN: Passwort-Baukasten mit Entropie-Anzeige + 3-Szenarien-Gate
+14. ✅ Intro-Sektion (kein Gate, erklärt das Konzept)
+15. ✅ Datei umbenannt zu `index.html` (4004 Zeilen)
 
 ---
 
@@ -156,7 +174,10 @@ cd /home/julian/Desktop && python3 -m http.server 8765
 - KI-Sektion hat etwas weniger interaktive Tiefe als 01–05
 - Kein Print-Stylesheet (für den Fall von Ausdrucken)
 - Die 30 Fragen decken alle Themen ab; Q2 (256 Werte bei 8 Bit) erfordert Schlussfolgerung aus der Interaktion, kein Direktzitat im Text
+- itslearning-Fragen noch auf 8 Einheiten anpassen (aktuell 6 Einheiten abgedeckt)
+- cyber-klasse-loesungen.txt noch auf Krypto- und Daten-Gate aktualisieren
+- Projektlaufzeit realistisch: ~45 min für zielstrebige Schüler → Erweiterungsbedarf (siehe Ideen unten)
 
 ---
 
-*Generiert: Februar 2026 · Projekt: CYBER::KLASSE · Informatik Klasse 8*
+*Aktualisiert: Februar 2026 · Projekt: CYBER::KLASSE · Informatik Klasse 8 · 8 Einheiten · 4004 Zeilen*
