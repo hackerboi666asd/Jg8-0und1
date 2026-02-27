@@ -312,8 +312,8 @@ export function build(container, engine) {
   engine.addHotspot(mon, 'Monitor untersuchen', () => {
     dialog.sequence([
       { char:'kim', text: 'Moment — das ist kein Verbindungsfehler. Das sind Binary-Zeichen.' },
-      { char:'justus', text: 'War doch klar! Morse-Code! Ich rufe jetzt die Feuerwehr.' },
-      { char:'kim', text: 'Justus. Das ist kein Morse-Code. Und ruf nicht die Feuerwehr.' },
+      { char:'justus', text: 'War doch klar! Morse-Code! Ich rufe jetzt die Polizei.' },
+      { char:'kim', text: 'Justus. Das ist kein Morse-Code. Und ruf nicht die Polizei.' },
       { char:'kim', text: 'Ich muss rausfinden, was BYTE da verschlüsselt hat. Mal den Decoder aufmachen.', after: () => engine.openPuzzle(buildBinaryPuzzle(engine, container)) },
     ]);
   });
@@ -505,7 +505,7 @@ function buildBinaryPuzzle(engine, container) {
             { char:'kim', text: '"BYTE WAR HIER." — Das ist die Nachricht. Jemand nennt sich BYTE und hat PETEs Stream gekapert.' },
             { char:'justus', text: 'Cool. Vielleicht wollte er nur kurz Hallo sagen?' },
             { char:'kim', text: 'Er hat eine Webseite hinterlassen: stream-archiv-pete.local — PETEs eigener Backup-Server. Ich gehe rein.' },
-            { char:'justus', text: 'Ich komme mit! Ich habe Chips.', after: () => engine.loadScene('s01_bits') },
+            { char:'justus', text: 'Ich komme mit! Ich habe Takis.', after: () => engine.loadScene('s01_bits') },
           ]);
         }, BINARY_BYTES.length * 80 + 800);
       } else {

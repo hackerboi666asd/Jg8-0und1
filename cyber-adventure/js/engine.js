@@ -98,9 +98,13 @@ export const engine = {
     glow.className = 'hs-glow';
     el.appendChild(glow);
 
+    const hsLabel = document.createElement('div');
+    hsLabel.className = 'hs-label';
+    hsLabel.textContent = '▶ ' + label;
+    el.appendChild(hsLabel);
+
     el.addEventListener('mouseenter', () => {
-      tooltip.textContent = label;
-      tooltip.style.display = 'block';
+      tooltip.style.display = 'none';
     });
     el.addEventListener('mouseleave', () => {
       tooltip.style.display = 'none';
