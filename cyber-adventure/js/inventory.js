@@ -1,45 +1,91 @@
 // ============================================================
-// CYBER::ADVENTURES — Inventory System
+// CYBER::ADVENTURES — Badge System (Abschluss-Abzeichen)
 // ============================================================
 
 import { state } from './state.js';
-import { engine } from './engine.js';
 
-const slotsEl    = document.getElementById('inventory-slots');
-const tooltipEl  = document.getElementById('inventory-tooltip');
+const slotsEl   = document.getElementById('inventory-slots');
+const tooltipEl = document.getElementById('inventory-tooltip');
+const labelEl   = document.getElementById('inventory-label');
 
-// Item registry
-const ITEMS = {
-  'visitenkarte_byte':  { icon: '💾', label: 'BYTEs Visitenkarte', desc: 'Eine Visitenkarte in Binary. Jemand macht gerne Theater.' },
-  'turing_protokoll':   { icon: '📄', label: 'Turing-Protokoll',    desc: 'Ein Turing-Maschinen-Skript. Handschriftlich, chaotisch.' },
-  'schicht_diagram':    { icon: '🗂️', label: 'Schicht-Diagramm',    desc: 'Ein zerknittertes Diagramm der Softwareschichten.' },
-  'korrupte_datei':     { icon: '🗃️', label: 'Korrupte Datei',      desc: 'PETEs Backup, stark beschädigt. Benötigt Reparatur.' },
-  'paradox_notiz':      { icon: '🔁', label: 'Paradox-Notiz',       desc: 'BYTEs Notiz: "Dieses Programm stoppt genau dann, wenn es nicht stoppt."' },
-  'deepfake_screenshoot':{ icon: '🖼️', label: 'Deepfake-Screenshot',desc: 'KI-Bild von BYTE — 7 Finger, 2 Nasen. Klassisch.' },
-  'geheimbrief':        { icon: '✉️', label: 'Verschlüsselter Brief',desc: 'Alles nur Kauderwelsch. Oder doch Caesar?' },
-  'passwort_zettel':    { icon: '📋', label: 'Passwort-Zettel',     desc: 'PETEs Passwort auf Post-It. Erschreckend.' },
-};
+// Badge registry — one per chapter, in story order
+const BADGES = [
+  {
+    id:      'visitenkarte_byte',
+    icon:    '💾', short: 'S00', color: '#00d4ff',
+    label:   'Binär-Detektivin',
+    desc:    'Binärcode geknackt — BYTE WAR HIER!',
+  },
+  {
+    id:      'turing_protokoll',
+    icon:    '📡', short: 'S01', color: '#00ff88',
+    label:   'ASCII-Agentin',
+    desc:    'ASCII-Rätsel gelöst: SCHULE.',
+  },
+  {
+    id:      'schicht_diagram',
+    icon:    '🤖', short: 'S02', color: '#00d4ff',
+    label:   'Turing-Expertin',
+    desc:    'Turing-Maschine konfiguriert und erfolgreich gestartet.',
+  },
+  {
+    id:      'korrupte_datei',
+    icon:    '🧱', short: 'S03', color: '#00ff88',
+    label:   'Schichten-Hackerin',
+    desc:    'Softwareschichten in die richtige Reihenfolge gebracht.',
+  },
+  {
+    id:      'paradox_notiz',
+    icon:    '🎮', short: 'S04', color: '#ff2d78',
+    label:   'Pixel-Pilotin',
+    desc:    'Das Pixel-Schloss auf PETEs Backup geknackt.',
+  },
+  {
+    id:      'deepfake_screenshoot',
+    icon:    '♾️', short: 'S05', color: '#a855f7',
+    label:   'Paradox-Jägerin',
+    desc:    'Das Halteproblem verstanden — unentscheidbar!',
+  },
+  {
+    id:      'geheimbrief',
+    icon:    '🧠', short: 'S06', color: '#ff2d78',
+    label:   'KI-Kritikerin',
+    desc:    'KI-Bias und Halluzinationen aufgedeckt.',
+  },
+  {
+    id:      'passwort_zettel',
+    icon:    '🔐', short: 'S07', color: '#00d4ff',
+    label:   'Krypto-Crack',
+    desc:    'ROT13 entschlüsselt: INFORMATION.',
+  },
+];
 
-const slots = new Map(); // itemId → DOM element
+let domSlots = {};   // id → { el, iconEl }
 
 export const inventory = {
 
   init() {
     slotsEl.innerHTML = '';
-    slots.clear();
+    domSlots = {};
+    for (const badge of BADGES) {
+      this._renderSlot(badge);
+    }
+    this._updateCounter();
   },
 
   restoreFromState() {
     for (const id of state.inventoryItems) {
-      this._renderSlot(id);
+      this._unlock(id, false);
     }
+    this._updateCounter();
   },
 
   addItem(id) {
     if (state.inventoryItems.has(id)) return false;
     state.inventoryItems.add(id);
     state.save();
-    this._renderSlot(id);
+    this._unlock(id, true);
+    this._updateCounter();
     return true;
   },
 
@@ -47,36 +93,68 @@ export const inventory = {
     return state.inventoryItems.has(id);
   },
 
-  _renderSlot(id) {
-    const def = ITEMS[id];
-    if (!def) { console.warn('Unknown item:', id); return; }
+  // ---- private ----
 
+  _renderSlot(badge) {
     const slot = document.createElement('div');
-    slot.className = 'inv-slot';
-    slot.textContent = def.icon;
-    slot.title = def.label;
-    slot.dataset.id = id;
+    slot.className = 'badge-slot locked';
+    slot.dataset.id = badge.id;
 
-    slot.addEventListener('mouseenter', (e) => {
-      tooltipEl.textContent = def.label + ' — ' + def.desc;
-      tooltipEl.style.display = 'block';
-      tooltipEl.style.left = (slot.getBoundingClientRect().left) + 'px';
+    const iconEl = document.createElement('div');
+    iconEl.className = 'badge-icon';
+    iconEl.textContent = '?';
+
+    const shortEl = document.createElement('div');
+    shortEl.className = 'badge-short';
+    shortEl.textContent = badge.short;
+
+    slot.append(iconEl, shortEl);
+
+    slot.addEventListener('mouseenter', () => {
+      const earned = state.inventoryItems.has(badge.id);
+      if (earned) {
+        tooltipEl.innerHTML =
+          `<span class="badge-tt-name" style="color:${badge.color}">${badge.icon} ${badge.label}</span>` +
+          `<span class="badge-tt-desc">${badge.short} · ${badge.desc}</span>`;
+      } else {
+        tooltipEl.innerHTML =
+          `<span class="badge-tt-locked">${badge.short} · noch nicht verdient</span>`;
+      }
+      tooltipEl.style.display = 'flex';
+      const r   = slot.getBoundingClientRect();
+      const tw  = tooltipEl.offsetWidth || 240;
+      tooltipEl.style.left = Math.max(4, Math.min(r.left + r.width / 2 - tw / 2, window.innerWidth - tw - 8)) + 'px';
     });
     slot.addEventListener('mouseleave', () => {
       tooltipEl.style.display = 'none';
     });
-    slot.addEventListener('click', () => {
-      if (slot.classList.contains('active')) {
-        slot.classList.remove('active');
-        engine.clearActiveItem();
-      } else {
-        document.querySelectorAll('.inv-slot.active').forEach(s => s.classList.remove('active'));
-        slot.classList.add('active');
-        engine.setActiveItem(id);
-      }
-    });
 
     slotsEl.appendChild(slot);
-    slots.set(id, slot);
+    domSlots[badge.id] = { el: slot, iconEl };
+  },
+
+  _unlock(id, animate) {
+    const badge = BADGES.find(b => b.id === id);
+    if (!badge) return;
+    const entry = domSlots[id];
+    if (!entry) return;
+
+    const { el, iconEl } = entry;
+    iconEl.textContent = badge.icon;
+    el.classList.remove('locked');
+    el.classList.add('unlocked');
+    el.style.setProperty('--badge-color', badge.color);
+
+    if (animate) {
+      el.classList.add('badge-earn');
+      el.addEventListener('animationend', () => el.classList.remove('badge-earn'), { once: true });
+    }
+  },
+
+  _updateCounter() {
+    const total  = BADGES.length;
+    const earned = [...state.inventoryItems].filter(id => BADGES.some(b => b.id === id)).length;
+    labelEl.innerHTML =
+      `ABZEICHEN<br><span class="badge-counter">${earned}&thinsp;/&thinsp;${total}</span>`;
   },
 };

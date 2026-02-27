@@ -17,15 +17,16 @@
   --text-dim:    #556677;
   --font-head:   'Orbitron', sans-serif;
   --font-mono:   'Share Tech Mono', monospace;
+  --font-body:   'Exo 2', 'Segoe UI', system-ui, sans-serif;
   --dialog-h:    200px;
-  --inv-h:       60px;
+  --inv-h:       72px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: var(--bg);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   color: var(--text);
   overflow: hidden;
   height: 100vh;
@@ -460,10 +461,11 @@ body {
 }
 
 #dialog-text {
-  font-family: var(--font-mono);
-  font-size: 1rem;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 400;
   color: var(--text-bright);
-  line-height: 1.7;
+  line-height: 1.75;
   flex: 1;
   overflow: hidden;
 }
@@ -473,8 +475,9 @@ body {
   margin-top: 0.6rem;
 }
 .choice-btn {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
   background: none;
   border: none;
   color: var(--neon-green);
@@ -498,66 +501,153 @@ body {
 }
 
 /* ======================================================
-   INVENTORY BAR
+   BADGE BAR (Abschluss-Abzeichen)
    ====================================================== */
 #inventory-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   height: var(--inv-h);
-  background: rgba(0,5,15,0.98);
-  border-top: 1px solid rgba(0,212,255,0.15);
+  background: rgba(0,4,14,0.98);
+  border-top: 1px solid rgba(0,212,255,0.12);
   display: flex; align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
   padding: 0 1rem;
   z-index: 300;
 }
 
 #inventory-label {
   font-family: var(--font-head);
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   color: var(--text-dim);
-  letter-spacing: 0.2em;
-  writing-mode: horizontal-tb;
+  letter-spacing: 0.15em;
+  line-height: 1.5;
+  text-align: center;
   flex-shrink: 0;
+  min-width: 54px;
+}
+.badge-counter {
+  color: var(--neon-green);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0;
 }
 
 #inventory-slots {
-  display: flex; gap: 0.5rem; flex: 1; overflow-x: auto;
+  display: flex;
+  gap: 0.45rem;
+  flex: 1;
+  align-items: center;
+  overflow-x: auto;
 }
 
-.inv-slot {
-  width: 44px; height: 44px;
-  border: 1px solid rgba(0,212,255,0.2);
-  border-radius: 4px;
-  background: rgba(0,10,25,0.8);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+/* ---- single badge slot ---- */
+.badge-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 52px;
+  height: 56px;
+  border-radius: 6px;
   flex-shrink: 0;
   position: relative;
-  transition: border-color 0.15s;
-  font-size: 1.2rem;
-}
-.inv-slot:hover {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 8px rgba(0,212,255,0.3);
-}
-.inv-slot.active {
-  border-color: var(--neon-yellow);
-  box-shadow: 0 0 8px rgba(255,224,51,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: default;
+  user-select: none;
 }
 
+/* -- LOCKED state -- */
+.badge-slot.locked {
+  background: rgba(0,10,25,0.7);
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+.badge-slot.locked .badge-icon {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.15);
+  font-family: var(--font-mono);
+  font-style: normal;
+}
+.badge-slot.locked .badge-short {
+  color: rgba(255,255,255,0.1);
+}
+
+/* -- UNLOCKED state -- */
+.badge-slot.unlocked {
+  background: rgba(0,10,30,0.85);
+  border: 1px solid var(--badge-color, #00d4ff);
+  box-shadow: 0 0 10px -2px var(--badge-color, #00d4ff);
+  cursor: pointer;
+}
+.badge-slot.unlocked:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 18px -2px var(--badge-color, #00d4ff);
+}
+.badge-slot.unlocked .badge-icon {
+  font-size: 1.4rem;
+  filter: drop-shadow(0 0 4px var(--badge-color, #00d4ff));
+}
+.badge-slot.unlocked .badge-short {
+  color: var(--badge-color, #00d4ff);
+}
+
+.badge-icon {
+  line-height: 1;
+  transition: filter 0.2s;
+}
+.badge-short {
+  font-family: var(--font-head);
+  font-size: 0.48rem;
+  letter-spacing: 0.05em;
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* -- earn animation -- */
+@keyframes badgeEarn {
+  0%   { transform: scale(0.4);  opacity: 0; }
+  50%  { transform: scale(1.35); opacity: 1; }
+  70%  { transform: scale(0.9); }
+  85%  { transform: scale(1.15); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.badge-slot.badge-earn {
+  animation: badgeEarn 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* ---- badge tooltip ---- */
 #inventory-tooltip {
   position: fixed;
-  bottom: calc(var(--inv-h) + 8px);
+  bottom: calc(var(--inv-h) + 10px);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--neon-blue);
-  background: var(--bg-panel);
-  border: 1px solid rgba(0,212,255,0.25);
-  padding: 0.3rem 0.8rem;
+  background: rgba(0,5,18,0.97);
+  border: 1px solid rgba(0,212,255,0.22);
+  padding: 0.35rem 0.85rem;
   pointer-events: none;
   display: none;
+  flex-direction: column;
+  gap: 0.15rem;
   z-index: 400;
+  max-width: 260px;
+  border-radius: 4px;
+}
+.badge-tt-name {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.badge-tt-desc {
+  font-family: var(--font-body);
+  color: rgba(255,255,255,0.55);
+  font-size: 0.78rem;
+}
+.badge-tt-locked {
+  font-family: var(--font-body);
+  color: rgba(255,255,255,0.25);
+  font-style: italic;
+  font-size: 0.78rem;
 }
 
 /* ======================================================

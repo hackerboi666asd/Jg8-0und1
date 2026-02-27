@@ -1,6 +1,16 @@
 # CYBER::ADVENTURES — Lösungen aller Puzzles
 
-> Lehrenden-Datei. Nicht an SuS weitergeben! 🔒
+| Szene | Lösung |
+|-------|--------|
+| S00 | `BYTE WAR HIER` |
+| S01 | `SCHULE` |
+| S02 | 0→1 rechts, 1→0 rechts |
+| S03 | Transistor → Hardware → BS → Software → Nutzer |
+| S04 | Kreuz-Muster: `00100 / 01110 / 11011 / 01110 / 00100` |
+| S05 | B, B, B |
+| S06 | B, B, B |
+| S07 | Schieberegler +13 → `INFORMATION` |
+| S08 | `K7#mP!v2qX&3` / B, B |
 
 ---
 
