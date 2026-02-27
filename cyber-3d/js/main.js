@@ -91,7 +91,7 @@ async function init() {
     // Activate lobby
     switchRoom('lobby');
 
-    // ── URL param: ?unlock=1337 → auto-unlock alles ──
+    // ── URL param: ?unlock=1337 → alle Etagen frei, aber kein Drohnen-Chaos ──
     if (new URLSearchParams(location.search).get('unlock') === '1337') {
         ['keller', 'pixel', 'krypto', 'dach'].forEach(id => state.unlockFloor(id));
         ['keller', 'pixel', 'krypto'].forEach(id => state.solvePuzzle(id));
@@ -100,11 +100,11 @@ async function init() {
         });
         state.emit('fragmentCollected', { count: state.fragments.collected.size, total: state.fragments.total });
         if (rooms.dach && !rooms.dach.secretOpen) rooms.dach._openSecretDoor?.();
-        weapon.activate();
+        // Waffe/Drohnen NICHT aktivieren — Spieler soll selbst entscheiden
         fireworks.setOrigin(0, 0, 0);
-        fireworks.launch(5);
+        fireworks.launch(3);
         const { showNotification } = await import('./hud.js');
-        showNotification('🔓 Alle Ebenen freigeschaltet!');
+        showNotification('🔓 Alle Etagen freigeschaltet — viel Spaß!');
     }
 
     // Jump + ball + hoverboard key handlers
